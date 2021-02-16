@@ -1,0 +1,186 @@
+\documentclass{article}
+\usepackage{lmodern, amssymb,amsmath, graphicx, hyperref}
+\makeatletter
+\makeatother
+%\numberwithin{table}{section}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+%\numberwithin{figure}{section}
+%\pagestyle{plain}
+\usepackage{rotating}
+\usepackage{tabularx}
+% === bibliography package ===
+  \usepackage{natbib}
+\usepackage{lscape} 
+% \usepackage[colorinlistoftodos, prependcaption]{todonotes} % to use \todo 
+\usepackage[margin=1in]{geometry}
+\usepackage{csquotes}
+\usepackage{lscape}
+\usepackage{setspace}
+%\usepackage{tocloft}
+\usepackage{longtable}
+%\addtolength{\cftsecnumwidth}{15pt}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,      
+  urlcolor=cyan,
+  citecolor = black
+}
+\usepackage{array}
+
+
+\urlstyle{same}  % don't use monospace font for urls
+%\renewcommand\thesection{Q \arabic{section}.}
+
+\title{Has Lettermarking Replaced Earmarking?}
+\author{Eleanor Neff Powell\thanks{University of Wisconsin-Madison}}
+
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\section{What are earmarks?}
+
+The formal rules of the US House and the US Senate define congressional earmarks slightly differently, but they share a common understanding of earmarks as `` congressionally directed spending, tax benefit, or tariff benefit be considered
+an earmark if it would benefit a specific entity or state, locality, or congressional district other
+than through a statutory or administrative formula or competitive award process'' (\href{https://fas.org/sgp/crs/misc/R45429.pdf}{Megan Lynch for the Congressional Research Service}).
+
+\textbf{House Definion of an earmark:} ``Congressional earmark- a provision or report language
+included primarily at the request of a Member,
+Delegate, Resident Commissioner, or Senator
+providing, authorizing or recommending a specific
+amount of discretionary budget authority, credit
+authority, or other spending authority for a contract,
+loan, loan guarantee, grant, loan authority, or other
+expenditure with or to an entity, or targeted to a
+specific State, locality or congressional district, other
+than through a statutory or administrative formula
+driven or competitive award process.
+Limited tax benefit- (1) any revenue-losing provision
+that (A) provides a federal tax deduction, credit,
+exclusion, or preference to 10 or fewer beneficiaries
+under the Internal Revenue Code of 1986, and (B)
+contains eligibility criteria that are not uniform in
+application with respect to potential beneficiaries of
+such provision; or (2) any federal tax provision which
+provides one beneficiary temporary or permanent
+transition relief from a change to the Internal Revenue
+Code of 1986.
+Limited tariff benefit- a provision modifying the
+Harmonized Tariff Schedule of the United States in a
+manner that benefits 10 or fewer entities.'' (House Rules XXI, clause 9)
+
+\textbf{Senate Definion of an earmark:} ``Congressionally directed spending item- a provision or
+report language included primarily at the request of a
+Senator providing, authorizing or recommending a
+specific amount of discretionary budget authority,
+credit authority, or other spending authority for a
+contract, loan, loan guarantee, grant, loan authority, or
+other expenditure with or to an entity, or targeted to a
+specific State, locality or congressional district, other
+than through a statutory or administrative formula
+driven or competitive award process.
+Limited tax benefit- any revenue provision that (A)
+provides a federal tax deduction, credit, exclusion, or
+preference to a particular beneficiary or limited group
+of beneficiaries under the Internal Revenue Code of
+1986, and (B) contains eligibility criteria that are not
+uniform in application with respect to potential
+beneficiaries of such provision.
+Limited tariff benefit- a provision modifying the
+Harmonized Tariff Schedule of the United States in a
+manner that benefits 10 or fewer entities.'' (Senate Rules XLIV, paragraph 5.)
+
+\section{The Earmark Moratorium}
+
+After years of politicians, particularly fiscally conservative Republicans, railing against ``Bridges to Nowhere,'' ``pork-barrel spending'' and government waste, the new Republican majority in 2011 at the beginning of the 112th Congress ``began observing what has been referred to as an earmark moratorium or earmark ban''\citep[pg. 1.]{Lynch2018CRS}.  It is worth noting that this so called earmark moratorium isn't a law or even part of House or Senate rules.  Rather, as Lynch describes, ``it has been established by party rules and committee protocols and is enforced by chamber and committee leadership through their agenda-setting power,'' \citep[pg. 1.]{Lynch2018CRS}.
+
+
+\section{How can we detect ``earmarks'' in the moratorium period}
+Chris Berry et al computer earmark detection method: \url{https://www.kdd.org/kdd2016/papers/files/adf1227-wulczynA.pdf}
+
+Could we extract things from changes to CRs? 
+
+\section{What is Lettermarking?}
+
+
+\section{Previous Research}
+
+\href{https://doi.org/10.1177/2053168017727201}{Neilheisel and Brady (2017)} examine lettermarking activty to the Department of Labor. They looked at the content of the letters and the DOL stimulus spending in the legislator's congressional district. They found that for most legislators lettermarking didn't have an impact, but conditional on ideology can have an impact.  
+
+In \href{https://collected.jcu.edu/cgi/viewcontent.cgi?article=1002&context=jep}{``The Evolution of Distributive Benefits: The Rise of Lettermarking in the United States Congress''} Mills and Kalaf-Hughes (2015) define and explore the history of lettermarking and examine lettermarking in the context of the Federal Aviation Administration. They define letter-marking as when legislators ``explicitly ask (in writing) the head of an administrative agency to retain or allocate distributive benefits in their district,'' \citep[pg. 37]{MillsKalafHughes2015JEP}.
+
+
+
+They describe letter-marking as a four-part process:
+
+\begin{enumerate}
+\item Legislators announce to their constituents a call for programmatic requests/language requests.\footnote{As \citet{MillsKalafHughes2015JEP} describe rogrammatic requests  propose total funding amts for programs but do not allow for the identification of specific projects to be funding while language requests ``do not direct funding to a particular entity but encourages, urges, or directs some type of action by an agency.''}
+\item Constituents submit requests for funding (program/language) to legislator.
+\item Legislator writes to appropriation cardinals to have requests inserted into bill or report language
+\item Once programmatic request is enacted as part of appropriations bill, legislator writes to agency head asking (demanding) the agency retain/allocate the benefits to their districts. 
+
+\end{enumerate} 
+
+
+
+
+
+Figure \ref{f:leeform} is a screenshot I took of the example provided in the form of a link to Congresswoman Shiela Jackson Lee's website by Mills and Kalaf-Hughes (2015).  
+
+
+\begin{figure}[ht!]
+\caption{2014 Lettermarking Request Form for Congresswoman Shiela Jackson Lee. Example provided by Mills and Kalaf-Hughes (2015). }\label{f:leeform}
+\centering
+\includegraphics[scale=.4]{../../figs/earmark/Lee Screen Shot 2020-11-17 at 1.47.03 PM}
+\end{figure}
+
+
+
+
+
+
+
+\clearpage
+\section{Agencies with High Levels of Earmarks}
+\subsection{Federal High Way Administration}
+The Federal High Way Administration has historically had high level of earmark activity.  Figure \label{f:highwayyear}below shows letters to the agency before and after the earmark ban.  Interestingly we see a big jump in letters to the agency before and after the earmark ban, though the jump seems to fade and return to the baseline after a couple of years. 
+
+\begin{figure}[ht!]
+\caption{Federal Highway Administration Contacts Pre \& Post Earmark Ban}\label{f:highwayyear}
+\centering
+\includegraphics[scale=.4]{../../figs/earmark/dot_fhwa_cleaned.pdf}
+\end{figure}
+
+\clearpage
+
+Looking beyond just the overall number of letters to the agency, we can look at the content of the letters to the agency. Figure \ref{f:highwaysupport} shows the pre/post earmark ban for letters that use the language ``support'',``allocate'', and ``endorse'' which are the phrases frequently used when legislators want to encourage the agency to fund a project (a.k.a. letter-mark). 
+
+\begin{figure}[ht!]
+\caption{Letters in ``Support of a Project'' to Federal Highway Administration}\label{f:highwaysupport}
+\centering
+\includegraphics[scale=.4]{../../figs/earmark/dot_fhwa_support.pdf}
+\end{figure}
+
+ One caveat we may want to consider as we look at this pre/post earmark activity for the Federal High Way Administration is that the timing of the earmark ban (March 2010) is in close proximity to the enactment of the TIGER program (in February 2009).  
+ 
+ \clearpage
+
+Figure \ref{f:highwaytiger} below shows letters that reference the ``TIGER'' program. Letters from legislators referencing the TIGER program are typically endorsing/supporting an application from a local government or transportation related entity within the legislator's district. TIGER is a discretionary grant program (Transportation Investment Generating Economic Recovery Program) from 2009-2015. The first law was signed by President Obama in February 2009. These were the so-called shovel ready projects designed to help with the economic recovery. Applicants that are eligible to receive funding for surface transportation projects include state and local governments, transit agencies, port authorities, metropoitican planning organizations and multi-state or multijurisdictional applicants.  The qualifications language (from wikipedia): ``Qualified projects should result in ``desirable, long-term'' outcomes for the United States, a state within or a regional or metroplitan area.  
+
+
+\begin{figure}[ht!]
+\caption{``TIGER'' Discretionary Grant Program Letters to Federal Highway Administration}\label{f:highwaytiger}
+\centering
+\includegraphics[scale=.4]{../../figs/earmark/dot_fhwa_tiger.pdf}
+\end{figure}
+
+\clearpage
+\bibliography{ear}{}
+\bibliographystyle{apsr}
+
+
+\end{document}
