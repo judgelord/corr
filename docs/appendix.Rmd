@@ -1,0 +1,167 @@
+---
+title: "Appendix"
+subtitle: "Unequal Representation: Evidence from a Census of Legislator Contacts with US Federal Agencies"
+#output: pdf_document
+output: html_document
+---
+
+# Data
+
+February 2017 and February 2021, we received data on \input{../tables/n} instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of 470,484 contacts from members of Congress with federal agencies.
+
+## Types of requests
+``  of the average legislators' contacts with agencies are about constituency service.
+
+## Requests by population 
+
+## Requests by year
+
+
+# Theory
+
+```{r 2x2, fig.cap="Divergent Predictions for the Change in Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power", fig.width=7, fig.height=5.5}
+library(tidyverse)
+x2 <- read_csv(here::here("data", "2x2.csv"))
+
+x2 %>% 
+  ggplot() +
+  aes(x = x, y = new, label = lab) +
+  geom_line(aes(y = baseline), linetype = 2, alpha = .5) + 
+  geom_line() +
+  geom_ribbon(aes(ymax = new, ymin = baseline), alpha = .2) + 
+  facet_wrap("outcome", nrow = 2) + 
+  geom_label() +  
+  geom_text(aes(label = lab2, y = baseline), check_overlap = T, hjust = 0, vjust = -.2) +
+  labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
+       title = "") + 
+  theme_void() + 
+  xlim(-.2,1.2) + 
+  ylim(-1.1,3.1) + 
+  theme(panel.border = element_rect(fill=NA),
+        axis.title.y = element_text(angle = 90))
+
+
+
+x2 %>% 
+  ggplot() +
+  aes(x = x, y = new, label = lab) +
+  geom_line(aes(y = baseline), linetype = 2, alpha = .5) + 
+  geom_line() +
+  geom_ribbon(aes(ymax = new, ymin = baseline), alpha = .2) + 
+  facet_grid(priority ~ capacity) +
+  geom_label() +  
+  geom_text(y = 0, 
+            label = "Baseline levels for new legislator\n(may differ between service and policy work)",
+            aes(x = ifelse(capacity == "Capacity DOES affect behavior" & priority == "Shifting priorities DO affect behavior", 0.5, NA))) +
+  labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
+       title = "",
+       x = "") + 
+  #theme_minimal() + 
+  xlim(-.2,1.2) + 
+  ylim(-1.1,3.1) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_rect(fill=NA),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank())
+
+
+# x2 %>% 
+#   ggplot() +
+#   aes(x = x, y = new, label = lab) +
+#   #geom_point(aes(y = baseline), alpha = .5) + 
+#   #geom_line() +
+#   geom_segment(aes(yend = baseline, xend = x), alpha = .2, size = 20) + 
+#   facet_wrap("outcome", nrow = 2) + 
+#   geom_label() +  
+#   geom_text(aes(label = lab2, y = baseline), check_overlap = T, hjust = 0, vjust = 1.5) +
+#   labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
+#        title = "") + 
+#   theme_void() + 
+#   xlim(-.1,1.1) + 
+#   ylim(-1.1,3.1) + 
+#   theme(panel.border = element_rect(fill=NA),
+#         axis.title.y = element_text(angle = 90))
+```
+
+```{r 1x2, fig.cap="Divergent Predictions for the Change in Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power", fig.width=6.5, fig.height=2.5}
+# just 
+x2 %>% 
+  filter(outcome %in% c("3. Only Increased Capacity Affects Behavior", "2. Only Shifting Priorities Affect Behavior")) %>% 
+  mutate(outcome = str_remove(outcome, "[1-9].*Only ")) %>%
+  ggplot() +
+  aes(x = x, y = new, label = lab) +
+  geom_line(aes(y = baseline), linetype = 2, alpha = .5) + 
+  geom_line() +
+  geom_ribbon(aes(ymax = new, ymin = baseline), alpha = .2) + 
+  facet_wrap("outcome", nrow = 1) + 
+  geom_label() +  
+  geom_text(y = 0, 
+            vjust = 1.1,
+            label = "Baseline levels for a new legislator\n(may differ between service & policy work)",
+            aes(x = ifelse(outcome == "Increased Capacity Affects Behavior", 0.5, NA))) +
+  labs(y = "Change in Level Provided\n(e.g., the number of\nrequests to agencies)",
+       title = "") + 
+  theme_void() + 
+  xlim(-.3,1.3) + 
+  ylim(-1.1,1.1) + 
+  theme(panel.border = element_rect(fill=NA),
+        axis.title.y = element_text(angle = 90))
+```
+
+# Results 
+
+
+We observe the total requests, $z$, and ratio, $r$. 
+$z$ is the sum of constituency service requests $x$  and policy requests $y$. 
+
+```{r}
+r = .9
+
+r2 = .8
+
+z = 100
+
+x = z*r
+y = z-z*r
+
+
+z2 = 120
+
+x2 = z2*r2
+y2 = z2-z2*r2
+
+d <- tribble(~chair, ~type)
+
+# raw data 
+chairs <- all_contacts %>% distinct(icpsr, chair, year)
+
+d <- dcounts_min %<>% 
+  mutate(type = ifelse(TYPE %in% c(1,2,3), "constituent", "policy") )
+0
+d %<>% left_join(chairs) %>% 
+  mutate(chair = chair %>%
+           replace_na(0),
+         Chair = ifelse(chair == 1, "Comittee Chair", "Non-Chair"))
+
+
+d %<>% group_by(type, year, icpsr, Chair) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type))
+
+d %>% group_by(type, Chair) %>% 
+  summarise(mean = mean(n)) %>% 
+  ungroup() %>%
+ggplot()  + 
+  aes(x = type, y = mean) +
+  geom_col(position = "dodge") + 
+  facet_wrap("Chair")
+```
+
+#TODO
+
+- [ ] intercoder agrement for USTR
+
+- [ ] y axis label and remove title from inequality figure
+
+- [ ] facet distribution across types by policy and constituent, probably coord flip as well
+
+
