@@ -154,7 +154,13 @@ ggplot()  +
   aes(x = type, y = mean) +
   geom_col(position = "dodge") + 
   facet_wrap("Chair")
+
+
+unique(all_contacts$agency)
 ```
+
+$\beta$
+
 
 #TODO
 
@@ -163,5 +169,7 @@ ggplot()  +
 - [ ] y axis label and remove title from inequality figure
 
 - [ ] facet distribution across types by policy and constituent, probably coord flip as well
+
+- [ ] remove title from state pop figure
 
 
