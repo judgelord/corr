@@ -1,44 +1,199 @@
 ---
 title: "Appendix"
 subtitle: "Unequal Representation: Evidence from a Census of Legislator Contacts with US Federal Agencies"
-#output: pdf_document
-output: html_document
+output:
+    # pdf_document:
+    #   toc: true
+    #   keep_tex: true
+    html_document:
+      highlight: zenburn
+      toc: true
+      toc_float: true
+      code_folding: hide
+editor_options: 
+  chunk_output_type: console
 ---
+
+
+```{r global.options, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = FALSE, 
+                      fig.width=8.5, 
+                      split = T,
+                      fig.align = 'center', 
+                      fig.path='figs/',
+                      warning=FALSE, 
+                      message=FALSE)
+
+
+library(tidyverse)
+library(magrittr)
+library(tidytext)
+library(xml2)
+library(knitr)
+library(kableExtra)
+
+library(ggplot2); theme_set(theme_bw())
+  options(
+    ggplot2.continuous.color = "viridis",
+    ggplot2.continuous.fill = "viridis"
+  )
+  scale_color_discrete <- function(...)
+    scale_color_viridis_d(..., direction = -1)
+  scale_fill_discrete <- function(...)
+    scale_fill_viridis_d(..., direction = -1)
+  
+  
+kablebox <- . %>%  
+  head(100) %>%
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "200px")
+
+kablebox_long <- . %>% 
+  head(100) %>% 
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "500px")
+```
 
 # Data
 
-February 2017 and February 2021, we received data on \input{../tables/n} instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of 470,484 contacts from members of Congress with federal agencies.
+```{r data, cache=TRUE}
+# raw data 
+load(here::here("data", "all_contacts_paper.Rdata"))
+load(here::here("data", "dcounts_min.Rdata"))
+
+d <- dcounts_min %<>% 
+  ungroup() %>% 
+  mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituentcy\nService", NA) ) %>%
+  mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
+
+type <- d %>% 
+  group_by(type) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup()
+
+
+type2017 <- d %>% 
+  filter(year> 2006, year < 2018) %>%
+  group_by(type) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
+  ungroup()
+
+coded <- d %>% 
+  mutate(coded = !is.na(type)) %>% 
+  group_by(coded) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) 
+
+coded_ratio = coded$n[2]/(sum(coded$n))
+
+multiplier = sum(coded$n)/coded$n[2]
+
+percent <- function(x){
+  y <- x*100 
+  y %<>% round() 
+  return(y)}
+# percent(.434534523453)
+```
+
+Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
 
 ## Types of requests
-``  of the average legislators' contacts with agencies are about constituency service.
 
-## Requests by population 
+`r percent(type$n[1]/(type$n[1]+type$n[2]) )`% of the average legislators' contacts with agencies are about constituency service.
+
+`r percent(type$n[2]/(type$n[1]+type$n[2]))`% of the average legislators' contacts with agencies are about policy work.
+
+`r type %>% kablebox()`
+
+---
+
+`r percent(type$n[3]/(sum(type$n)))`% of contacts have yet to be coded.
+
+`r coded %>% kablebox()`
+
+## Requests by state population 
+
+TODO
 
 ## Requests by year
 
+TODO
 
+## Requests by institutional position
+
+The first plot is contacts we have coded. The second assumes these ratios hold for uncoded letters.
+
+```{r,fig.cap="Change in Levels of Constituency Service and Policy Work as Legislators Gain Power", fig.width=4, fig.height=3}
+
+chairs <- all_contacts %>% distinct(icpsr, chair, year) 
+
+d %<>% left_join(chairs) %>% 
+  mutate(chair = chair %>%
+           replace_na(0),
+         Chair = ifelse(chair == 1, "Committee Chair", " Non-Chair"))
+
+chair <- d %>% 
+  group_by(type, year, icpsr, Chair) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
+  group_by(type, Chair) %>% 
+  summarise(mean = mean(n)) %>% 
+  ungroup() %>%
+  filter(!is.na(type))
+
+chair %>% 
+  ggplot()  + 
+  aes(x = type, y = mean) +
+  geom_col(position = "dodge") + 
+  facet_wrap("Chair") + 
+  labs(x = "Type of Legislator Request to Agency",
+       y = "Average Requests per Year") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
+
+
+
+
+chair %>% 
+  # assuming consistant proportions to uncoded data 
+  mutate(mean = mean*multiplier) %>% 
+  ggplot()  + 
+  aes(x = type, y = mean) +
+  geom_col(position = "dodge") + 
+  facet_wrap("Chair") + 
+  labs(x = "Type of Legislator Request to Agency",
+       y = "Average Requests per Year") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
+```
 # Theory
 
+Synthetic figures, ignoring baseline levels of each type.
+
+## 2x2
 ```{r 2x2, fig.cap="Divergent Predictions for the Change in Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power", fig.width=7, fig.height=5.5}
 library(tidyverse)
 x2 <- read_csv(here::here("data", "2x2.csv"))
-
-x2 %>% 
-  ggplot() +
-  aes(x = x, y = new, label = lab) +
-  geom_line(aes(y = baseline), linetype = 2, alpha = .5) + 
-  geom_line() +
-  geom_ribbon(aes(ymax = new, ymin = baseline), alpha = .2) + 
-  facet_wrap("outcome", nrow = 2) + 
-  geom_label() +  
-  geom_text(aes(label = lab2, y = baseline), check_overlap = T, hjust = 0, vjust = -.2) +
-  labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
-       title = "") + 
-  theme_void() + 
-  xlim(-.2,1.2) + 
-  ylim(-1.1,3.1) + 
-  theme(panel.border = element_rect(fill=NA),
-        axis.title.y = element_text(angle = 90))
+# 
+# x2 %>% 
+#   ggplot() +
+#   aes(x = x, y = new, label = lab) +
+#   geom_line(aes(y = baseline), linetype = 2, alpha = .5) + 
+#   geom_line() +
+#   geom_ribbon(aes(ymax = new, ymin = baseline), alpha = .2) + 
+#   facet_wrap("outcome", nrow = 2) + 
+#   geom_label() +  
+#   geom_text(aes(label = lab2, y = baseline), check_overlap = T, hjust = 0, vjust = -.2) +
+#   labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
+#        title = "") + 
+#   theme_void() + 
+#   xlim(-.2,1.2) + 
+#   ylim(-1.1,3.1) + 
+#   theme(panel.border = element_rect(fill=NA),
+#         axis.title.y = element_text(angle = 90))
 
 
 
@@ -84,6 +239,7 @@ x2 %>%
 #         axis.title.y = element_text(angle = 90))
 ```
 
+## 1x2
 ```{r 1x2, fig.cap="Divergent Predictions for the Change in Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power", fig.width=6.5, fig.height=2.5}
 # just 
 x2 %>% 
@@ -132,34 +288,9 @@ x2 = z2*r2
 y2 = z2-z2*r2
 
 d <- tribble(~chair, ~type)
-
-# raw data 
-chairs <- all_contacts %>% distinct(icpsr, chair, year)
-
-d <- dcounts_min %<>% 
-  mutate(type = ifelse(TYPE %in% c(1,2,3), "constituent", "policy") )
-0
-d %<>% left_join(chairs) %>% 
-  mutate(chair = chair %>%
-           replace_na(0),
-         Chair = ifelse(chair == 1, "Comittee Chair", "Non-Chair"))
-
-
-d %<>% group_by(type, year, icpsr, Chair) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type))
-
-d %>% group_by(type, Chair) %>% 
-  summarise(mean = mean(n)) %>% 
-  ungroup() %>%
-ggplot()  + 
-  aes(x = type, y = mean) +
-  geom_col(position = "dodge") + 
-  facet_wrap("Chair")
-
-
-unique(all_contacts$agency)
 ```
 
-$\beta$
+
 
 
 #TODO
