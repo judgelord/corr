@@ -17,7 +17,7 @@ editor_options:
 
 ```{r global.options, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = TRUE, 
+                      cache = FALSE, 
                       fig.width=8.5, 
                       split = T,
                       fig.align = 'center', 
@@ -157,7 +157,7 @@ x2 %>%
 
 # Data
 
-```{r data, cache=TRUE}
+```{r data, cache=FALSE}
 # raw data 
 load(here::here("data", "all_contacts2.Rdata"))
 all_contacts2 <- all_contacts #FIXME 
@@ -191,7 +191,7 @@ year_congress<- function(year){
 
 
 
-d <- dcounts_min %<>% 
+d <- dcounts_min %>% 
   ungroup() %>% 
   mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituentcy\nService", NA) ) %>%
   mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
@@ -226,101 +226,6 @@ percent <- function(x){
 
 Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
 
-## Types of requests
-
-`r percent(type$n[1]/(type$n[1]+type$n[2]) )`% of the average legislators' contacts with agencies are about constituency service.
-
-`r percent(type$n[2]/(type$n[1]+type$n[2]))`% of the average legislators' contacts with agencies are about policy work.
-
-`r type %>% kablebox()`
-
-We classify legislator requests into five overall types:
-
-All data:
-```{r data_by_type-tall, fig.height=2.5, fig.width=5}
-all_contacts2 %>% 
-  filter(Type != "To be coded") %>%  
-  mutate(total = n()) %>% 
-  group_by(Type, total, type) %>% 
-  summarise(nT = n()) %>% 
-  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
-         Type = str_c(Type, "\n    ", percent)) %>% 
-  ungroup() %>% 
-  #distinct(type, Type, nT)
-  ggplot() + 
-  geom_col(aes(x = type, fill = Type, y = nT), position ="stack") + 
-  #coord_flip() + 
-  scale_y_continuous(labels = scales::comma) + 
-  labs(x = "",
-       fill = "",
-       y = paste("Number of Contacts\nN =", sum(nrow(all_contacts2))),
-       title = "") +
-  #theme_void() + 
-  theme(panel.border = element_blank(),
-        panel.grid.major.x = element_blank(),
-        axis.ticks = element_blank(),
-        axis.text.x = element_text())
-```
-
-Alterntative format:
-```{r data_by_type, fig.height=2, fig.width=6}
-all_contacts2 %>% 
-  filter(Type != "To be coded") %>%  
-  mutate(total = n()) %>% 
-  group_by(Type, total, type) %>% 
-  summarise(nT = n()) %>% 
-  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
-         Type = str_c(Type, "\n    ", percent)) %>% 
-  ungroup() %>% 
-  #distinct(type, Type, nT)
-  ggplot() + 
-  geom_col(aes(x = type, fill = Type, y = nT/1000), position ="stack") + 
-  coord_flip() + 
-  scale_y_continuous(breaks = seq(0,500, 50)) + 
-  labs(x = "",
-       fill = "",
-       y = paste("Number of Contacts (Thousands)\nN =", sum(nrow(all_contacts2))),
-       title = "") +
-  #theme_void() + 
-  theme(panel.border = element_blank(),
-        panel.grid.major.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.text.x.top = element_text())
-
-```
-
-2007-2017 data:
-```{r data_by_type-2001-2017, fig.height=2, fig.width=6}
-N <- all_contacts2 %>% 
-  filter(year <2018,
-         year > 2006) %>% 
-  nrow()
-
-all_contacts2 %>% 
-  filter(Type != "To be coded",
-         year <2018,
-         year > 2006) %>%  
-    mutate(total = n()) %>% 
-  group_by(Type, total, type) %>% 
-  summarise(nT = n()) %>% 
-  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
-         Type = str_c(Type, "\n    ", percent)) %>% 
-  ungroup() %>% 
-  #distinct(type, Type, nT)
-  ggplot() + 
-  geom_col(aes(x = type, fill = Type, y = nT/1000), position ="stack") + 
-  coord_flip() + 
-  scale_y_continuous(breaks = seq(0,500, 50)) + 
-  labs(x = "",
-       fill = "",
-       y = paste("Number of Contacts (Thousands)\nN =", N),
-       title = "") +
-  #theme_void() + 
-  theme(panel.border = element_blank(),
-        panel.grid.major.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.text.x.top = element_text())
-```
 
 
 
@@ -329,11 +234,11 @@ all_contacts2 %>%
 ## Requests by year
 
 ```{r counts-per-year, fig.height=4, fig.width=6, cache=TRUE, eval=FALSE}
-dcounts_min %<>% filter(chamber != "President")
+d %<>% filter(chamber != "President")
 
-dcounts_min %<>% mutate(congress = year_congress(year))
+d %<>% mutate(congress = year_congress(year))
 
-dcounts <- dcounts_min %>% left_join(members)
+dcounts <- d %>% left_join(members)
 
 
 
@@ -417,9 +322,109 @@ all_contacts %>%
        y = "Average Number of Requests per Year")
 ```   
 
+---
+
+## Types of requests
+
+`r percent(type$n[1]/(type$n[1]+type$n[2]) )`% of the average legislators' contacts with agencies are about constituency service.
+
+`r percent(type$n[2]/(type$n[1]+type$n[2]))`% of the average legislators' contacts with agencies are about policy work.
+
+`r type %>% kablebox()`
+
+We classify legislator requests into five overall types:
+
+All data:
+```{r data_by_type-tall, fig.height=2.5, fig.width=5}
+all_contacts2 %>% 
+  filter(Type != "To be coded") %>%  
+  mutate(total = n()) %>% 
+  group_by(Type, total, type) %>% 
+  summarise(nT = n()) %>% 
+  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
+         Type = str_c(Type, "\n    ", percent)) %>% 
+  ungroup() %>% 
+  #distinct(type, Type, nT)
+  ggplot() + 
+  geom_col(alpha = .7,aes(x = type, fill = Type, y = nT), position ="stack") + 
+  #coord_flip() + 
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = "",
+       fill = "",
+       y = paste("Number of Contacts\nN =", sum(nrow(all_contacts2))),
+       title = "") +
+  #theme_void() + 
+  theme(panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x = element_text())
+```
+
+Alterntative format:
+```{r data_by_type, fig.height=2, fig.width=6, results='hide'}
+all_contacts2 %>% 
+  filter(Type != "To be coded") %>%  
+  mutate(total = n()) %>% 
+  group_by(Type, total, type) %>% 
+  summarise(nT = n()) %>% 
+  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
+         Type = str_c(Type, "\n    ", percent)) %>% 
+  ungroup() %>% 
+  #distinct(type, Type, nT)
+  ggplot() + 
+  geom_col(alpha = .7,aes(x = type, fill = Type, y = nT/1000), position ="stack") + 
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0,500, 50)) + 
+  labs(x = "",
+       fill = "",
+       y = paste("Number of Contacts (Thousands)\nN =", sum(nrow(all_contacts2))),
+       title = "") +
+  #theme_void() + 
+  theme(panel.border = element_blank(),
+        panel.grid.major.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x.top = element_text())
+
+```
+
+2007-2017 data:
+```{r data_by_type-2001-2017, fig.height=2, fig.width=6}
+N <- all_contacts2 %>% 
+  filter(year <2018,
+         year > 2006) %>% 
+  nrow()
+
+all_contacts2 %>% 
+  filter(Type != "To be coded",
+         year <2018,
+         year > 2006) %>%  
+    mutate(total = n()) %>% 
+  group_by(Type, total, type) %>% 
+  summarise(nT = n()) %>% 
+  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
+         Type = str_c(Type, "\n    ", percent)) %>% 
+  ungroup() %>% 
+  #distinct(type, Type, nT)
+  ggplot() + 
+  geom_col(alpha = .7,aes(x = type, fill = Type, y = nT/1000), position ="stack") + 
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0,500, 50)) + 
+  labs(x = "",
+       fill = "",
+       y = paste("Number of Contacts (Thousands)\nN =", N),
+       title = "") +
+  #theme_void() + 
+  theme(panel.border = element_blank(),
+        panel.grid.major.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x.top = element_text())
+```
+
+---
+
 ## Requests by institutional position
 
-The first plot is contacts we have coded. The second assumes these ratios hold for uncoded letters.
+The first plot is the contacts we have coded. The second assumes these ratios hold for uncoded letters.
 
 ```{r chairs, fig.cap="Change in Levels of Constituency Service and Policy Work as Legislators Gain Power", fig.width=4, fig.height=3}
 
@@ -441,9 +446,9 @@ chair <- d %>%
 chair %>% 
   ggplot()  + 
   aes(x = type, y = mean) +
-  geom_col(position = "dodge") + 
+  geom_col(alpha = .7,position = "dodge") + 
   facet_wrap("Chair") + 
-  labs(x = "Type of Legislator Request to Agency",
+  labs(x = "", # "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
   theme(panel.grid.major.x = element_blank(),
         panel.border = element_blank(),
@@ -457,7 +462,7 @@ chair %>%
   mutate(mean = mean*multiplier) %>% 
   ggplot()  + 
   aes(x = type, y = mean) +
-  geom_col(position = "dodge") + 
+  geom_col(alpha = .7,position = "dodge") + 
   facet_wrap("Chair") + 
   labs(x = "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
@@ -468,42 +473,62 @@ chair %>%
 
 # Results 
 
-```{r}
-library(lfe)
-load(here::here('data', 'dcounts_min.Rdata'))
+
+
+
+## Level
+
+### Member-level
+
+TODO 
+
+- [ ] members.Rdata going back to most senior member's first Congress
+- [ ] what to do with chamber switchers?
+
+```{r level}
+
+#load(here::here('data', 'dcounts_min.Rdata'))
 
 ##creating the aggregate count variable
-
+## one obs per agency, member, year 
 d <- dcounts_min %>% 
   group_by(agency, icpsr, chamber, year) %>% 
-  summarise(perYear = sum(per_icpsr_chamber_year_agency_type))
+  summarise(perYear = sum(per_icpsr_chamber_year_agency_type)) 
 
-d_sub <- dcounts_min %>% 
-  subset(TYPE %in% c(1, 2, 3)) %>%  
-  group_by(agency, icpsr, chamber, year) %>% 
+# dcounts_min %>% 
+#   mutate(type2 = ifelse(TYPE %in% c(1,2,3), "policy", NA ),
+#          type2 = ifelse(TYPE %in% c(4,5), "constituent", type2)) %>% 
+#   group_by(type2, agency, icpsr, chamber, year) %>% 
+#   # 2-type counts 
+#   mutate(perYear_type2 = sum(per_icpsr_chamber_year_agency_type),
+#          # versions with NAs for models
+#          perYear_con = ifelse(type2 == "constituent", perYear_type2),
+#          perYear_pol = ifelse(type2 == "policy", perYear_type2))
+#   
+
+# constituency service
+d_sub <- dcounts_min %>%
+  filter(TYPE %in% c(1, 2, 3)) %>%
+  group_by(agency, icpsr, chamber, year) %>%
   summarise(perYear_con = sum(per_icpsr_chamber_year_agency_type))
 
-d_sub2<- dcounts_min %>% 
-  subset(TYPE %in% c(4, 5)) %>%  
-  group_by(agency, icpsr, chamber, year) %>% 
+# policy
+d_sub2<- dcounts_min %>%
+  subset(TYPE %in% c(4, 5)) %>%
+  group_by(agency, icpsr, chamber, year) %>%
   summarise(perYear_pol = sum(per_icpsr_chamber_year_agency_type))
 
-d$perYear_con<- d_sub$perYear_con
-d$perYear_policy<- d_sub2$perYear_pol
 
+d %<>% left_join(d_sub) %>% left_join(d_sub2)
 
-
-
-
+# congress
 d$congress <- year_congress(d$year)
 
-d <- left_join(d, members %>% 
+d %<>% left_join(members %>% 
                  select(congress, icpsr, party,party_code, state_abbrev, district_code, nominate.dim1, presidents_party, female, chair, ranking_minority, party_leader, party_whip, majority, prestige, prestige_chair, yearelected, state), by = c('congress', 'icpsr'))
 
 #FIXME this should all be in members data 
 # nom <- read_csv(here::here('data', 'nominate_data.csv'))
-
-
 nom2<- members %>% 
   group_by(icpsr) %>% 
   summarise(first_cong = min(congress))
@@ -511,6 +536,9 @@ nom2<- members %>%
 nom2$first_year <- 1787 + 2*nom2$first_cong
 
 df<- left_join(d, nom2, by ='icpsr' )
+#/FIXME 
+
+# Tenure vars 
 df$tenure<- df$year - df$first_year
 df$first<- ifelse(df$tenure==0, 1, 0)
 df$second<- ifelse(df$tenure==1, 1, 0)
@@ -520,68 +548,79 @@ df$fifth<- ifelse(df$tenure==4, 1, 0)
 df$sixth<- ifelse(df$tenure==5, 1, 0)
 
 # colnames(agency_vars)
-df<- left_join(df, agency_vars %>% select(agency, icpsr, chamber, year, oversight_committee, oversight_committee_chair), by = c('agency', 'icpsr', 'year'))
+df %<>% 
+  #select(-oversight_committee, -oversight_committee_chair) %>% #FIXME these should be the same
+  left_join(agency_vars %>% 
+                    select(agency, icpsr, chamber, year, oversight_committee,
+                           oversight_committee_chair), by = c('agency', 'icpsr', 'year', 'chamber')
+            )
 
 df$icpsr_agency<- paste(df$agency, df$icpsr, sep='_')
 df$agency_year<- paste(df$agency, df$year, sep='_')
 
+# tenure 
+df %<>% ungroup() %>% 
+  group_by(icpsr) %>% 
+  mutate(max_year = max(tenure)) 
 
-df$tenure <- df$year - df$first_year
+df$survive <- ifelse((df$chamber=='House' & df$max_year>1)| (df$chamber=='Senate' & df$max_year>5),1, 0 )
 
-
-final_tenure<- df %>% group_by(icpsr) %>%  summarise(max_year = max(tenure))
-
-df<- left_join(df, final_tenure , by = 'icpsr')
-df$survive <- ifelse((df$chamber.x=='House' & df$max_year>1)| (df$chamber.x=='Senate' & df$max_year>5),1, 0 )
-df$chamber <- df$chamber.x
 
 ##purging repeated values 
 #FIXME repeats are probably chamber switchers
-doubles<- df %>% count(icpsr, year, agency, chamber)
+df %<>% 
+  add_count(icpsr, year, agency, chamber, 
+            name = "n") 
 
-doubles$remove<- ifelse(doubles$n>1, 1, 0)
+doubles <- filter(df, n>1) # no doubles (doubles were chamber-switchers)
 
-# sum(doubles$remove)
+doubles %>% kable(caption = "doubles")
 
-df2 <- left_join(df, doubles %>% 
-                 select(icpsr, year, agency, remove), 
-               by = c('icpsr', 'year', 'agency') )
-
-df2<- df2 %>% subset(remove==0)
-
-
-##creating the ratio variable 
-d_rat<- df %>% group_by(year, icpsr, prestige, prestige_chair, chair, ranking_minority, majority, presidents_party,
-				first, second, third, fourth, fifth, sixth) %>% summarise(perCon = sum(perYear_con), perPol = sum(perYear_policy)) %>% mutate(ratio = perCon/(perCon + perPol))
-
-d_rat<- as.data.frame(d_rat)
-
-doubles<- d_rat %>% group_by(year, icpsr) %>% summarise(count = n())
-doubles$remove<- ifelse(doubles$count>1, 1, 0)
-
-d_rat2<- left_join(d_rat, doubles, by = c('year','icpsr'))
-d_rat2<-d_rat2 %>% subset(remove==0)
-# ProportionContact.dta')
+# drop doubles 
+df %<>% filter(n<2) 
 
 
+# LEVEL MODELS
+
+df %<>% 
+  # mutate(agency_year) %>% 
+  mutate(lpyear = log(perYear + 1))
+```
+
+---
+
+### District-level
+
+- [ ] Were most maps in place by 2011?
+
+```{r district}
 ####
-decade<- case_when(df2$year < 2011 ~ '0', 
-                   df2$year > 2010 ~ '1')
+# Redistricting? were most maps in place by 2011?
+decade<- case_when(df$year < 2011 ~ '0', 
+                   df$year > 2010 ~ '1')
 
-state_dist<- case_when(df2$chamber=='Senate'~ paste(df2$state,df2$district_code,  sep='_' ), 
-						df2$chamber =='House'~ paste(paste(df2$state, df2$district_code, sep='_'), decade, sep='_'))
-
-
-
-
-df2$state_dist<- state_dist
-
-perDist<- df2 %>% group_by(year, state_dist, icpsr, chamber, tenure, state) %>% summarise(perYear = sum(perYear)) %>% distinct()
-
-## Now we want to identify when there is a new member in a district.  to do this, we look for changes in the icpsr number
+state_dist<- case_when(df$chamber=='Senate'~ paste(df$state,
+                                                    df$district_code, 
+                                                    sep='_' ), 
+                       df$chamber =='House'~ paste(paste(df$state, 
+                                                          df$district_code, 
+                                                          sep='_'), 
+                                                    decade,
+                                                    sep='_'))
 
 
 
+
+df$state_dist<- state_dist
+
+perDist<- df %>% 
+  group_by(year, state_dist, icpsr, chamber, tenure, state) %>% 
+  summarise(perYear = sum(perYear)) %>%
+  distinct()
+
+
+
+## Now, we want to identify when there is a new member in a district.  To do this, we look for changes in the icpsr number
 perDist$new_member<- ifelse(perDist$tenure==0, 1, 0)
 
 perDist$second_year<- ifelse(perDist$tenure==1, 1, 0)
@@ -598,30 +637,64 @@ state_level<- perDist %>% group_by(state, year) %>%
 
 state_new <- ifelse(state_level$mean_new>0, 1, 0)
 
-state_level$state_new<- state_new
+state_level$state_new <- state_new
 
-perDist<- left_join(perDist, select(state_level, state_new, mean_new, state, year), by = c('state', 'year'))
-#DistrictLevel
+perDist %<>% left_join(state_level %>% 
+                         select(state_new, mean_new, state, year), 
+                    by = c('state', 'year'))
+#########################
+# saved as DistrictLevel
+########################
+# save(perDist, file =  here::here("data", "perDist.Rdata"))
+############################################
 ```
-
-
-## Level
 
 TODO
 
 ## Priority 
 
+```{r ratio}
+##creating the ratio variable 
+d_rat <- df %>% 
+  group_by(year, icpsr, chamber,
+           prestige, prestige_chair, chair, ranking_minority, majority, presidents_party,
+           first, second, third, fourth, fifth, sixth) %>% 
+  # per member per year counts per type2
+  summarise(perCon = sum(perYear_con), 
+            perPol = sum(perYear_pol)) %>% 
+  # ratio of con to pol 
+  #FIXME switch? 
+  mutate(ratio = perCon/(perCon + perPol))
+
+# drop doubles
+d_rat %<>% group_by(year, icpsr, chamber) %>% add_count(name = "n")
+
+doubles_ratio <- filter(d_rat, n>1)
+
+doubles_ratio %>% kable(caption = "doubles")
+
+d_rat %<>% filter(n<2) 
+
+############################################
+# d_rat saved as ProportionContact.dta')
+# save(d_rat, file =  here::here("data", "d_rat.Rdata"))
+############################################
+
+# RATIO MODEL 
+
+```
+
 TODO
 
 ## Joint Effect of Capacity and Priority 
 
-We observe the total requests, $z$, and ratio, $r$. 
-$z$ is the sum of constituency service requests $x$  and policy requests $y$. 
+We observe the total requests, $z$, and ratio, $r$, of policy work to constituency service. 
+$z$ is the sum of policy requests $x$ and constituency service requests $y$. $r$ is $x/y$./
 
 ```{r}
-r = .9
+r = .2
 
-r2 = .8
+r2 = .31
 
 z = 100
 
@@ -633,10 +706,96 @@ z2 = 120
 
 x2 = z2*r2
 y2 = z2-z2*r2
-
-d <- tribble(~chair, ~type)
 ```
 
+Combining model estimates for the shift in the level of requests and relative priority of policy work to constituency service, we see that even as the ratio of policy work increases, constituency service also significantly increases. 
+
+These estimates are calculated by adding diff-in-diff regression coefficients for committee chairs' increased levels of requests to the baseline levels for non-chairs. We also adjust the ratio of policy work to constituency service based on the diff-in-diff regression coefficients for committee chairs' increased policy work ratio.
+
+```{r chairs-est, fig.cap="Difference-in-Difference Estimates of Change in Levels of Constituency Service and Policy Work as Legislators Gain Power", fig.width=4, fig.height=3}
+n_agencies <- dcounts_min$agency %>% unique() %>% length()
+
+#FIXME replace with tidy model output 
+# TABLE 1
+level <- tribble(~term, ~estimate, ~std.error,
+                 "chair", 0.206, 0.0951)
+
+# per member across all agencies 
+level$estimate <- level$estimate*n_agencies
+level$std.error <- level$std.error*n_agencies
+
+# ratio of policy work for non-chairs
+base_ratio <- chair$mean[3]/chair$mean[1]
+
+# level estimates with baseline ratio (for presenting level effects only)
+level_con <- level %>% mutate(estimate = estimate*(1-base_ratio),
+                               std.error = std.error*(1-base_ratio))
+
+level_pol <- level %>% mutate(estimate = estimate*(base_ratio),
+                               std.error = std.error*(base_ratio))
+
+
+# Priority Table 
+priority <- tribble(~term, ~estimate, ~std.error,
+                 "chair", 0.0875, 0.0175)
+
+# adjust level estimates with new ratio (joint effects )
+new_ratio <- base_ratio + priority$estimate[1]
+
+level_con <- level %>% mutate(estimate = estimate*(1-new_ratio),
+                               std.error = std.error*(1-new_ratio))
+
+level_pol <- level %>% mutate(estimate = estimate*(new_ratio),
+                               std.error = std.error*(new_ratio))
+
+
+#FIXME, include priority model uncertianty too
+chair$std.error <- NA
+# constituent error 
+chair$std.error[2] <- level_con$std.error[1]
+# policy error
+chair$std.error[4] <- level_pol$std.error[1]
+
+
+# chair mean = non-chair mean * level coef
+# constituent estimate 
+chair$mean[2] <- chair$mean[1] + (1 + level_con$estimate[1] )
+# policy estimate
+chair$mean[4] <- chair$mean[3] + (1+level_pol$estimate[1] )
+
+chair_adjusted <- chair %>% 
+  # assuming consistant proportions to uncoded data 
+  mutate(mean = mean*multiplier) %>%
+  # baseline = non-chairs mean
+  mutate(baseline = ifelse(Chair == "Committee Chair", NA, mean) ) %>%
+  fill(baseline) %>%
+  # point estimates and uncertiatty only for chair estimates 
+  mutate(estimate = ifelse(Chair == "Committee Chair", mean, NA)) %>% 
+  mutate(std.error = ifelse(Chair == "Committee Chair", std.error, NA)) 
+
+chair_adjusted %>% 
+  mutate(Chair = ifelse() )
+  ggplot()  + 
+  aes(x = type, y = mean) +
+  geom_col(alpha = .7, position = "dodge") + 
+  geom_hline(aes(yintercept = baseline), linetype = 2) + 
+  geom_pointrange(aes(y = estimate,
+                      ymin = mean-1.96*std.error,
+                      ymax = mean+1.96*std.error)) + 
+  facet_wrap("Chair") + 
+  labs(x = "", #Type of Legislator Request to Agency",
+       y = "Average Requests per Year") +
+  theme(panel.grid.major.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
+
+```
+
+The baseline level (non-chairs) is `r chair_adjusted$mean[1]` constituency service requests and `r chair_adjusted$mean[3]` policy requests per year. 
+
+The baseline ratio (for non-chairs) of policy work to constituency service is `r base_ratio`. Adding the model coefficient from the difference in difference model of shifting priorities yields a new ratio of `r new_ratio`.
+
+The model-estimated level for committee chairs is `r chair_adjusted$mean[2]` constituency service requests and `r chair_adjusted$mean[4]` policy requests per year. 
 
 
 
@@ -644,10 +803,10 @@ d <- tribble(~chair, ~type)
 
 - [ ] intercoder agrement for USTR
 
-- [ ] y axis label and remove title from inequality figure
+- [ ] y-axis label and remove the title from inequality figure
 
 - [ ] facet distribution across types by policy and constituent, probably coord flip as well
 
-- [ ] remove title from state pop figure
+- [ ] remove the title from state pop figure
 
 
