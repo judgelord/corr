@@ -2,14 +2,14 @@
 title: "Appendix"
 subtitle: "Unequal Representation: Evidence from a Census of Legislator Contacts with US Federal Agencies"
 output:
-    # pdf_document:
-    #   toc: true
-    #   keep_tex: true
     html_document:
       highlight: zenburn
       toc: true
       toc_float: true
       code_folding: hide
+    #   toc: true
+    #   keep_tex: true
+    # pdf_document:
 editor_options: 
   chunk_output_type: console
 ---
@@ -17,7 +17,7 @@ editor_options:
 
 ```{r global.options, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = FALSE, 
+                      cache = TRUE, 
                       fig.width=8.5, 
                       split = T,
                       fig.align = 'center', 
@@ -33,6 +33,10 @@ library(tidytext)
 library(xml2)
 library(knitr)
 library(kableExtra)
+library(here)
+library(ggrepel)
+
+# library(lfe)
 
 library(ggplot2); theme_set(theme_bw())
   options(
@@ -155,16 +159,21 @@ x2 %>%
 ```
 
 
-# Data
+# Data  
+```{r, eval=TRUE}
+read_csv(here("data/_FOIA_response_table.csv")) %>% kablebox_long()
+```
 
 ```{r data, cache=FALSE}
+# can't cache data
+
 # raw data 
 load(here::here("data", "all_contacts2.Rdata"))
 all_contacts2 <- all_contacts #FIXME 
 
 load(here::here("data", "all_contacts_paper.Rdata"))
 
-all_contacts2 %<>% mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituentcy\nService", NA) ) %>%
+all_contacts2 %<>% mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituency\nService", NA) ) %>%
   mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
 
 all_contacts2$Type %<>% str_replace("Indiv. Constituent" , "Constituent (Individual)") %>% 
@@ -193,7 +202,7 @@ year_congress<- function(year){
 
 d <- dcounts_min %>% 
   ungroup() %>% 
-  mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituentcy\nService", NA) ) %>%
+  mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituency\nService", NA) ) %>%
   mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
 
 type <- d %>% 
@@ -222,26 +231,56 @@ percent <- function(x){
   y %<>% round() 
   return(y)}
 # percent(.434534523453)
+
+d %<>% filter(chamber != "President")
+
+d %<>% mutate(congress = year_congress(year))
+
+
+members %<>% mutate(member_state = member_state %>%
+                     str_replace("\\) ", "-") %>%
+                     str_c(")")) 
+
+dcounts <- d %>% left_join(members)
 ```
 
 Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
 
 
+## Requests by percentile
 
 
+```{r percentiles, fig.height=3.4, fig.width=6, cache=TRUE}
+
+dcounts %>% 
+    group_by(member_state, chamber, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
+  group_by(member_state, chamber) %>% 
+  summarise(mean = mean(n)) %>% 
+  ungroup() %>% 
+    group_by(chamber) %>% 
+  mutate(Percentile = ntile(mean, 100),
+         rank = dense_rank(-mean)) %>% 
+  arrange(-Percentile) %>% 
+  dplyr::select(member_state, Percentile, mean, chamber,rank) %>% distinct() %>% 
+    ggplot() + 
+    geom_col(aes(x = Percentile, y = mean), 
+             color = "grey", 
+             width = .000001,
+             fill = "black",
+             position = "dodge") + 
+  geom_point(aes(x = Percentile, y = mean), color = "light blue") + 
+  geom_text(aes(x = Percentile, y = mean, label = ifelse(rank <14 | Percentile < 30, member_state, "")), check_overlap = T, size = 2, hjust = "inward") + 
+    facet_grid(. ~ chamber , scales = "free_y") + theme_bw() +
+  labs(#title = "Average Legislator Requests per Year by Percentile",
+       x = "Percentile Within Chamber",
+       y = "Average Requests per Year") + 
+  theme_minimal()
+```
 
 
 ## Requests by year
 
-```{r counts-per-year, fig.height=4, fig.width=6, cache=TRUE, eval=FALSE}
-d %<>% filter(chamber != "President")
-
-d %<>% mutate(congress = year_congress(year))
-
-dcounts <- d %>% left_join(members)
-
-
-
+```{r counts-per-year, fig.height=4, fig.width=6, cache=TRUE, eval=TRUE}
 dcounts %<>% 
   group_by(bioname, year) %>% 
   mutate(per_bioname_year = sum(per_icpsr_chamber_year_agency_type)) %>%
@@ -261,6 +300,7 @@ mcconnell2013 <- dcounts %>% filter(bioname == "McCONNELL, Addison Mitchell (Mit
 
 
 p <- dcounts %>% 
+  filter(year > 2006, year <2018) %>%
   distinct(bioname, per_bioname_year, year, chamber) %>% 
   ggplot() + 
   geom_line(aes(x = year, 
@@ -291,35 +331,46 @@ p <- dcounts %>%
        title = "") +
   scale_x_continuous(breaks = unique(dcounts$year)) + 
   scale_color_viridis_d(begin = 0, end = .6) +
+  theme_minimal() + 
   theme(panel.background = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x = element_text(angle = 45, vjust = 0)) 
+
+#FIXME, this takes a long time 
 p
 
-#ggsave(here::here("Figs/counts-per-year.pdf"), p, height=3, width=7)
+ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=7)
 ```   
 
 ## Requests by state population
 
 ```{r pop, fig.width=6, fig.height=4}
-all_contacts %>% 
+library(scales)
+
+
+dcounts %>% 
   filter(chamber == "Senate") %>% 
-    count(member_state, year, pop2010) %>% 
+    group_by(member_state, year, pop2010) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
     group_by(member_state, pop2010) %>%
   summarise(mean = mean(n)) %>% ungroup() %>% 
     ggplot() + 
-    geom_point(aes(x = log(pop2010), y = mean), color = "light blue") + 
-    geom_smooth(aes(x = log(pop2010), y = mean)) + 
-  geom_text(aes(x = log(pop2010), 
+    geom_point(aes(x = pop2010, y = mean), color = "light blue") + 
+    geom_smooth(aes(x = pop2010, y = mean)) + 
+  geom_text_repel(aes(x = pop2010, 
                 y = mean, 
-                label = ifelse(mean > 150 | mean < 40, 
+                label = ifelse(mean > 260 |# & log(pop2010) < 17.4 | 
+                                 mean < 80 & (log(pop2010) > 17 | log(pop2010) <14), 
                                member_state, 
                                "")), 
+            seed = 44,
             check_overlap = T, 
+            min.segment.length = 0,
             size = 2.5) + theme_bw() +
   labs(title = "",
-       x = "Log State Population",
-       y = "Average Number of Requests per Year")
+       x = "State Population (log scale)",
+       y = "Average Number of Requests per Year") +
+  scale_x_log10(labels = comma)
 ```   
 
 ---
@@ -384,7 +435,6 @@ all_contacts2 %>%
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x.top = element_text())
-
 ```
 
 2007-2017 data:
@@ -572,9 +622,10 @@ df %<>%
   add_count(icpsr, year, agency, chamber, 
             name = "n") 
 
+#FIXME !!! 
 doubles <- filter(df, n>1) # no doubles (doubles were chamber-switchers)
 
-doubles %>% kable(caption = "doubles")
+doubles %>% kablebox()
 
 # drop doubles 
 df %<>% filter(n<2) 
@@ -671,7 +722,7 @@ d_rat %<>% group_by(year, icpsr, chamber) %>% add_count(name = "n")
 
 doubles_ratio <- filter(d_rat, n>1)
 
-doubles_ratio %>% kable(caption = "doubles")
+doubles_ratio %>% kablebox()
 
 d_rat %<>% filter(n<2) 
 
@@ -774,7 +825,7 @@ chair_adjusted <- chair %>%
   mutate(std.error = ifelse(Chair == "Committee Chair", std.error, NA)) 
 
 chair_adjusted %>% 
-  mutate(Chair = ifelse() )
+  #mutate(Chair = ifelse() )
   ggplot()  + 
   aes(x = type, y = mean) +
   geom_col(alpha = .7, position = "dodge") + 
@@ -789,6 +840,63 @@ chair_adjusted %>%
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 
+
+chair_adjusted %<>% mutate(baseline = ifelse(type =="Constituency\nService", baseline+ 12.4, baseline))
+
+
+# stacked to show ratio with PERCENTS 
+chair_adjusted %>% 
+  #mutate(Chair = ifelse() )
+  ggplot()  + 
+  aes(x = Chair, y = mean, fill = type) +
+  geom_col(alpha = .7, position = "fill") +  
+  facet_wrap("Chair", scales = "free_x") + 
+  labs(x = "", #Type of Legislator Request to Agency",
+       y = "Share of Requests per Year",
+       fill = "") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
+
+# stacked to show ratio + free scales 
+chair_adjusted %>% 
+  #mutate(Chair = ifelse() )
+  ggplot()  + 
+  aes(x = Chair, y = mean, fill = type) +
+  geom_col(alpha = .7, position = "stack") + 
+  #geom_hline(aes(yintercept = baseline), linetype = 2) + 
+  #geom_pointrange(aes(y = estimate,
+                      #ymin = mean-1.96*std.error,
+                      #ymax = mean+1.96*std.error)) + 
+  facet_wrap("Chair", scales = "free") + 
+  #scale_y_
+  labs(x = "", #Type of Legislator Request to Agency",
+       y = "Average Requests per Year",
+       fill = "") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
+
+# stacked to show ratio + CI
+chair_adjusted %>% 
+  #mutate(Chair = ifelse() )
+  ggplot()  + 
+  aes(x = Chair, y = mean, fill = type) +
+  geom_col(alpha = .7, position = "stack") + 
+  geom_hline(aes(yintercept = baseline), linetype = 2) + 
+  geom_pointrange(aes(y = estimate,
+                      ymin = mean-1.96*std.error,
+                      ymax = mean+1.96*std.error)) + 
+  facet_wrap("Chair", scales = "free") + 
+  labs(x = "", #Type of Legislator Request to Agency",
+       y = "Average Requests per Year",
+       fill = "") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text.x = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.x = element_blank())
 ```
 
 The baseline level (non-chairs) is `r chair_adjusted$mean[1]` constituency service requests and `r chair_adjusted$mean[3]` policy requests per year. 
@@ -807,6 +915,6 @@ The model-estimated level for committee chairs is `r chair_adjusted$mean[2]` con
 
 - [ ] facet distribution across types by policy and constituent, probably coord flip as well
 
-- [ ] remove the title from state pop figure
+- [ x ] remove the title from state pop figure
 
 
