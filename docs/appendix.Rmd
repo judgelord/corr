@@ -161,7 +161,19 @@ x2 %>%
 
 # Data  
 ```{r, eval=TRUE}
-read_csv(here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")) %>% kablebox_long()
+FOIA <- read_csv(here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")) %>% 
+  mutate(Department = Department %>% str_remove("Department of ")) 
+
+FOIA %>% 
+  kablebox_long()
+
+FOIA %>% select(-Coded) %>%
+  rename(N = Observations) %>% 
+  kable(format = "latex", booktabs = T) %>%
+  row_spec(row = 16, hline_after = TRUE) %>%
+  row_spec(row = 17, bold = T) %>% 
+  #kable_styling(font_size = 9, full_width = TRUE) %>% 
+       write_file(here::here("tables", "FOIA.tex")) 
 ```
 
 ```{r data, cache=FALSE}
@@ -193,10 +205,12 @@ congress_years2<- function(congress){
 		return(years)
 }
 
-members2 <- members %>%
-mutate(year = congress %>%  congress_years2() %>% str_c(collapse = ";"))
+# FIXME members data should have years so we don't merge in observations for members in the january (final days of their last term)
+# members2 <- members %>%
+# mutate(year = congress %>%  congress_years2() %>% str_c(collapse = ";"))
 
-members2$year[1]
+# CAUTION THIS IS WRONG AND WILL PRINT OUT ALL YEARS IN DATA ^2
+# members2$year[1]
 
 load(here::here('data', 'agency_vars.Rdata'))
 
