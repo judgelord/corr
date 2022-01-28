@@ -1,0 +1,6 @@
+##this is the do file for the analysis of the tenure and the positions
+use /users/justingrimmer/Dropbox/correspondence/data/AgencyData.dta
+
+destring year, replace
+
+egen ia_fixed = group(icpsr_agency)

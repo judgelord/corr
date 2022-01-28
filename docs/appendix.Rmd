@@ -211,6 +211,23 @@ type <- d %>%
   ungroup()
 
 
+type %>% 
+  rename(type2 = type) %>%
+  mutate(percent = n/sum(type$n[1:2])*100) %>% kablebox()
+
+
+
+type5 <- d %>% 
+  group_by(TYPE) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() 
+
+type5 %<>% 
+  mutate(percent = n/sum(type5$n[2:6])*100)
+
+type5 %>% kablebox()
+
+
 type2017 <- d %>% 
   filter(year> 2006, year < 2018) %>%
   group_by(type) %>% 
@@ -242,6 +259,108 @@ members %<>% mutate(member_state = member_state %>%
                      str_c(")")) 
 
 dcounts <- d %>% left_join(members)
+
+
+type2xchair <- dcounts %>% 
+  group_by(type, chair) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  drop_na(type, chair) %>% 
+  group_by(chair) %>% 
+  mutate(percent = n / sum(n) *100) 
+
+type2xchair%>% 
+  kablebox()
+
+type2xprestigechair <- dcounts %>% 
+  group_by(type, prestige_chair) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  group_by(prestige_chair) %>% 
+  mutate(percent = n / sum(n) *100) 
+
+type2xprestigechair%>% 
+  kablebox()
+
+
+# prestige committee
+type2xprestige <- dcounts %>% 
+  group_by(type, prestige) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  group_by(prestige) %>% 
+  mutate(percent = n / sum(n) *100) 
+
+
+type2xprestigechair%>% 
+  kablebox()
+
+
+type2xchamber <- dcounts %>%
+  group_by(type, chamber) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  group_by(chamber) %>% 
+  mutate(percent = n / sum(n) *100) 
+
+
+# year
+type2xyear <- dcounts %>% mutate(years = year  - yearelected) %>% 
+  group_by(type, years) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  group_by(years) %>% 
+  mutate(percent = n / sum(n) *100) 
+
+type2xyear %>% 
+  kablebox()
+
+
+# chamber averages 
+dcounts %>%
+  group_by(chamber, year, bioname) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(-n) %>%
+  group_by(chamber) %>% 
+  summarise(mean_per_year = mean(n) %>% round(0)) %>% 
+  kablebox()
+
+
+# per member 
+dcounts %>% 
+  group_by(bioname, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(-n) %>%
+  group_by(bioname) %>% 
+  mutate(mean_per_year = mean(n) %>% round(0)) %>% 
+  kablebox_long()
+
+# per member HOUSE
+dcounts %>% 
+  filter(chamber == "House") %>% 
+  group_by(bioname, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(-n) %>%
+  group_by(bioname) %>% 
+  mutate(mean_per_year = mean(n) %>% round(0)) %>% 
+  kablebox_long()
+
+dcounts %>% 
+  group_by(bioname, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(n) %>%
+  group_by(bioname) %>% 
+  mutate(mean_per_year = mean(n) %>% round(0)) %>% 
+  #FIXME 
+  filter(n > 4) %>% 
+  kablebox_long()
+
+
 ```
 
 Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
@@ -376,6 +495,7 @@ dcounts %>%
 ---
 
 ## Types of requests
+
 
 `r percent(type$n[1]/(type$n[1]+type$n[2]) )`% of the average legislators' contacts with agencies are about constituency service.
 
