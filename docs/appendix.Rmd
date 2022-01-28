@@ -413,12 +413,15 @@ dcounts %>%
              fill = "black",
              position = "dodge") + 
   geom_point(aes(x = Percentile, y = mean), color = "light blue") + 
-  geom_text(aes(x = Percentile, y = mean, label = ifelse(rank <14 | Percentile < 30, member_state, "")), check_overlap = T, size = 2, hjust = "inward") + 
-    facet_grid(. ~ chamber , scales = "free_y") + theme_bw() +
+  geom_text(aes(x = Percentile, y = mean, label = ifelse(rank <14 | Percentile < 30, member_state, "")), check_overlap = T, 
+                  size = 2,
+                  hjust = "inward") + 
+  theme_minimal() + 
   labs(#title = "Average Legislator Requests per Year by Percentile",
        x = "Percentile Within Chamber",
-       y = "Average Requests per Year") + 
-  theme_minimal()
+       y = "Average Requests per Year") +     facet_grid(. ~ chamber , scales = "free_y") 
+
+  
 ```
 
 
