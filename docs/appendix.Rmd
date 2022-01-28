@@ -161,7 +161,7 @@ x2 %>%
 
 # Data  
 ```{r, eval=TRUE}
-read_csv(here("data/_FOIA_response_table.csv")) %>% kablebox_long()
+read_csv(here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")) %>% kablebox_long()
 ```
 
 ```{r data, cache=FALSE}
@@ -186,6 +186,17 @@ all_contacts2$Type %<>% str_replace("Indiv. Constituent" , "Constituent (Individ
 load(here::here("data", "dcounts_min.Rdata"))
 
 load(here::here("data", "members.Rdata"))
+
+
+congress_years2<- function(congress){
+		years<- c(congress*2 + 1787, congress*2 + 1788 ) %>% str_c(collapse = ";", sep = ";")
+		return(years)
+}
+
+members2 <- members %>%
+mutate(year = congress %>%  congress_years2() %>% str_c(collapse = ";"))
+
+members2$year[1]
 
 load(here::here('data', 'agency_vars.Rdata'))
 
