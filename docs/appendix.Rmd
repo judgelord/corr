@@ -445,7 +445,6 @@ dcounts %>%
   ungroup() %>% 
   group_by(chamber) %>% 
   mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
-  filter(cqlabel == cq, year > 2007, year <2019) %>% 
   ggplot() +
   aes(x = year, y = n, 
       fill = member_state %>% str_replace("-.*", "\\)")) + 
@@ -514,7 +513,7 @@ dcounts %>%
         panel.grid.minor.x =  element_blank(),
         axis.text.x = element_text(angle = 45))
   
-ggsave(str_c("docs/figs/districts/", cq, ".png"), 
+ggsave(str_c("figs/districts/", cq, ".png"), 
        width = 5.3,
   height = 2.5,
   dpi = 1000)

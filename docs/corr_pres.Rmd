@@ -51,7 +51,7 @@ xaringanthemer::style_mono_light(base_color = "#3b444b",
           table_row_even_background_color = "#d5e3dd",
           extra_css =
             list(".remark-slide-number" = list("display" = "none")),
-          outfile = "docs/xaringan-themer.css")
+          outfile = "xaringan-themer.css")
 
 ```
 
@@ -336,10 +336,10 @@ class: inverse center middle
 
 ---
 
-## Consituent demand matters
+## Consituent Demand
 
-```{r, out.width="80%"}
-include_graphics("docs/figs/pop-1.png")
+```{r, out.width="68%"}
+include_graphics("figs/pop-1.png")
 ```
 
 ---
@@ -347,7 +347,7 @@ include_graphics("docs/figs/pop-1.png")
 ## Unequal Levels of Advocacy Overall
 
 ```{r, out.width="80%"}
-include_graphics("docs/figs/percentiles-1.png")
+include_graphics("figs/percentiles-1.png")
 ```
 
 ---
@@ -356,7 +356,7 @@ include_graphics("docs/figs/percentiles-1.png")
 ## Unequal Levels of Advocacy Over time
 
 ```{r, out.width="70%"}
-include_graphics(here("docs/figs/counts-per-year-1.png"))
+include_graphics("figs/counts-per-year-1.png")
 ```
 
 ---
@@ -390,7 +390,10 @@ Controls: majoirty party, president's party
 
 # Demand
 
-![](figs/AllredTweet.png)
+```{r, out.width="70%"}
+include_graphics("figs/AllredTwee.png")
+```
+
 
 ---
 
@@ -416,7 +419,7 @@ Test 2: Name recogition
 ## Example:
 
 ```{r}
-include_graphics("docs/figs/districts/(WI-07)-map.png")
+include_graphics("figs/districts/(WI-07)-map.png")
 ```
 
 ???
@@ -436,7 +439,7 @@ background-size: contain
 Sean Duffy initially provided less constituency service than 20-term Rep. Dave Obey, but was on par by year 3.
 
 ```{r}
-include_graphics("docs/figs/districts/(WI-07).png")
+include_graphics("figs/districts/(WI-07).png")
 ```
 
 ---
@@ -446,7 +449,7 @@ include_graphics("docs/figs/districts/(WI-07).png")
 Constituency service dropped in the transition from Feingold to Johnson and from Kohl to Baldwin.
 
 ```{r}
-include_graphics("docs/figs/districts/(WI).png")
+include_graphics("figs/districts/(WI).png")
 ```
 
 ---
