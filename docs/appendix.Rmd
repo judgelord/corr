@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       split = T,
                       fig.align = 'center', 
                       fig.path='figs/',
+                      fig.retina = 10,
                       warning=FALSE, 
                       message=FALSE)
 
@@ -199,6 +200,10 @@ load(here::here("data", "dcounts_min.Rdata"))
 
 load(here::here("data", "members.Rdata"))
 
+members %<>% mutate(member_state = member_state %>%
+                     str_replace("\\) ", "-") %>%
+                     str_c(")")) 
+
 
 congress_years2<- function(congress){
 		years<- c(congress*2 + 1787, congress*2 + 1788 ) %>% str_c(collapse = ";", sep = ";")
@@ -279,9 +284,7 @@ d %<>% filter(chamber != "President")
 d %<>% mutate(congress = year_congress(year))
 
 
-members %<>% mutate(member_state = member_state %>%
-                     str_replace("\\) ", "-") %>%
-                     str_c(")")) 
+
 
 dcounts <- d %>% left_join(members)
 
@@ -375,6 +378,16 @@ dcounts %>%
   mutate(mean_per_year = mean(n) %>% round(0)) %>% 
   kablebox_long()
 
+# per member VA-10
+dcounts %>% 
+  filter(cqlabel == "(VA-10)") %>% 
+  group_by(bioname, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(year) %>%
+  group_by(bioname) %>% 
+  mutate(mean_per_year = mean(n) %>% round(0)) %>% 
+  kablebox_long()
+
 dcounts %>% 
   group_by(bioname, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
   ungroup() %>% 
@@ -387,6 +400,135 @@ dcounts %>%
 
 
 ```
+
+
+##  Example
+
+Rep. Barbara Comstock worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endoresed and campaigned with her. 
+
+Notice several patterns
+- dip in constituncy service when Wolf is no longer running for re-eleiction
+- further dip with transition
+- quick rebound as Comstock gets her office in order
+- inheriting a highly-effective office, Comstock is far above average house member
+
+```{r va-10, fig.width=5.3, fig.height=2.5}
+cq <- "(VA-10)"
+
+dcounts %>% 
+  group_by(member_state, year, chamber, cqlabel) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  group_by(chamber) %>% 
+  mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
+  filter(cqlabel == cq, year > 2007, year <2017) %>% 
+  ggplot() +
+  aes(x = year, y = n, fill = member_state) + 
+  geom_col(alpha = .5, position = "dodge") +
+  geom_hline(aes(yintercept = mean_per_chamber), linetype = 2) + 
+  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "House mean", min.segment.length = 0, size = 3, fill = NA, vjust = -.3, hjust = 0) + 
+  scale_x_continuous(breaks = seq(2008, 2016, 1)) +
+  labs(x = "",
+       y = "Number of Requests", 
+       fill = cq %>% str_remove_all("\\(|\\)")) + 
+  theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),
+        panel.grid.minor.x =  element_blank(),
+        axis.text.x = element_text(angle = 45))
+```
+
+
+```{r ny-14}
+cq <- "(NY-07)"
+CHAMBER <- "House"
+dcounts %>% 
+  group_by(member_state, year, chamber, cqlabel) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  group_by(chamber) %>% 
+  mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
+  filter(cqlabel == cq, year > 2007, year <2019) %>% 
+  ggplot() +
+  aes(x = year, y = n, 
+      fill = member_state %>% str_replace("-.*", "\\)")) + 
+  geom_col(alpha = .5, position = "dodge") +
+  geom_hline(aes(yintercept = mean_per_chamber), linetype = 2) + 
+  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
+  scale_x_continuous(breaks = seq(2007, 2017, 1)) +
+  labs(x = "",
+       y = "Number of Requests", 
+       fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
+  theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),
+        panel.grid.minor.x =  element_blank(),
+        axis.text.x = element_text(angle = 45))
+
+
+cq <- "(NY-14)"
+CHAMBER <- "House"
+dcounts %>% 
+  group_by(member_state, year, chamber, cqlabel) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  group_by(chamber) %>% 
+  mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
+  filter(cqlabel == cq, year > 2007, year <2019) %>% 
+  ggplot() +
+  aes(x = year, y = n, 
+      fill = member_state %>% str_replace("-.*", "\\)")) + 
+  geom_col(alpha = .5, position = "dodge") +
+  geom_hline(aes(yintercept = mean_per_chamber), linetype = 2) + 
+  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
+  scale_x_continuous(breaks = seq(2008, 2017, 1)) +
+  labs(x = "",
+       y = "Number of Requests", 
+       fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
+  theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),
+        panel.grid.minor.x =  element_blank(),
+        axis.text.x = element_text(angle = 45))
+```
+
+
+```{r cases, eval=FALSE}
+case_study <- function(cq){
+
+  CHAMBER <- filter(members, cqlabel == cq) %>% 
+    .$chamber %>% .[1]
+
+dcounts %>% 
+  group_by(member_state, year, chamber, cqlabel) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  group_by(chamber) %>% 
+  mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
+  filter(cqlabel == cq, year > 2007, year <2017) %>% 
+  ggplot() +
+  aes(x = year, y = n, 
+      fill = member_state %>% str_replace("-.*", "\\)")) + 
+  geom_col(alpha = .5, position = "dodge") +
+  geom_hline(aes(yintercept = mean_per_chamber), linetype = 2) + 
+  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
+  scale_x_continuous(breaks = seq(2008, 2016, 1)) +
+  labs(x = "",
+       y = "Number of Requests", 
+       fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
+  theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),
+        panel.grid.minor.x =  element_blank(),
+        axis.text.x = element_text(angle = 45))
+  
+ggsave(str_c("docs/figs/districts/", cq, ".png"), 
+       width = 5.3,
+  height = 2.5,
+  dpi = 1000)
+} 
+
+case_study("(NY-14)")
+
+cases <- unique(members$cqlabel) #%>% head()
+
+map(cases, case_study )
+
+```
+
+---
 
 Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
 
@@ -483,7 +625,7 @@ p <- dcounts %>%
         axis.ticks = element_blank(),
         axis.text.x = element_text(angle = 45, vjust = 0)) 
 
-#FIXME, this takes a long time 
+# FIXME, this takes a long time 
 p
 
 ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=7)
