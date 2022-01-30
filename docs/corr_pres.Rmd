@@ -338,7 +338,9 @@ class: inverse center middle
 
 ## Consituent demand matters
 
-![](figs/pop-1.png)
+```{r, out.width="80%"}
+include_graphics("docs/figs/pop-1.png")
+```
 
 ---
 
