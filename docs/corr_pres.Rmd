@@ -353,7 +353,7 @@ include_graphics("figs/percentiles-1.png")
 ---
 
 
-## Unequal Levels of Advocacy Over time
+## Over Time Variation
 
 ```{r, out.width="70%"}
 include_graphics("figs/counts-per-year-1.png")
@@ -361,7 +361,13 @@ include_graphics("figs/counts-per-year-1.png")
 
 ---
 
-# Methods: Outcome
+class: inverse center middle
+
+# Models
+
+---
+
+# Outcome
 
 Cross-sectional differences across legislators for a given agency in a given year
 
@@ -373,7 +379,7 @@ Change within legislatore-agency and district-agency dyads (difference in differ
 
 ---
 
-# Methods: Explanations
+# Explanations
 
 Institutional power
 - committee chair 
@@ -388,10 +394,10 @@ Controls: majoirty party, president's party
 
 ---
 
-# Demand
+# Endogenous demand
 
 ```{r, out.width="70%"}
-include_graphics("figs/AllredTwee.png")
+include_graphics("figs/AllredTweet.png")
 ```
 
 
@@ -401,13 +407,19 @@ include_graphics("figs/AllredTwee.png")
 
 Constitutents direct requests to better known 
 
-Test 1: When a one new senator is elected does the longer-serving senator recieve a bump?
+Test 1: When one new senator is elected does the longer-serving senator receive a bump? 
 --
-**No.**
+ **No.**
 
 --
 
-Test 2: Name recogition
+Test 2: Name recogition?
+
+## More Robustness Checks:
+
+Subsets
+- by chamber
+- only those who were reelected
 
 ---
 
@@ -451,16 +463,6 @@ Constituency service dropped in the transition from Feingold to Johnson and from
 ```{r}
 include_graphics("figs/districts/(WI).png")
 ```
-
----
-
-## Robustness 
-
-Subsets 
-- by chamber
-- only those who were reelected
-
-
 
 
 
