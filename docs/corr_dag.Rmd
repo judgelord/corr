@@ -51,12 +51,14 @@ dag <- read_csv(here::here("data", "dag.csv"))
 dag %>% select(-paper) %>% kablebox()
 ```
 
+## More & less complex pathways
+
 ```{r corr-dag}
 
 library(netlit)
 
 
-set.seed(4)
+set.seed(13)
 
 # plot tidy network data
 plot_netework <- function(dag){
@@ -112,7 +114,9 @@ simple <- drop_node(dag, "directing resources to service") %>%
   drop_node("media coverage") %>% 
   drop_node("policy expertise")
 
-plot_netework(simple)
+set.seed(7)
+
+#  plot_netework(simple)
 
 
 # now dropping core mechanisms that don't confound
@@ -120,7 +124,61 @@ simpler <- drop_node(simple, "office organization") %>%
   drop_node("professional networks") %>% 
   drop_node("marginal benefit of service work") %>% 
   drop_node("ratio of policy to service") %>% 
-drop_node("bureaucratic responsiveness")
+drop_node("bureaucratic responsiveness") %>% 
+  drop_node("staff")
 
+set.seed(2)
 plot_netework(simpler)
+```
+
+## Level Model
+```{r corr-dag-level} 
+priority_vars <- "priority|ratio|policy "
+
+level_only <- . %>% 
+  filter(! str_detect(to, priority_vars))
+
+
+set.seed(30)
+
+dag %>% 
+  level_only() %>%
+  drop_node("power over policy") %>% 
+  plot_netework()
+
+# simple %>% 
+#   level_only() %>%
+#   drop_node("power over policy") %>% 
+#   plot_netework()
+
+set.seed(49)
+
+simpler %>% 
+  level_only() %>%
+  drop_node("power over policy") %>% 
+  plot_netework()
+```
+
+## Ratio Model
+
+```{r corr-dag-ratio} 
+level_vars <- "level|responsiveness|service |resources to service|capacity|demand|advertising|professional|name|organization|media|staff"
+
+priority_only <- . %>% 
+  filter(! str_detect(to, level_vars))
+
+dag %>% 
+  priority_only() %>%
+  #drop_node("power over policy") %>% 
+  plot_netework()+ scale_color_viridis_d(option = "plasma", begin = 0, end = .5, direction = -1)
+
+# simple %>% 
+#   priority_only() %>%
+#   #drop_node("power over policy") %>% 
+#   plot_netework()+ scale_color_viridis_d(option = "plasma", begin = 0, end = .5, direction = -1)
+
+simpler %>% 
+  priority_only() %>%
+  #drop_node("power over policy") %>% 
+  plot_netework()+ scale_color_viridis_d(option = "plasma", begin = 0, end = .5, direction = -1)
 ```
