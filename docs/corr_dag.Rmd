@@ -1,0 +1,90 @@
+---
+title: "Corr DAGs"
+output:
+    html_document:
+      highlight: zenburn
+      toc: true
+      toc_float: true
+      code_folding: hide
+    #   toc: true
+    #   keep_tex: true
+    # pdf_document:
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = FALSE, 
+                      fig.width=8.5, 
+                      split = T,
+                      fig.align = 'center', 
+                      fig.path='../figs/',
+                      fig.retina = 4,
+                      warning=FALSE, 
+                      message=FALSE)# 
+
+# install.packages("ggnetwork")
+library(ggnetwork)
+library(here)
+library(tidyverse)
+library(googlesheets4)
+library(fontawesome)
+
+
+# Table formatting
+library(kableExtra)
+kablebox <- . %>% 
+  slice_head(n = 100) %>%
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "400px")
+
+```
+
+
+Relationships come from [this google sheet](https://docs.google.com/spreadsheets/d/1LACTrfsXGX2J7JlFgnF3bniUQpsMtKBVSQSYo0KPmkc)
+```{r dag-sheet}
+source(here::here("code", "update-dag.R"))
+
+dag <- read_csv(here::here("data", "dag.csv"))
+
+dag %>% select(-paper) %>% kablebox()
+```
+
+```{r corr-dag}
+
+library(netlit)
+# now with all node and edge attributes 
+d <- review(dag,
+              edge_attributes = names(dag) )
+
+n <- ggnetwork(d$graph)
+
+n$name %<>% str_replace("([a-z| ]{10}) ", 
+                           "\\1\n") %>% str_to_title()
+
+set.seed(14)
+
+# plot tidy network data
+p <- ggplot(n) +
+  aes(x = x, y = y, xend = xend, yend = yend,
+      label = name ) +
+    geom_nodes(size = 10, alpha = .1) +
+    geom_edges(aes(#linetype = concept,
+                   color = concept), 
+               curvature = 0.1, 
+               alpha = .8,
+               #box.padding = unit(1, "lines"),
+             arrow = arrow(length = unit(6, "pt"), type = "closed")) +
+  
+    geom_nodetext_repel(size = 2.3) +
+  theme_blank() + 
+  labs(color = "",
+       linetype = "") + 
+  scale_color_viridis_d(option = "plasma", begin = 0, end = .9, direction = -1) + 
+  theme(legend.position="bottom")
+
+p
+
+```
