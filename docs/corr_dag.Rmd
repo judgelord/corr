@@ -16,7 +16,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
                       cache = FALSE, 
-                      fig.width=8.5, 
+                      fig.width=5.5, 
                       split = T,
                       fig.align = 'center', 
                       fig.path='../figs/',
@@ -29,8 +29,6 @@ library(ggnetwork)
 library(here)
 library(tidyverse)
 library(googlesheets4)
-library(fontawesome)
-
 
 # Table formatting
 library(kableExtra)
@@ -55,22 +53,26 @@ dag %>% select(-paper) %>% kablebox()
 ```{r corr-dag}
 
 library(netlit)
-# now with all node and edge attributes 
-d <- review(dag,
+
+
+set.seed(20)
+
+# plot tidy network data
+plot_netework <- function(dag){
+  d <- review(dag,
               edge_attributes = names(dag) )
 
 n <- ggnetwork(d$graph)
 
-n$name %<>% str_replace("([a-z| ]{10}) ", 
+n$name %<>% str_replace_all("([a-z| ]{8}) ", 
                            "\\1\n") %>% str_to_title()
 
-set.seed(14)
 
-# plot tidy network data
-p <- ggplot(n) +
+
+ggplot(n) +
   aes(x = x, y = y, xend = xend, yend = yend,
       label = name ) +
-    geom_nodes(size = 10, alpha = .1) +
+    geom_nodes(size = 15, alpha = .1) +
     geom_edges(aes(#linetype = concept,
                    color = concept), 
                curvature = 0.1, 
@@ -78,13 +80,46 @@ p <- ggplot(n) +
                #box.padding = unit(1, "lines"),
              arrow = arrow(length = unit(6, "pt"), type = "closed")) +
   
-    geom_nodetext_repel(size = 2.3) +
+    geom_nodetext_repel(size = 2.5) +
   theme_blank() + 
   labs(color = "",
        linetype = "") + 
   scale_color_viridis_d(option = "plasma", begin = 0, end = .9, direction = -1) + 
   theme(legend.position="bottom")
+}
 
-p
+plot_netework(dag)
 
+
+drop_node <- function(data, NODE_TO_DROP){
+simple <- data %>% mutate(
+  from = case_when(
+    from == NODE_TO_DROP ~ dag$from[which(dag$to == NODE_TO_DROP)],
+    T ~ from
+  ),
+  to = case_when(
+    to == NODE_TO_DROP ~ dag$from[which(dag$to == NODE_TO_DROP)],
+    T ~ to
+  )
+)
+return(simple)
+}
+
+simple <- drop_node(dag, "directing resources to service") %>%
+  drop_node(NODE_TO_DROP = "marginal benefit of policy work") %>% 
+  drop_node("bureaucratic responsiveness") %>% 
+  drop_node("media coverage") %>% 
+  drop_node("policy expertise")
+
+plot_netework(simple)
+
+
+# now dropping core mechanisms that don't confound
+simpler <- drop_node(simple, "office organization") %>%
+  drop_node("professional networks") %>% 
+  drop_node("marginal benefit of service work") %>% 
+  drop_node("ratio of policy to service") %>% 
+drop_node("bureaucratic responsiveness")
+
+plot_netework(simpler)
 ```
