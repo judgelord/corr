@@ -133,9 +133,9 @@ To preview our findings [FINDINGS]
 
 # Feedback requests
 
-# Framing 
+## Framing 
 
-# Robustness 
+## Robustness 
 - selection
 - name recognition
 
@@ -401,6 +401,18 @@ Hand coding $\leadsto$ 79% overall agreement, 90% when coders are certain
 ```{r, out.width="68%"}
 include_graphics("figs/pop-1.png")
 ```
+
+---
+
+## Constituent Demand
+
+
+## 	District demographics are correlated with types of requests legislators make
+	
+
+- Higher proportion of veterans $\leadsto$ more requests to VA
+
+- Higher proportion of residents over 65 $\leadsto$ more requests to SSA 
 
 ---
 
