@@ -80,7 +80,7 @@ class: inverse
 
 [Who Gets Constituency Service?](https://judgelord.github.io/research/correp/): Veterans and seniors are served proportionate to their population; low-income people are not. Republicans do 15% less for low-income constituents (within a district)—no partisan differences in help for businesses.
 
-[Public Pressure and Congressional Oversight](https://judgelord.github.io/research/oversight/): Coalitions mobilize public pressure also mobilize more legislators. Coalitions with more legislators are more likely to win.
+[Public Pressure and Congressional Oversight](https://judgelord.github.io/research/oversight/): Coalitions that mobilize public pressure also mobilize more legislators. Coalitions with more legislators are more likely to win.
 
 ???
 
@@ -218,7 +218,7 @@ background-size: cover
 
 We build on recent work that focused on legislator contacts with specific agencies. 
 
-- Represent constituents' policy demands despite party pressure (Ritchie 2017)
+- Legislators represent constituents' policy demands despite party pressure (Ritchie 2017)
 
 - Constituents and institutional position, not ideology, drive policy oversight (Lowande 2018) 
 
@@ -370,7 +370,7 @@ Centers for Medicare & Medicaid Services
 
 429 FOIA requests to 294 federal agencies (a census)
 
-485,000+ legislator requests (so far), 2007-2020
+485,000+ legislator requests (so far), 2007-2018
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(kableExtra)
