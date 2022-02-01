@@ -717,7 +717,7 @@ all_contacts2 %>%
   scale_y_continuous(breaks = seq(0,500, 50)) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts (Thousands)\nN =", sum(nrow(all_contacts2))),
+       y = paste("Number of Contacts (Thousands)"),
        title = "") +
   #theme_void() + 
   theme(panel.border = element_blank(),
