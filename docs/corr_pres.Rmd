@@ -1,13 +1,13 @@
 ---
 title: "Legislator Capacity and Experience Increase Both Policy Work and Constituency Service"
 subtitle: ""
-author: "Devin Judge-Lord, ustin Grimmer,  Eleanor Neff Powell"
+author: "Devin Judge-Lord, Justin Grimmer,  Eleanor Neff Powell"
 date: "Paper & slides: [judgelord.github.io/research/correspondence](https://judgelord.github.io/research/correspondence)"
 urlcolor: cyan
 output:
   xaringan::moon_reader:
     lib_dir: libs
-    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"
+#    mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"
     css: xaringan-themer.css
     nature:
       ratio: '16:9'
@@ -73,9 +73,35 @@ webshot(file, "whyMail-APW.pdf")
 
 
 
+class: inverse
+
+<p style="text-align:center;">YOU MAY ALSO LIKE</p>
+
+[Legislator Advocacy on Behalf of Constituents and Corporate Donors](https://judgelord.github.io/research/ferc/): Legislators are more likely to write letters on behalf of companies whose PACs donate to their campaigns.
+
+[Who Gets Constituency Service?](https://judgelord.github.io/research/correp/): Veterans and seniors are served proportionate to their population; low-income people are not. Republicans do 15% less for low-income constituents (within a district)—no partisan differences in help for businesses.
+
+[Public Pressure and Congressional Oversight](https://judgelord.github.io/research/oversight/): Coalitions mobilize public pressure also mobilize more legislators. Coalitions with more legislators are more likely to win.
+
+---
+
+# How do power and experience affect how elected officials allocate their attention and effort?
+
+--
+
+## - Do constituents face a trade-off between influence in Washington and constituency service at home?
+
+--
+
+## - If legislators are given more resources, how will they be used? 
+ 
+
+
+---
+
 # Outline
 
-1. Theory: Institutional power has counterveiling effects on constituency service
+1. Theory: Institutional power has countervailing effects on constituency service
 
 --
 (*absolute increase* in capacity **BUT** *relative decrease* as attention/priorities shift to policy work)
@@ -86,19 +112,19 @@ webshot(file, "whyMail-APW.pdf")
 
 --
 
-1. Methods: change in legislatore-agency and  district-agency pairs
+1. Methods: change in legislator-agency and  district-agency pairs
 
 --
 
-1. Findings:  Increasing capacity effects  overcome simultanous shifts in priorities. 
+1. Findings:  Increasing capacity effects overcome simultaneous shifts in priorities. 
 --
-Even as the *ratio* of policy work increases, the overall *level* of constituency service still increases.
+Even as the *ratio* of policy work increases, legislators maintain or increase their overall *level* of constituency service.
 
 ???
 
 We have been working on this project for over five years.
 
-With Justin Grimmer and Ellie Powell, we are assembling a very large new database of letters and emails written by members of Congress to federal agencies.
+With Justin Grimmer and Ellie Powell, we assemble a very large new database of letters and emails written by members of Congress to federal agencies.
 
 I will [OUTLINE]
 
@@ -106,42 +132,68 @@ To preview our findings [FINDINGS]
 
 ---
 
+# Feedback requests
+
+# Framing 
+
+# Robustness 
+- selection
+- name recognition
 
 
-# Theory: Institutional power & expiernece
+---
+
+# Theory: Institutional power & experience
 
 increase capacity
 - chairs direct committee staff
-- expiernece and relationships in Washington
-- new legislators face start-up costs 
+- experience and relationships in Washington
+- new legislators  $\leadsto$ start-up costs 
 - power means that requests are answered 
 
 
 shift priorities/attention toward policy
-- "potomic feaver" (Fenno 1978)
+- "Potomac fever" (Fenno 1978)
 - power means power over policy
-- incumbancy means secuirty
-
----
-
-Dividing effort between policy goals and particularistic service presents a significant tension for representation..
-
-Reelection-minded officials should allocate resourses to particularistic service (Ashworth and Bueno de Mesquita, 2006)
+- incumbency means security
 
 ---
 
 background-image: url("figs/SchumerNeighbor.jpeg")
 background-size: contain
 
+
 ---
+
+
+```{r, out.height="1%", out.width="45%"}
+knitr::include_graphics("figs/SchumerNeighbor.jpeg")
+```
+
+
+- Multitask accountability models: as elected officials acquire power, they should continue attention to their district (Ashworth and Bueno de Mesquita, 2006)
+
+- If true, newly elected officials  $\leadsto$ startup costs 
+
+
+???
+
+# Policy goals and Reëlection
+
+Dividing effort between policy goals and particularistic service presents a significant tension for representation.
+
+Reëlection-minded officials should allocate resources to particularistic service ~(Ashworth and Bueno de Mesquita, 2006)~
+
+
+---
+
 
 background-image: url("figs/DickLugar.png")
 background-size: cover
 
+## "Potomac fever" (Fenno 1978)
 
 ---
-
-
 
 background-image: url("figs/crowley.jpg")
 background-size: cover
@@ -150,20 +202,16 @@ background-size: cover
 ---
 
 
-
 background-image: url("figs/CruzHearing1.jpg")
 background-size: cover
 
 
----
-
-background-image: url("figs/CruzHearing1.jpg")
-background-size: contain
-
-
-
+<p style="color:white;">
+"...members of Congress get re-elected, and the system works for everyone except the American people. This kind of self-interest builds on itself as members spend more time in office."
+</p>
 
 ---
+
 
 We build on recent work that focused on legislator contacts with specific agencies. 
 
@@ -177,7 +225,7 @@ We build on recent work that focused on legislator contacts with specific agenci
 
 ???
 
-Molly Ritchie finds that when legislators face cross-pressures on policy issues, they directly engage the bureaucracy in order to still represent constituents even though party politics keep them from doing so legislatively.
+Molly Ritchie finds that when legislators face cross-pressures on policy issues, they directly engage the bureaucracy to still represent constituents even though party politics keep them from doing so legislatively.
 
 Kenny Lowande, also focusing on policy, finds that partisan disagreement with the executive branch does not drive oversight.
 
@@ -207,7 +255,7 @@ Building on this work, we focus squarely on constituency service [SLIDE]
 
 Representation goes beyond floor votes.
 
-Indeed, there are far more intimate forms of representation that are less constrained by parties and by chamber procedure.
+Indeed, there are far more intimate forms of representation that are less constrained by parties and chamber procedure.
 
 Possibly the most common act of representation is helping constituents deal with the bureaucracy. 
 
@@ -220,28 +268,36 @@ Here we focus on individual casework and a bit on help for companies. We talk mo
 
 class: inverse center middle
 
-# Data
+# Data: FOIA all contacts from members of Congress 2007-2018 
 
 ![](figs/CIACorrespondence.jpg)
 
----
-
-Federal Energy Regulatory Commission
-
-![image](figs/FERC.png)
-
-???
-
-For example, here, Rep. Thornberry is writing to the Federal Energy Regulatory Commission on behalf of two companies in his district, asking for extra scrutiny on another company's permit application. 
-
-
-We have several thousand such letters written to this agency, in which we use optical content recognition to extract the text. If they do not have metadata like the sender's name and date, we extract it from the text of the letter or description of the letter.
+??? 
 
 To give you a sense of the range of responses. Some agencies provided letters themselves,
 
+A small portion of these data
+
 ---
 
-![](figs/schumer-cosigned-letter-tweet.png)
+background-image: url("figs/FERC.png")
+background-size: contain
+
+???
+
+ For example, here, Rep. Thornberry, chair of the armed services committee, is writing to Federal Energy Regulatory Commission on behalf of two companies in his district, asking for extra scrutiny on another company's permit application. 
+
+ We have several thousand such letters written to this agency, which we use optical content recognition to extract the text. If they do not have metadata like the sender's name and date, we extract it from the text of the letter or description of the letter.
+ 
+---
+
+background-image: url("figs/schumer-cosigned-letter-tweet.png")
+background-size: contain
+
+
+???
+
+
 
 ---
 
@@ -249,23 +305,32 @@ Environmental Protection Agency
 
 ![image](figs/EPA.png)
 
+
+???
+Rich and informative summaries like those kept by the EPA. Here, Rep Donna writes about a regulatory exemption for a power plant to alert the EPA to a hearing and support a nonprofit grant application.
+
+
 ---
 
 Department of Veterans Affairs
 ![image](figs/va-logs.png)
 ???
 
-Other agencies provided logs, which range widely in the amount of information they record. 
+Other agencies provided logs, which range widely in the information they record. 
 
 These logs from the VA don't say much, but often enough to deduce what the letters were about.
 
-I am going to quickly click through a few more examples, just to give you an idea of the range of these data.
+I am going to quickly click through a few more examples just to give you an idea of the range of these data.
 
 ---
 
 VA Detroit Regional Offices
 
 ![image](figs/VA_regional-logs.png)
+
+???
+
+These were distinct from VA HQ, illustrating the import of our comprehensive approach.
 
 ---
 
@@ -323,12 +388,8 @@ read_csv(here::here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")
 
 ---
 
-class: inverse center middle 
-
-# Descriptive Finding
-
----
-
+Hand coding $\leadsto$ 79% overall agreement, 90% when coders are certain
+	
 ## Over 80% Constituency Service
 
 ![Distribution Across Types of Congressional Requests
@@ -336,7 +397,7 @@ class: inverse center middle
 
 ---
 
-## Consituent Demand
+## Constituent Demand
 
 ```{r, out.width="68%"}
 include_graphics("figs/pop-1.png")
@@ -353,13 +414,6 @@ include_graphics("figs/percentiles-1.png")
 ---
 
 
-## Over Time Variation
-
-```{r, out.width="70%"}
-include_graphics("figs/counts-per-year-1.png")
-```
-
----
 
 class: inverse center middle
 
@@ -371,13 +425,20 @@ class: inverse center middle
 
 Cross-sectional differences across legislators for a given agency in a given year
 
-Change within legislatore-agency and district-agency dyads (difference in differences) + year*agency fixed effects
+Change within legislative-agency and district-agency dyads (difference in differences) + year*agency fixed effects
 
-- DV 1: volume of constituency service 
-- DV 2: ratio of policy work to constituency service
+- DV 1: **volume** of constituency service 
+- DV 2: **ratio** of policy work to constituency service
 
 
 ---
+
+```{r, out.width="80%"}
+include_graphics("figs/counts-per-year-1.png")
+```
+
+---
+
 
 # Explanations
 
@@ -390,11 +451,33 @@ Experience
 - years in office
 - newly elected (within district models)
 
-Controls: majoirty party, president's party
+Controls: majority party, president's party
 
 ---
 
-# Endogenous demand
+
+## Are legislators merely reacting to changing constituent demand?
+
+- Research design addresses static and slow-moving demand
+--
+
+- Demand for constituency service can be (and often is) created 
+--
+$\leadsto$ different mechanism
+
+--
+
+But do constituents direct requests to more powerful and experienced legislators? 
+--
+(for reasons not caused by legislator efforts) 
+--
+e.g., media coverage of policy debates
+
+
+---
+
+
+
 
 ```{r, out.width="70%"}
 include_graphics("figs/AllredTweet.png")
@@ -403,27 +486,61 @@ include_graphics("figs/AllredTweet.png")
 
 ---
 
-## Exogenous, but correlated demand: 
+## Exogenous but correlated demand: 
 
-Constitutents direct requests to better known 
 
-Test 1: When one new senator is elected does the longer-serving senator receive a bump? 
+Test 1: When one new senator is elected, does the longer-serving senator receive a bump? 
 --
  **No.**
 
 --
 
-Test 2: Name recogition?
+Test 2: Name recognition? 
+--
+**Downstream of treatment.**
 
 ## More Robustness Checks:
 
 Subsets
 - by chamber
-- only those who were reelected
+- only those who were re-elected
 
 ---
 
-# Results 
+
+## Results: The Effects of Increased Resources and Prestige
+
+
+DV 1: Volume $\uparrow$ 
+- ~ 14 additional contacts per year when becoming chair (25% of one standard deviation in the number of contacts), smaller effects for ranking member or prestige committee 
+
+--
+
+DV 2: Ratio of $\frac{Policy}{Service}$: $\uparrow$ 
+- ~ 9 percentage point change for committee chairs
+--
+
+Combined: slight increase (no decrease) in constituency service -- 
+
+Increasing power (and budget) $\leadsto$ maintaining attention to their district, despite prioritizing policy
+
+
+
+
+---
+
+## Results: Startup Costs and New Legislators
+
+- Within legislator analysis: early career legislator, less service (compared to later in career) 
+
+--
+
+- Within district analysis: replace legislator, less service
+
+--
+
+## Rather than experienced legislators turning from their district, new legislators are less equipped to deliver service
+
 
 
 ---
@@ -446,9 +563,9 @@ background-size: contain
 
 ---
 
-## Example: Volume of constituency service within districts
+## Example: Level of constituency service within districts
 
-Sean Duffy initially provided less constituency service than 20-term Rep. Dave Obey, but was on par by year 3.
+Sean Duffy initially provided less constituency service than 20-term Rep. Dave Obey but was on par by year 3.
 
 ```{r}
 include_graphics("figs/districts/(WI-07).png")
@@ -456,7 +573,7 @@ include_graphics("figs/districts/(WI-07).png")
 
 ---
 
-## Example: Volume of constituency service within districts
+## Example: Level of constituency service within districts
 
 Constituency service dropped in the transition from Feingold to Johnson and from Kohl to Baldwin.
 
@@ -474,111 +591,59 @@ class: inverse center middle
 
 ---
 
-class: inverse
 
-<p style="text-align:center;">YOU MAY ALSO LIKE</p>
-
-[Legislator Advocacy on Behalf of Constituents and Corporate Donors](https://judgelord.github.io/research/ferc/): Legislators are more likely to write letters on behalf of companies whos PACs donate to their campaigns.
-
-[Who Gets Constituency Service?](https://judgelord.github.io/research/correp/): Veterans and seniors are served proportionate to their population; low-income people are not. Republicans do 15% less for low-income constituents (within a district). No partisan differences in help for businesses.
-
-[Public Pressure and Congressional Oversight](https://judgelord.github.io/research/oversight/): Coalitions mobilize public pressure also mobilize more legislators. Coalitions with more legislators are more likely to win.
-
----
-
-class: inverse center
+class: inverse center middle
 
 # Extra Slides
 
----
-
-## From [Who Gets Constituency Service](https://judgelord.github.io/research/correp/)
-
-![](../../CorRep/figs/constituent_type_share-1.png)
 
 ---
 
-## Variation *Within* Constituent Types
+$Y_{ijt} = \beta \text{Position}_{it}   + \gamma_{ij} +  \delta_{tj} + \sum_{s = 1}^{S} \eta_{s} \text{tenure}_{s[it]} + m_{it} + p_{it} +  \epsilon_{ijt}$
 
-Count of letters per member per year
+Where: 
 
-![](../../CorRep/figs/percent_correp-1.png)
-
----
-
-## Variation *Within* Constituent Types
-
-Count of letters per member per year
-
-![](../../CorRep/figs/percent_correp-2.png)
-
-
----
-
-## Variation *Within* Constituent Types
-
-Count of letters per member per year
-
-![](../../CorRep/figs/percent_correp-4.png)
-
----
-
-# What explains variation in levels of constituency service across legislators?
-
-## [?] District demographics 
-## [?] Partisan-aligned differences in which groups are valorized or stigmatized
-
-
----
-
-# District demographics
-
-Overall, **little systematic bias** in which districts receive more service. The average letter comes from an average district (average income, percent below the poverty line, percent over 65, etc.).
-
-### Sub-constituency size 
-
-[ $\checkmark$ ] Strong relationships between the percent of **seniors** or **veterans** and the number of letters on behalf of these groups.
-
-[  $\unicode{x2718}$ ]  No relationship between the **percent below the poverty line** or **median income** and letters on behalf of poor or working-class constituents (e.g., regarding means-tested programs)
-
----
-## Partisan differences (in differences)
-
-![](../../CorRep/figs/n_per_year_agency-1.png)
-
----
-
-Republicans provide less service overall, much less to poor constituents,
-
-![](../../CorRep/table/t4.png)
-
----
-
-but no difference in service to businesses, seniors, or military families.
-
-![](../../CorRep/table/t5.png)
-
----
-
-### Questions going forward:
-
-Can we attribute unequal representation to  
-1. structural features of federalism in the U.S.?
-1. members perceiving groups as "deserving"?
-1. second-order constituent beliefs about whether officials will help them?
-
-Other informative analyses?
-- immigrants
-- non-White constituents
-- disability 
-
-Why do Republicans do less constituent service? 
+- $Y_{ijt} =$ Number of contacts between legislator $i$ and agency $j$ in year $t$
+- $\beta =$ Estimated causal effect of obtaining committee position 
+ - Chair of committee
+ - Ranking member
+ - Prestige committee assignment
+ - Oversight committee assignment
+- $\gamma_{ij} =$ Legislator $i$ x Agency $j$ fixed effect 
+- $\delta_{tj} =$ Year $t$ x Agency $j$ fixed effect
+- $m_{it}, p_{it},\sum_{s = 1}^{S} \eta_{s} \text{tenure}_{s[it]}$ time varying controls 
+- Standard errors clustered at legislator level
 
 ???
 
-For our questions going forward, I again want to lament the fact that Rochelle is not here because her dissertation is exactly about why constituents contact legislators and will help us get at the first question about whether we can parse the reasons for unequal representation that we find. Is it because elected officials discriminate or that constituents don't even bother reaching out to legislators who they don't believe will help them? 
+(same results if clustered at legislator level)
 
-Are low-income constituents paying close enough attention to who is in office that they stop seeing help when a republic takes over, or do Republican legislators put less priority on this type of representation? 
+---
+
+background-image: url("figs/t2.png")
+background-size: contain
+
+---
+
+background-image: url("figs/t3.png")
+background-size: contain
+
+---
+
+background-image: url("figs/t4.png")
+background-size: contain
+
+---
+
+
+background-image: url("figs/t6.png")
+background-size: contain
+
+
+---
+
+background-image: url("figs/corr-dag-level-2.png")
+background-size: cover
 
 
 

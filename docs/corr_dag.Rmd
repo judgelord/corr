@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.height = 4.5,
                       split = T,
                       fig.align = 'center', 
-                      fig.path='../figs/',
+                      fig.path='figs/',
                       fig.retina = 4,
                       warning=FALSE, 
                       message=FALSE)# 
@@ -56,7 +56,6 @@ dag %>% select(-paper) %>% kablebox()
 ```{r corr-dag}
 
 library(netlit)
-
 
 set.seed(13)
 
@@ -129,6 +128,20 @@ drop_node("bureaucratic responsiveness") %>%
 
 set.seed(2)
 plot_netework(simpler)
+
+simpler %>% 
+    filter(!str_detect(to, "advert|name"),
+           !str_detect(from, "advert|name") ) %>%
+    # drop_node("power") %>%
+  plot_netework()
+
+
+simpler %>% 
+    filter(!str_detect(to, "demand|advert|name"),
+           !str_detect(from, "demand|advert|name") ) %>%
+  plot_netework()
+
+  
 ```
 
 ## Level Model
@@ -151,7 +164,10 @@ dag %>%
 #   drop_node("power over policy") %>% 
 #   plot_netework()
 
-set.seed(49)
+#set.seed(49)
+
+set.seed(55)
+
 
 simpler %>% 
   level_only() %>%
