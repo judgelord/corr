@@ -1,0 +1,39 @@
+% Further, we show that more prestigious committee assignments do not increase representatives' name recognition. %TODO, JUSTIN, THIS IS NOT YET IN THE RESULTS SECTION
+% Finally, the increase in name recognition that comes with a longer tenure in Washington does not align with the changes in constituency service over a legislator's tenure. % TODO WE NEED A MORE ACURATE SENTENCE SUMMARY OF NAME RECOGNITION RESULTS HERE
+
+
+In particular, we examine the limited effects of prestige and tenure on legislators' name recognition and assess whether there is evidence of constituents redirecting their queries away from new legislators toward incumbent legislators from the same state. 
+
+
+First, building on the theoretical discussion in Section \ref{s:theory}, we might worry that legislators' increasing prestige leads them to have higher name recognition, causing constituents to direct their demands to them. % TODO: NULL EFFECT? MAKE THIS DISCUSSION ACCURATE:
+%We show, however, that as legislators acquire more institutional power in Congress, it does not cause an increase in name recognition.
+While more experienced legislators do have higher name recognition, name recognition increases do not align with the increases in constituency service that legislators provide their constituents, making name recognition a poor explanation for the increased level of constituency service. More importantly, name recognition is endogenous to increasing capacity. Thus, even if name recognition did increase with institutional power, we would not know the extent to which this was due to legislators using their increased resources to advertise their ability to provide constituency service (consistent with our theory of increasing capacity causing increasing constituency service) or for confounding reasons, such as media coverage of policy debates. 
+
+
+\subsection{The Limited Effects of Prestige and Tenure on Name Recognition}
+To assess how increased power and time in Congress affect legislators' name recognition, we use the Cooperative Congressional Election Study (CCES) cumulative file. CCES collects a set of survey responses from 2006-2018, providing 452,755 individual-level responses. All respondents were asked if they approved of their representative in the US House and both senators. If the respondent provided an assessment of the elected official, we coded the respondent as recognizing the legislator's name. If the respondent selected the option that they had never heard of the representative or were not sure, then we code them as not recognizing the legislator.
+
+We estimate the average name recognition for each legislator in each survey $Y_{it}$, or the proportion of respondents who provide an evaluation of the legislator. We then use difference-in-differences regressions to assess how legislators' name recognition changes as they spend more time in Congress.  
+
+%TODO NEW TABLE WITH ONLY DIFF-IN-DIFF
+\begin{table}[hbt!]
+\caption{Limited Changes in Name Recognition} \label{t:namerec1}
+
+\begin{minipage}{\textwidth}
+\begin{center}
+\input{../tables/TableNameRec.tex}
+\end{center}
+\end{minipage}
+\end{table}
+
+%TODO MOVE TO APPENDIX?
+%In the paper, we presented the results of a difference-in-difference model that showed no relationship between time in office and name recognition. Here 
+The effects of time in office on name recognition do not align with observed shifts in constituency service from Table \ref{t:prestige1}.
+The first column of Table \ref{t:namerec1} shows average name recognition of legislators' tenure in the House and Senate. Legislators who are newer to Congress have lower levels of name recognition than other legislators who have been in Congress for longer. The cross-sectional version of this model shows an increase in name recognition but is severely confounded because name recognition likely leads to reelection and more time in office. Additionally, changes in name recognition do not follow the same pattern as changes in constituency service. Whereas changes in constituency service plateau after the first two years in office, name recognition continues to increase. If name recognition were driving our results, we would expect to see constituency service increase in legislators' fourth, sixth, and eighth years; none of which we saw in Table \ref{t:prestige1}. (Recall that across specifications in Table \ref{t:prestige1}, levels of constituency service were stable after year 2, controlling for legislator and district characteristics.) Within-legislator variation in name recognition (The second column of Table \ref{t:namerec1}) similarly does not appear to explain shifts in levels of constituency service that we observe.
+
+ %Further, we continue to see lower levels of name recognition for legislators at the end of their second year, then for legislators serving in their 10th year and beyond. Both the persistence of this difference and the rate at which it changes suggest that name recognition is a poor explanation for why legislators provide more constituency service after their first year. Even second-year legislators---when the decrease in constituency service has already begun to attenuate---continue to have lower name recognition.  % SECOND-YEAR LEGISLATORS TELLS US NOTHING ABOUT CHANGE IN YEAR 1; IT COULD BE GREATER AND THUS CONSISTENT WITH DEMAND DRIVER
+
+ % MORE ON DIFF-IN_DIFF IF WE ARE KEEPING THIS SECTION
+
+%TODO IF WE KEEP THIS SECTION: THERE ARE NO COLUMNS 3-6 WITH CHAIR TREATMENTS IN THE TABLE. COMMENTING OUT FOR NOW
+% The third column of Table \ref{t:namerec1} shows that, on average, legislators who hold more power in Washington do have higher name recognition back in the district. Yet, using a difference-in-differences design to make within-legislator comparisons over their careers, we see that these differences disappear. Column 4 shows that when legislators acquire more power in Washington, it has little effect on their name recognition with constituents. And finally, columns 5 and 6, which include both tenure controls and prestige, show the same basic pattern: increasing time in Washington does little to affect name recognition back in the district.  
