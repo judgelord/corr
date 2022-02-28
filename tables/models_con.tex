@@ -1,10 +1,14 @@
 \begin{table}
+
+\caption{\label{tab:models_con}The Effect of Expierence and Institutional Power on Constituency Service}
 \centering
+\fontsize{11}{13}\selectfont
 \begin{tabular}[t]{lcccc}
 \toprule
   & 1 & 2 & 3 & 4\\
 \midrule
-Dependent Variable & Count & Count & Count & Log(Count+1)\\
+\textbf{Dependent Variable} & \textbf{Count} & \textbf{Count} & \textbf{Count} & \textbf{Log(Count+1)}\\
+\midrule
 Committee Chair & \num{0.300} & \num{0.040} & \num{0.044} & \num{0.012}\\
  & (\num{0.108}) & (\num{0.064}) & (\num{0.064}) & (\num{0.007})\\
 Ranking Member & \num{0.510} & \num{0.054} & \num{0.070} & \num{0.012}\\
@@ -28,12 +32,16 @@ Majority & \num{0.114} & \num{0.035} & \num{0.039} & \num{-0.005}\\
 President's Party & \num{0.057} & \num{0.031} & \num{0.033} & \num{0.009}\\
  & (\num{0.041}) & (\num{0.020}) & (\num{0.020}) & (\num{0.003})\\
 \midrule
-All Legislators & ✓ & ✓ &  & ✓\\
-Served At Least Second Term &  &  & ✓ & \\
-Num.Obs. & \num{412111} & \num{412111} & \num{388997} & \num{412111}\\
-Std.Errors & by: Legislator & by: Legislator & by: Legislator & by: Legislator\\
-Legislator x Agency Fixed Effects &  & ✓ & ✓ & ✓\\
-Year x Agency Fixed Effects &  & ✓ & ✓ & ✓\\
+All Legislators & \checkmark & \checkmark &  & \checkmark\\
+Served At Least 2nd Term &  &  & \checkmark & \\
+Observations & \num{412111} & \num{412111} & \num{388997} & \num{412111}\\
+Robust/Clustered Std. Errors & by: Legislator & by: Legislator & by: Legislator & by: Legislator\\
+Year x Agency FE &  & \checkmark & \checkmark & \checkmark\\
+Legislator x Agency FE &  & \checkmark & \checkmark & \checkmark\\
 \bottomrule
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 4 takes the Log of the counts + 1 as the dependent variable.}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 3 subsets to legislators who serve at least 3 years in Congress.}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 2 presents the difference-in-differences estimates}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 1 shows the average differences across committee assignments and years in Congress.}\\
 \end{tabular}
 \end{table}

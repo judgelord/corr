@@ -1,10 +1,14 @@
 \begin{table}
+
+\caption{\label{tab:models_policy}The Effect of Expierence and Institutional Power on Policy Work}
 \centering
+\fontsize{11}{13}\selectfont
 \begin{tabular}[t]{lcccc}
 \toprule
   & 1 & 2 & 3 & 4\\
 \midrule
-Dependent Variable & Count & Count & Count & Log(Count+1)\\
+\textbf{Dependent Variable} & \textbf{Count} & \textbf{Count} & \textbf{Count} & \textbf{Log(Count+1)}\\
+\midrule
 Committee Chair & \num{0.203} & \num{0.158} & \num{0.159} & \num{0.036}\\
  & (\num{0.028}) & (\num{0.034}) & (\num{0.034}) & (\num{0.007})\\
 Ranking Member & \num{0.144} & \num{0.090} & \num{0.092} & \num{0.025}\\
@@ -28,12 +32,16 @@ Majority & \num{0.002} & \num{-0.001} & \num{0.000} & \num{-0.002}\\
 President's Party & \num{0.026} & \num{0.008} & \num{0.009} & \num{0.004}\\
  & (\num{0.009}) & (\num{0.006}) & (\num{0.006}) & (\num{0.001})\\
 \midrule
-All Legislators & ✓ & ✓ &  & ✓\\
-Served At Least Second Term &  &  & ✓ & \\
-Num.Obs. & \num{412111} & \num{412111} & \num{388997} & \num{412111}\\
-Std.Errors & by: Legislator & by: Legislator & by: Legislator & by: Legislator\\
-Legislator x Agency Fixed Effects &  & ✓ & ✓ & ✓\\
-Year x Agency Fixed Effects &  & ✓ & ✓ & ✓\\
+All Legislators & \checkmark & \checkmark &  & \checkmark\\
+Served At Least 2nd Term &  &  & \checkmark & \\
+Observations & \num{412111} & \num{412111} & \num{388997} & \num{412111}\\
+Robust/Clustered Std. Errors & by: Legislator & by: Legislator & by: Legislator & by: Legislator\\
+Year x Agency FE &  & \checkmark & \checkmark & \checkmark\\
+Legislator x Agency FE &  & \checkmark & \checkmark & \checkmark\\
 \bottomrule
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 1 shows the average differences across committee assignments and years in Congress.}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 2 presents the difference-in-differences estimates}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 3 subsets to legislators who serve at least 3 years in Congress.}\\
+\multicolumn{5}{l}{\rule{0pt}{1em}Column 4 takes the Log of the counts + 1 as the dependent variable.}\\
 \end{tabular}
 \end{table}

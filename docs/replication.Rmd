@@ -115,6 +115,17 @@ cm = c("chair" = "Committee Chair",
 
 
 setFixest_dict(cm)
+
+# table formatting 
+format_table <- . %>% row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
+      kable_styling(font_size = 11) %>% 
+                    #full_width = TRUE, 
+                    #latex_options = c("repeat_header")) %>%
+  str_replace("Num.Obs.", "Observations") %>% 
+  str_replace("Std.Errors", "Robust/Clustered Std. Errors") %>% 
+  str_replace("FE: Legislator_x_Agency", "Legislator x Agency FE") %>%
+  str_replace("FE: Year_x_Agency", "Year x Agency FE") %>% 
+    str_replace_all("X|✓", "\\\\\\checkmark") 
 ```
 
 
@@ -138,7 +149,7 @@ dcounts_tenure %<>%
 m_total_cross <-feglm (perYear ~ 
                          chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party,
+                    majority + presidents_party | Legislator_x_Agency,
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
@@ -152,7 +163,7 @@ coefplot(m_total_cross, horiz = T)
 m_total_dnd <-feglm (perYear ~ 
                        chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator",
                     # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
            data = dcounts_tenure)
@@ -166,7 +177,7 @@ coefplot(m_total_dnd, horiz = T)
 m_total_2nd <-feglm (perYear ~ 
                        chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
@@ -178,7 +189,7 @@ coefplot(m_total_2nd, horiz = T)
 m_logtotal_dnd <-feglm (log(perYear + 1) ~ 
                           chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
@@ -194,7 +205,7 @@ coefplot(m_logtotal_dnd, horiz = T)
 - Table: `tables/models_total.tex` (sans stars)
 
 
-```{r}
+```{r models_total}
 models_total <- list(
   "1" = m_total_cross,
   "2" = m_total_dnd,
@@ -203,7 +214,7 @@ models_total <- list(
 )
 
 rows <- tibble(
-  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
+  term = c("Dependent Variable", "All Legislators", "Served At Least 2nd Term"),
   `1` = c("Count", "✓", ""),
   `2` =c("Count", "✓", ""),
   `3`  = c("Count", "", "✓"),
@@ -212,22 +223,31 @@ rows <- tibble(
 
 attr(rows, 'position') <- c(0, 24,25)
 
+
+# HTML
 modelsummary(models_total, stars = T, 
              add_rows = rows, 
              coef_map = cm,
              gof_omit = "R.*|AIC|BIC|Log.*",
              coef_omit = "(Intercept)")
 
+# LaTeX 
 modelsummary(models_total, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_omit = "R.*|AIC|BIC|Log.*", 
              coef_omit = "(Intercept)",
-             output = "latex") %>%
-  str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
-  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X|✓", "\\\\checkmark") %>% 
+             output = "latex",
+             title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
+             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
+                          "Column 2 presents the difference-in-differences estimates",
+                          "Column 3 subsets to legislators who serve at least 3 years in Congress.",
+                          "Column 4 takes the Log of the counts + 1 as the dependent variable.") %>% rev() ) %>% 
+  format_table() %>%
   write_lines(file = here::here("tables", "models_total.tex") )
+
+
+
 ```
 
 ### Predictions 
@@ -368,7 +388,7 @@ coefplot(m_con_cross, horiz = T)
 m_con_dnd <-feglm (perYear_con ~ 
                      chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator",
            data = dcounts_tenure)
 
@@ -380,7 +400,7 @@ coefplot(m_con_dnd, horiz = T)
 m_con_2nd <-feglm (perYear_con ~ 
                      chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
@@ -392,7 +412,7 @@ coefplot(m_con_2nd, horiz = T)
 m_logcon_dnd <-feglm (log(perYear_con + 1) ~ 
                         chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
@@ -405,7 +425,7 @@ coefplot(m_logcon_dnd, horiz = T)
 
 - Table: `tables/models_con.tex` (sans stars)
 
-```{r}
+```{r models_con}
 models_con <- list(
   "1" = m_con_cross,
   "2" = m_con_dnd,
@@ -413,15 +433,6 @@ models_con <- list(
   "4" = m_logcon_dnd
 )
 
-rows <- tibble(
-  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
-  `1` = c("Count", "✓", ""),
-  `2` =c("Count", "✓", ""),
-  `3`  = c("Count", "", "✓"),
-  `4` = c("Log(Count+1)", "✓", "") #"✓"
-)
-
-attr(rows, 'position') <- c(0, 24,25)
 
 modelsummary(models_con, stars = T, 
              add_rows = rows, 
@@ -434,10 +445,13 @@ modelsummary(models_con, # stars = T,
              coef_map = cm, 
              gof_omit = "R.*|AIC|BIC|Log.*", 
              coef_omit = "(Intercept)",
-             output = "latex") %>%
-    str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
-  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X|✓", "\\\\checkmark") %>% 
+             output = "latex",
+             title = "The Effect of Expierence and Institutional Power on Constituency Service", 
+             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
+                          "Column 2 presents the difference-in-differences estimates",
+                          "Column 3 subsets to legislators who serve at least 3 years in Congress.",
+                          "Column 4 takes the Log of the counts + 1 as the dependent variable."))%>% 
+  format_table() %>%
   write_lines(file = here::here("tables", "models_con.tex") )
 ```
 
@@ -546,7 +560,7 @@ coefplot(m_policy_cross, horiz = T)
 m_policy_dnd <-feglm (perYear_policy ~ 
                         chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator",
            data = dcounts_tenure)
 
@@ -558,7 +572,7 @@ coefplot(m_policy_dnd, horiz = T)
 m_policy_2nd <-feglm (perYear_policy ~ 
                         chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
@@ -570,7 +584,7 @@ coefplot(m_policy_2nd, horiz = T)
 m_logcon_dnd <-feglm (log(perYear_policy + 1) ~ 
                         chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
@@ -583,7 +597,7 @@ coefplot(m_logcon_dnd, horiz = T)
 
 - Table: `tables/models_policy.tex` (sans stars)
 
-```{r}
+```{r models_policy}
 models_policy <- list(
   "1" = m_policy_cross,
   "2" = m_policy_dnd,
@@ -591,15 +605,6 @@ models_policy <- list(
   "4" = m_logcon_dnd
 )
 
-rows <- tibble(
-  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
-  `1` = c("Count", "✓", ""),
-  `2` =c("Count", "✓", ""),
-  `3`  = c("Count", "", "✓"),
-  `4` = c("Log(Count+1)", "✓", "") #"✓"
-)
-
-attr(rows, 'position') <- c(0, 24,25)
 
 modelsummary(models_policy, stars = T, 
              add_rows = rows, 
@@ -612,10 +617,13 @@ modelsummary(models_policy, # stars = T,
              coef_map = cm, 
              gof_omit = "R.*|AIC|BIC|Log.*", 
              coef_omit = "(Intercept)",
-             output = "latex") %>%
-    str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
-  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X|✓", "\\\\checkmark") %>% 
+             output = "latex",
+             title = "The Effect of Expierence and Institutional Power on Policy Work", 
+             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
+                          "Column 2 presents the difference-in-differences estimates",
+                          "Column 3 subsets to legislators who serve at least 3 years in Congress.",
+             "Column 4 takes the Log of the counts + 1 as the dependent variable.") %>% rev() ) %>% 
+  format_table() %>%
    write_lines(file = here::here("tables", "models_policy.tex") )
 ```
 
