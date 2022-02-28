@@ -93,6 +93,7 @@ Clustering standard errors at the legislator level:
 ["Clustering on the panel variable produces an estimator of the VCE that is robust to cross-sectional heteroskedasticity and within-panel (serial) correlation that is asymptotically equivalent to that proposed by Arellano (1987)"](https://www.stata.com/manuals13/xtxtreg.pdf)
 
 Replicated using `fixest::feglm` here and `xtreg` in Replication.do.
+See more about robust (clustered) standard errors with fixed effects are calculated by `fixest` [here](https://lrberge.github.io/fixest/articles/standard_errors.html) and by  `xtreg` [here](https://www.stata.com/manuals13/xtxtreg.pdf).
 
 ```{r cm}
 # Coef Map
@@ -120,115 +121,6 @@ setFixest_dict(cm)
 ---
 
 ## Total Letters 
-
-### Without agency-year FE:
-
-```{r m-total-without-agency-year-FE,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
-testing = F
-
-dcounts_tenure %<>% 
-  mutate(Legislator = icpsr,
-         Legislator_x_Agency = icpsr_agency,
-         Year_x_Agency = agency_year)
-
-# paper table 
-# 1 
-# cross-sectional 
-m_total_cross <-feglm (perYear ~ 
-                         chair + ranking_minority + prestige + 
-                    first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party,
-                    cluster = "Legislator", 
-           data = dcounts_tenure)
-
-if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
-
-coefplot(m_total_cross, horiz = T) 
-
-
-
-# 2
-m_total_dnd <-feglm (perYear ~ 
-                       chair + ranking_minority + prestige + 
-                    first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency, 
-                    cluster = "Legislator",
-                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
-           data = dcounts_tenure)
-
-if(testing){modelsummary(m_total_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
-
-coefplot(m_total_dnd, horiz = T) 
-
-
-# 3
-m_total_2nd <-feglm (perYear ~ 
-                       chair + ranking_minority + prestige + 
-                    first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency, 
-                    cluster = "Legislator", 
-           data = dcounts_tenure %>% filter(survive == 1))
-
-if(testing){modelsummary(m_total_2nd, gof_omit = "R.*", coef_omit = "(Intercept)")}
-coefplot(m_total_2nd, horiz = T) 
-
-
-# 4
-m_logtotal_dnd <-feglm (log(perYear + 1) ~ 
-                          chair + ranking_minority + prestige + 
-                    first + second + third + fourth + fifth + sixth + 
-                    majority + presidents_party | Legislator_x_Agency, 
-                    cluster = "Legislator", 
-           data = dcounts_tenure)
-
-if(testing){modelsummary(m_logtotal_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
-
-coefplot(m_logtotal_dnd, horiz = T) 
-
-
-```
-
-### Total Letters Table (without agency-year FE)
-
-```{r}
-models_total <- list(
-  "1" = m_total_cross,
-  "2" = m_total_dnd,
-  "3"  =  m_total_2nd,
-  "4" = m_logtotal_dnd
-)
-
-rows <- tibble(
-  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
-  `1` = c("Count", "✓", ""),
-  `2` =c("Count", "✓", ""),
-  `3`  = c("Count", "", "✓"),
-  `4` = c("Log(Count+1)", "✓", "") #"✓"
-)
-
-attr(rows, 'position') <- c(0, 24,25)
-
-m <- modelsummary(models_total, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_omit = "R.*|AIC|BIC|Log.*",
-             coef_omit = "(Intercept)", output = "html") 
-
-modelsummary(models_total, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_omit = "R.*|AIC|BIC|Log.*", 
-             coef_omit = "(Intercept)",
-             output = "latex") %>%
-  str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
-  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-  str_replace_all("X", "✓") %>% 
-  write_lines(file = here::here("tables", "models_total.tex") )
-```
-
----
-
-### Now with agency-year FE 
 
 - Figures: `figs/m-total-[1:4].png`
 
@@ -297,7 +189,7 @@ coefplot(m_logtotal_dnd, horiz = T)
 
 ```
 
-### Total Letters Table (with agency-year FE)
+### Total Letters Table 
 
 - Table: `tables/models_total.tex` (sans stars)
 
@@ -334,7 +226,7 @@ modelsummary(models_total, # stars = T,
              output = "latex") %>%
   str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
   str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X", "✓") %>% 
+    str_replace_all("X|✓", "\\\\checkmark") %>% 
   write_lines(file = here::here("tables", "models_total.tex") )
 ```
 
@@ -545,7 +437,7 @@ modelsummary(models_con, # stars = T,
              output = "latex") %>%
     str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
   str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X", "✓") %>% 
+    str_replace_all("X|✓", "\\\\checkmark") %>% 
   write_lines(file = here::here("tables", "models_con.tex") )
 ```
 
@@ -723,8 +615,8 @@ modelsummary(models_policy, # stars = T,
              output = "latex") %>%
     str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
   str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
-    str_replace_all("X", "✓") %>% 
-  write_lines(file = here::here("tables", "models_policy.tex") )
+    str_replace_all("X|✓", "\\\\checkmark") %>% 
+   write_lines(file = here::here("tables", "models_policy.tex") )
 ```
 
 ### Predictions 
