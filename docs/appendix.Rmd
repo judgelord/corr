@@ -28,6 +28,9 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 
+library(modelsummary)
+library(marginaleffects)
+library(fixest)
 library(tidyverse)
 library(magrittr)
 library(tidytext)
@@ -197,6 +200,10 @@ all_contacts2$Type %<>% str_replace("Indiv. Constituent" , "Constituent (Individ
 
 
 load(here::here("data", "dcounts_min.Rdata"))
+load(here::here("data", "dcounts_tenure.Rdata"))
+load(here::here("data", "dcounts_ratio.Rdata"))
+load(here::here("data", "dcounts_per_district.Rdata"))
+
 
 load(here::here("data", "members.Rdata"))
 
@@ -523,7 +530,7 @@ case_study("(NY-14)")
 
 cases <- unique(members$cqlabel) #%>% head()
 
-map(cases, case_study )
+# map(cases, case_study )
 
 ```
 
@@ -675,7 +682,58 @@ dcounts %>%
 We classify legislator requests into five overall types:
 
 All data:
-```{r data_by_type-tall, fig.height=2.5, fig.width=5}
+```{r data_by_type-tall, fig.height=3.5, fig.width=5.5}
+
+type_totals <- all_contacts2 %>% 
+  filter(Type != "To be coded") %>%  
+  mutate(total = n()) %>% 
+  group_by(Type, total, type) %>% 
+  summarise(nT = n()) %>% 
+  mutate(percent = paste0(nT, " = ", 100*round(nT/total, 2), "%"),
+         Type = str_c(Type, "\n    ", percent)) %>% 
+  ungroup() %>% 
+  group_by(type) %>% 
+  mutate(nt = sum(nT),
+         percent_t = paste0(100*round(nt/total, 2), "%"))
+
+type_totals %<>% mutate(Type = Type %>% 
+                          str_replace_all("\\)", "") %>% 
+                          str_replace_all(" \\(", ",\n") )
+
+# horizontal
+type_totals %>% 
+  ggplot() + 
+  geom_col(alpha = .7,aes(x = Type, fill = type, y = nT) ) + 
+  scale_y_continuous(breaks = seq(0,500000, 50000), limits = c(0,300000)) + 
+  labs(x = "",
+       fill = "",
+       y = paste("Number of Contacts"),
+       title = "") +
+  #geom_text(aes(label = Type, x = Type,y = nT) ) + 
+  theme(panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.ticks = element_blank(),
+        #axis.text.x.top = element_text(),
+        legend.position ="none") + 
+  ggpubr::geom_bracket(
+    xmin = type_totals$Type[1], xmax = type_totals$Type[3], 
+    y.position = 260000,
+    label = paste(type_totals$percent_t[1], "Constituency Service" ),
+    #hjust = 1,
+    vjust = -1
+  ) + 
+  ggpubr::geom_bracket(
+    xmin = type_totals$Type[4], xmax = type_totals$Type[5], 
+    y.position = 75000,
+    label = paste(type_totals$percent_t[5], "Policy Work"),
+    #hjust = 1,
+    vjust = -1
+  )
+
+
+
+
+
 all_contacts2 %>% 
   filter(Type != "To be coded") %>%  
   mutate(total = n()) %>% 
@@ -698,10 +756,47 @@ all_contacts2 %>%
         panel.grid.major.x = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x = element_text())
+
+
 ```
 
-Alterntative format:
+Horizontal format:
 ```{r data_by_type, fig.height=2, fig.width=6, results='hide'}
+type_totals %<>% 
+  #distinct(type, Type, nT)
+  mutate(Type = Type %>% str_replace(",\n", ", "))
+
+type_totals %>% 
+  ggplot() + 
+  geom_col(alpha = .7,aes(x = Type, fill = type, y = nT/1000) ) + 
+  coord_flip() + 
+  scale_y_continuous(breaks = seq(0,500, 50), limits = c(0,500)) + 
+  labs(x = "",
+       fill = "",
+       y = paste("Number of Contacts (Thousands)"),
+       title = "") +
+  #theme_void() + 
+  theme(panel.border = element_blank(),
+        panel.grid.major.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text.x.top = element_text(),
+        legend.position ="none") + 
+  ggpubr::geom_bracket(
+    xmin = type_totals$Type[1], xmax = type_totals$Type[3], y.position = 300,
+    label = paste(type_totals$percent_t[1], type_totals$type[1]),
+    hjust = -.3,
+    vjust = 1.5,
+    label.size = 3.5
+  ) + 
+  ggpubr::geom_bracket(
+    xmin = type_totals$Type[4], xmax = type_totals$Type[5], y.position = 100,
+    label = paste(type_totals$percent_t[5], type_totals$type[5]),
+    hjust = -.3,
+    vjust = 1,
+    label.size = 3.5
+  )
+
+
 all_contacts2 %>% 
   filter(Type != "To be coded") %>%  
   mutate(total = n()) %>% 
@@ -810,7 +905,6 @@ chair %>%
         axis.ticks.x = element_blank())
 ```
 
-# Results 
 
 
 
@@ -821,8 +915,8 @@ chair %>%
 
 TODO 
 
-- [ ] members.Rdata going back to most senior member's first Congress
-- [ ] what to do with chamber switchers?
+- [ x ] members.Rdata going back to most senior member's first Congress in "data/nominate.Rdata"
+- [ x ] what to do with party and chamber switchers? Drop them from counts.
 
 ```{r level}
 

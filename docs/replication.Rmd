@@ -1,0 +1,816 @@
+---
+title: "Replication"
+subtitle: "Unequal Representation: Evidence from a Census of Legislator Contacts with US Federal Agencies"
+output:
+    html_document:
+      highlight: zenburn
+      toc: true
+      toc_float: true
+      code_folding: hide
+    #   toc: true
+    #   keep_tex: true
+    # pdf_document:
+      header-includes:
+       - \usepackage{subfig}
+
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r global.options, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = FALSE, 
+                      fig.width=4.5, 
+                      fig.height = 3.5,
+                      split = T,
+                      fig.align = 'center', 
+                      fig.path='figs/',
+                      fig.retina = 1,
+                      warning=FALSE, 
+                      message=FALSE)
+
+
+
+library(modelsummary)
+library(marginaleffects)
+library(fixest)
+library(tidyverse)
+library(magrittr)
+library(tidytext)
+library(xml2)
+library(knitr)
+library(kableExtra)
+library(here)
+library(ggrepel)
+
+# library(lfe)
+
+library(ggplot2); theme_set(theme_bw())
+  options(
+    ggplot2.continuous.color = "viridis",
+    ggplot2.continuous.fill = "viridis"
+  )
+  scale_color_discrete <- function(...)
+    scale_color_viridis_d(..., direction = -1)
+  scale_fill_discrete <- function(...)
+    scale_fill_viridis_d(..., direction = -1)
+  
+  
+kablebox <- . %>%  
+  head(100) %>%
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "200px")
+
+kablebox_long <- . %>% 
+  head(100) %>% 
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "500px")
+```
+
+# Replication data
+
+From `code/replication.R`, which starts with the main data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
+
+1. counts per member-year (dcounts_tenure.Rdata/AgencyComm.dta)
+2. ratio per member-year (dcounts_ratio.Rdata/ProportionContact.dta)
+3. counts per district-year (dcounts_per_district.Rdata, DistrictLevel.dta)
+
+The same three datasets are used in Replication.do
+
+```{r data}
+load(here::here("data", "dcounts_tenure.Rdata"))
+load(here::here("data", "dcounts_ratio.Rdata"))
+load(here::here("data", "dcounts_per_district.Rdata"))
+```
+
+# Counts per member per year
+
+Clustering standard errors at the legislator level:
+
+["Clustering on the panel variable produces an estimator of the VCE that is robust to cross-sectional heteroskedasticity and within-panel (serial) correlation that is asymptotically equivalent to that proposed by Arellano (1987)"](https://www.stata.com/manuals13/xtxtreg.pdf)
+
+Replicated using `fixest::feglm` here and `xtreg` in Replication.do.
+
+```{r cm}
+# Coef Map
+cm = c("chair" = "Committee Chair",
+       "ranking_minority" = "Ranking Member",
+       "prestige" = "Prestige Committee",
+       "first" = "First Year",
+       "second" = "Second Year",
+       "third" = "Third Year",
+       "fourth" = "Fourth Year",
+       "fifth" = "Fifth Year",
+       "sixth" = "Sixth Year",
+       "majority" = "Majority",
+       "presidents_party" = "President's Party",
+       "Legislator" = "Legislator", 
+       "Agency" = "Agency",
+       "FE: icpsr_agency" = "Legislator × Agency Fixed Effects",
+       "icpsr_agency" = "Legislator × Agency Fixed Effects")
+
+
+setFixest_dict(cm)
+```
+
+
+---
+
+## Total Letters 
+
+
+```{r m-total-without-agency-year-FE,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
+testing = F
+
+dcounts_tenure %<>% 
+  mutate(Legislator = icpsr,
+         Legislator_x_Agency = icpsr_agency,
+         Year_x_Agency = agency_year)
+
+# paper table 
+# 1 
+# cross-sectional 
+m_total_cross <-feglm (perYear ~ 
+                         chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_total_cross, horiz = T) 
+
+
+
+# 2
+m_total_dnd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency, 
+                    cluster = "Legislator",
+                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_total_dnd, horiz = T) 
+
+
+# 3
+m_total_2nd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_total_2nd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_total_2nd, horiz = T) 
+
+
+# 4
+m_logtotal_dnd <-feglm (log(perYear + 1) ~ 
+                          chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logtotal_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_logtotal_dnd, horiz = T) 
+
+
+```
+
+### Total Letters Table (without agency-year FE)
+
+```{r}
+models_total <- list(
+  "1" = m_total_cross,
+  "2" = m_total_dnd,
+  "3"  =  m_total_2nd,
+  "4" = m_logtotal_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
+  `1` = c("Count", "✓", ""),
+  `2` =c("Count", "✓", ""),
+  `3`  = c("Count", "", "✓"),
+  `4` = c("Log(Count+1)", "✓", "") #"✓"
+)
+
+attr(rows, 'position') <- c(0, 24,25)
+
+modelsummary(models_total, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = "R.*|AIC|BIC|Log.*",
+             coef_omit = "(Intercept)")
+
+modelsummary(models_total, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)",
+             output = "latex") %>%
+  str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
+  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
+  str_replace_all("X", "✓") %>% 
+  write_lines(file = here::here("tables", "models_total.tex") )
+```
+
+---
+
+### Now with agency-year FE 
+
+- Figures: `figs/m-total-[1:4].png`
+
+```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
+testing = F
+
+dcounts_tenure %<>% 
+  mutate(Legislator = icpsr,
+         Legislator_x_Agency = icpsr_agency,
+         Year_x_Agency = agency_year)
+
+# paper table 
+# 1 
+# cross-sectional 
+m_total_cross <-feglm (perYear ~ 
+                         chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_total_cross, horiz = T) 
+
+
+
+# 2
+m_total_dnd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator",
+                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_total_dnd, horiz = T) 
+
+
+# 3
+m_total_2nd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_total_2nd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_total_2nd, horiz = T) 
+
+
+# 4
+m_logtotal_dnd <-feglm (log(perYear + 1) ~ 
+                          chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logtotal_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_logtotal_dnd, horiz = T) 
+
+
+```
+
+### Total Letters Table (with agency-year FE)
+
+- Table: `tables/models_total.tex` (sans stars)
+
+
+```{r}
+models_total <- list(
+  "1" = m_total_cross,
+  "2" = m_total_dnd,
+  "3"  =  m_total_2nd,
+  "4" = m_logtotal_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
+  `1` = c("Count", "✓", ""),
+  `2` =c("Count", "✓", ""),
+  `3`  = c("Count", "", "✓"),
+  `4` = c("Log(Count+1)", "✓", "") #"✓"
+)
+
+attr(rows, 'position') <- c(0, 24,25)
+
+modelsummary(models_total, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = "R.*|AIC|BIC|Log.*",
+             coef_omit = "(Intercept)")
+
+modelsummary(models_total, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)",
+             output = "latex") %>%
+  str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
+  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
+    str_replace_all("X", "✓") %>% 
+  write_lines(file = here::here("tables", "models_total.tex") )
+```
+
+### Predictions 
+
+#### Values to predict at
+
+The most frequent legislator agency pair: McCain x VA
+
+The modal year at the VA: 2018
+
+```{r values}
+# modal agency 
+dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+
+dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+
+dcounts_tenure %>% group_by(Year_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+
+# other variable means
+ dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
+
+
+values <- tidyr::expand(dcounts_tenure,
+                        agency = "VA",
+                        chair = chair, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = FALSE,
+                        second = FALSE,
+                        third = FALSE,
+                        fourth = FALSE,
+                        fifth = FALSE, 
+                        sixth = FALSE,
+                        Legislator_x_Agency = "VA_15039",
+                        Year_x_Agency = "VA_2018",
+                        majority = TRUE,
+                        presidents_party = presidents_party
+                   ) %>% 
+  drop_na(majority, chair)
+```
+
+
+- Figures: `figs/m-total-predicted-[1:2].png`
+
+```{r m-total-predicted,  fig.show="hold", out.width="50%"}
+predicted <- predictions(m_total_cross,
+                         newdata = values)
+
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# As a plot
+predicted %>%
+  mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position =  position_dodge(width = -1)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Total Letters per Year\n Cross Sectional",
+       x = "",
+       y = "Predicted Number of Total Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+
+
+# DND 
+predicted <- predictions(m_total_dnd,
+                         newdata = values)
+
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# As a plot
+predicted %>%
+  # mutate(predicted = predicted*90,
+  #        std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Total Letters per Year\n Difference in Differences (Within Legislator)",
+       x = "",
+       y = "Predicted Number of Total Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+```
+
+
+## Constituency Service Letters
+
+DV: Only letters coded as constituency service letters
+
+- Figures: `figs/m-con-[1:4].png`
+
+```{r m-con,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap="Constituency Service Letters", fig.subcap= c("1","2","3","4")}
+testing = F
+
+m_con_cross <-feglm (perYear_con ~ 
+                       chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_con_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_con_cross, horiz = T) 
+
+
+
+# 2
+m_con_dnd <-feglm (perYear_con ~ 
+                     chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator",
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_con_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_con_dnd, horiz = T) 
+
+
+# 3
+m_con_2nd <-feglm (perYear_con ~ 
+                     chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_tenure_2nd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_con_2nd, horiz = T) 
+
+
+# 4
+m_logcon_dnd <-feglm (log(perYear_con + 1) ~ 
+                        chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_logcon_dnd, horiz = T) 
+```
+
+### Constituency Letters Table
+
+- Table: `tables/models_con.tex` (sans stars)
+
+```{r}
+models_con <- list(
+  "1" = m_con_cross,
+  "2" = m_con_dnd,
+  "3"  =  m_con_2nd,
+  "4" = m_logcon_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
+  `1` = c("Count", "✓", ""),
+  `2` =c("Count", "✓", ""),
+  `3`  = c("Count", "", "✓"),
+  `4` = c("Log(Count+1)", "✓", "") #"✓"
+)
+
+attr(rows, 'position') <- c(0, 24,25)
+
+modelsummary(models_con, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)")
+
+modelsummary(models_con, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)",
+             output = "latex") %>%
+    str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
+  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
+    str_replace_all("X", "✓") %>% 
+  write_lines(file = here::here("tables", "models_con.tex") )
+```
+
+### Predictions 
+
+- Figures: `figs/m-con-predicted-[1:4].png`
+
+```{r m-con-predicted,  fig.show="hold", out.width="50%"}
+# A data frame of values at which to estimate probabilities:
+predicted <- predictions(m_con_cross,
+                         newdata = values)
+
+# naming things for plots
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# A plot
+predicted %>%
+  mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position = position_dodge(width = -1)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Constituency Letters per Year\n Cross Sectional",
+       x = "",
+       y = "Predicted Number of Constituency Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+
+
+# Predictions for DND Plot
+predicted <- predictions(m_con_dnd,
+                         newdata = values)
+
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# DND plot
+predicted %>%
+  # mutate(predicted = predicted*90,
+  #        std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Constituency Letters per Year\n Difference in Differences (Within Legislator)",
+       x = "",
+       y = "Predicted Number of Constituency Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+```
+
+
+
+## Policy Letters
+
+Only using letters coded as constituent letters 
+
+- Figures: `figs/m-policy-[1:4].png`
+
+```{r m-policy,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap="Policy Letters", fig.subcap= c("1","2","3","4")}
+testing = F
+
+m_policy_cross <-feglm (perYear_policy ~ 
+                          chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority +  presidents_party,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_policy_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_policy_cross, horiz = T) 
+
+
+
+# 2
+m_policy_dnd <-feglm (perYear_policy ~ 
+                        chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator",
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_policy_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_policy_dnd, horiz = T) 
+
+
+# 3
+m_policy_2nd <-feglm (perYear_policy ~ 
+                        chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_tenure_2nd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+coefplot(m_policy_2nd, horiz = T) 
+
+
+# 4
+m_logcon_dnd <-feglm (log(perYear_policy + 1) ~ 
+                        chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Legislator_x_Agency + Year_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_logcon_dnd, horiz = T) 
+```
+
+### Policy Letters Table
+
+- Table: `tables/models_policy.tex` (sans stars)
+
+```{r}
+models_policy <- list(
+  "1" = m_policy_cross,
+  "2" = m_policy_dnd,
+  "3"  =  m_policy_2nd,
+  "4" = m_logcon_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", "All Legislators", "Served At Least Second Term"),
+  `1` = c("Count", "✓", ""),
+  `2` =c("Count", "✓", ""),
+  `3`  = c("Count", "", "✓"),
+  `4` = c("Log(Count+1)", "✓", "") #"✓"
+)
+
+attr(rows, 'position') <- c(0, 24,25)
+
+modelsummary(models_policy, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)")
+
+modelsummary(models_policy, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)",
+             output = "latex") %>%
+    str_replace("FE: Legislator_x_Agency", "Legislator x Agency Fixed Effects") %>% 
+  str_replace("FE: Year_x_Agency", "Year x Agency Fixed Effects") %>% 
+    str_replace_all("X", "✓") %>% 
+  write_lines(file = here::here("tables", "models_policy.tex") )
+```
+
+### Predictions 
+
+- Figures: `figs/m-policy-predicted-[1:2].png`
+
+```{r m-policy-predicted,  fig.show="hold", out.width="50%"}
+predicted <- predictions(m_policy_cross,
+                         newdata = values)
+
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# As a plot
+predicted %>%
+  mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position =  position_dodge(width = -1)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Policy Letters per Year\n Cross Sectional",
+       x = "",
+       y = "Predicted Number of Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+
+
+# Predictions for DND plot 
+predicted <- predictions(m_policy_dnd,
+                         newdata = values)
+
+predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+
+# DND plot
+predicted %>%
+  # mutate(predicted = predicted*90,
+  #        std.error = std.error*90) %>%
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  labs(title = "Predicted Number of Policy Letters per Year\n Difference in Differences (Within Legislator)",
+       x = "",
+       y = "Predicted Number of Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")  +
+  theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+```
+
+# Ratio 
+
+```{r m-ratio,  fig.show="hold", out.width="50%"}
+
+
+```
+
+
+# Per District
+
+```{r m-district,  fig.show="hold", out.width="50%"}
+
+
+```

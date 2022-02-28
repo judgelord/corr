@@ -33,6 +33,10 @@
 \usepackage{multirow}
 \bibliographystyle{apsr}
 
+% for modelsummary
+\usepackage{siunitx}
+\newcolumntype{d}{S[input-symbols = ()]}
+
 
 \begin{document}
 
@@ -291,7 +295,7 @@ The left-hand bar shows that 65\% of all contacts with federal agencies are made
 \begin{figure}[hbt!]
 \centering
 \caption{Legislator Requests to Federal Agencies by Type 2007-2020} \label{f:type2}
-\scalebox{0.4}{\includegraphics{figs/data_by_type-1}}
+\includegraphics[width = .8\textwidth]{figs/data_by_type-tall-1}
 \end{figure}
 
 
@@ -313,7 +317,7 @@ On average, senators in our data contacted agencies 156 times per year.
 \centering
 \caption{Variation in Average Legislator Requests by Percentile} \label{f:contact1} 
 \begin{minipage}{\textwidth}
-\scalebox{0.4}{\includegraphics{figs/percentiles-1}}
+\includegraphics[width = \textwidth]{figs/percentiles-1}
 \footnotetext{This figure presents the average number of contacts with federal agencies per year for House members (left-hand panel) and senators (right-hand panel), where the legislators' counts are sorted by their per year percentile rank. This reveals that senators and House members regularly contact federal agencies, but there is considerable variation in the level of contact across legislators.}
 \end{minipage}
 \end{figure}
@@ -329,7 +333,7 @@ Figure \ref{f:peryear} shows the number of requests per legislator over time, hi
 \centering
 \caption{Variation in Legislator Requests by Year 2007-2017} \label{f:peryear} 
 \begin{minipage}{\textwidth}
-\scalebox{0.4}{\includegraphics{figs/counts-per-year-1}}
+\includegraphics[width = \textwidth]{figs/counts-per-year-1}
 \footnotetext{This figure presents the number of contacts with federal agencies per year for House members (left-hand panel) and senators (right-hand panel) over time. This reveals that senators and House considerable variation in the level of contact both within and across legislators.}
 \end{minipage}
 \end{figure}
@@ -514,7 +518,7 @@ Figure \ref{f:stateSize} shows that this is the case: senators from larger state
 \begin{figure}
 \centering
 \caption{Average Number of Requests per Senator per Year 2007-2017 by State Population.} \label{f:stateSize}
-\scalebox{0.4}{\includegraphics{figs/pop-1}}
+\includegraphics[width = \textwidth]{figs/pop-1}
 \end{figure}
 
 We expect the number of times a legislator contacts a particular agency to correlate with their districts' demographic composition. To assess the correlation between demographic characteristics and the rates legislators contact agencies, we focus on two example agencies: the Veterans Administration (VA) and the Social Security Administration (SSA). We measured the prevalence of two groups in the district: veterans---the residents who might plausibly need assistance navigating the VA---and residents who are over 65 years of age---and therefore satisfy the age eligibility for social security. We then run a simple bivariate regression of the total number of contacts a legislator made to each agency on the proportion of constituents who are veterans or who are over 65.  

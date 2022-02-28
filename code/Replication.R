@@ -3,7 +3,9 @@ library(ggplot2)
 library(lfe)
 library(readstata13)
 library(foreign)
-load('/Users/jgrimmer/Dropbox/correspondence/data/dcounts_min.Rdata')
+library(here)
+#load('/Users/jgrimmer/Dropbox/correspondence/data/dcounts_min.Rdata')
+load(here::here("data", "dcounts_min.Rdata"))
 
 ##creating the aggregate count variable
 
@@ -17,10 +19,12 @@ d$perYear_policy<- d_sub2$perYear_pol
 
 
 
-
 ##now loading the data on members 
-load('/Users/jgrimmer/Dropbox/correspondence/data/agency_vars.Rdata')
-load('/Users/jgrimmer/Dropbox/correspondence/data/members.Rdata')
+#load('/Users/jgrimmer/Dropbox/correspondence/data/agency_vars.Rdata')
+load(here::here("data", "agency_vars.Rdata"))
+
+#load('/Users/jgrimmer/Dropbox/correspondence/data/members.Rdata')
+load(here::here("data", "members.Rdata"))
 
 congress_years<- function(congress){
 		years<- c(congress*2 + 1787, congress*2 + 1788 )
@@ -36,8 +40,11 @@ d$congress<- year_congress(d$year)
 
 d<- left_join(d, members %>% select(congress, icpsr, party,party_code, state_abbrev, district_code, nominate.dim1, presidents_party, female, chair, ranking_minority, party_leader, party_whip, majority, prestige, prestige_chair, yearelected, state), by = c('congress', 'icpsr'))
 
-nom<- read.delim('/Users/jgrimmer/Correspondence/data/nominate_data.csv', sep=',')
 
+
+
+# nom<- read.delim('/Users/jgrimmer/Correspondence/data/nominate_data.csv', sep=',')
+load(here::here("data", "members.Rdata"))
 
 nom2<- nom %>% group_by(icpsr) %>% summarise(first_cong = min(congress))
 
@@ -68,23 +75,33 @@ df<- left_join(df, final_tenure , by = 'icpsr')
 df$survive <- ifelse((df$chamber.x=='House' & df$max_year>1)| (df$chamber.x=='Senate' & df$max_year>5),1, 0 )
 df$chamber <- df$chamber.x
 
+## count or repeated values (chamber and party switchers)
+# note that in the full data, we use the dates of letters to attribute them to the proper party or chamber at the time
+# but in yearly counts, we lose this level of detail, leading to undercounts for switchers
+df %<>% 
+  ungroup() %>% 
+  distinct() %>% 
+  add_count(icpsr, year, agency, name = "n") 
+
+# inspect duplicates 
+df %>% filter(n > 1) %>% select(icpsr, party, chamber, year, agency)
+  
 ##purging repeated values 
-doubles<- df2 %>% group_by(icpsr, year, agency) %>% summarise(count = n())
-doubles$remove<- ifelse(doubles$count>1, 1, 0)
-
-df2<- left_join(df, doubles%>% select(icpsr, year, agency, remove) , by = c('icpsr', 'year', 'agency'))
-
-df2<- df2 %>% subset(remove==0)
+df2<- df %>% filter(n == 1)
 
 
-write.dta(df2, file='/users/jgrimmer/Dropbox/Correspondence/Data/AgencyComm.dta')
+write.dta(df2, file='~/Dropbox/Correspondence/Data/AgencyComm.dta')
 
+dcounts_tenure <- df2
+save(dcounts_tenure, file = here::here("data", "dcounts_tenure.Rdata"))
 
 
 ##creating the ratio variable 
-
 d_rat<- df %>% group_by(year, icpsr, prestige, prestige_chair, chair, ranking_minority, majority, presidents_party,
-				first, second, third, fourth, fifth, sixth) %>% summarise(perCon = sum(perYear_con), perPol = sum(perYear_policy)) %>% mutate(ratio = perCon/(perCon + perPol))
+				first, second, third, fourth, fifth, sixth) %>% 
+  summarise(perCon = sum(perYear_con), 
+            perPol = sum(perYear_policy)) %>% 
+  mutate(ratio = perCon/(perCon + perPol))
 
 d_rat<- as.data.frame(d_rat)
 
@@ -93,12 +110,16 @@ doubles$remove<- ifelse(doubles$count>1, 1, 0)
 
 d_rat2<- left_join(d_rat, doubles, by = c('year','icpsr'))
 d_rat2<-d_rat2 %>% subset(remove==0)
-write.dta(d_rat2, file='/users/jgrimmer/Dropbox/Correspondence/Data/ProportionContact.dta')
+write.dta(d_rat2, file='~/Dropbox/Correspondence/Data/ProportionContact.dta')
+
+dcounts_ratio <- d_rat2
+save(dcounts_ratio, file = here::here("data", "dcounts_ratio.Rdata"))
 
 
 ####
-decade<- case_when(df2$year < 2011 ~ '0', 
-				   df2$year > 2010 ~ '1')
+decade<- case_when(
+  df2$year < 2011 ~ '0', 
+  df2$year > 2010 ~ '1')
 
 state_dist<- case_when(df2$chamber=='Senate'~ paste(df2$state,df2$district_code,  sep='_' ), 
 						df2$chamber =='House'~ paste(paste(df2$state, df2$district_code, sep='_'), decade, sep='_'))
@@ -134,19 +155,30 @@ perDist<- left_join(perDist, select(state_level, state_new, mean_new, state, yea
 write.dta(perDist, '~/Dropbox/correspondence/data/DistrictLevel.dta')
 
 
+dcounts_per_district <- perDist
+save(dcounts_per_district, file = here::here("data", "dcounts_per_district.Rdata"))
 
 
 
 
-####making the figures for the slides
+#### making the figures for the slides
 
 library(readstata13)
 d<- read.dta13('/users/jgrimmer/Dropbox/Correspondence/Data/AgencyComm.dta')
 d2<- read.dta13('/users/jgrimmer/Dropbox/Correspondence/Data/ProportionContact.dta')
 
-sub<- d %>% group_by(icpsr, year, nominate_dim1, party, chamber_x, chair, ranking_minority, prestige) %>% summarise(avg_over = mean(perYear), 
+#FIXME replace names with these when it won't mess justin up
+d <- dcounts_tenure %>% mutate(nominate_dim1 = nominate.dim1,
+                               chamber_x = chamber)
+d2 <- dcounts_ratio 
+
+sub<- d %>% group_by(icpsr, year, nominate_dim1, party, 
+                     chamber_x, 
+                     chair, ranking_minority, prestige) %>% 
+  summarise(avg_over = mean(perYear), 
 																avg_con = mean(perYear_con), 
 																avg_pol = mean(perYear_policy))
+
 sub$party<- as.factor(sub$party)
 sub2<- sub %>% subset(party!= '(I)' & chamber_x!= 'President')
 
@@ -157,6 +189,9 @@ g3<- sub2 %>% ggplot(aes(x = nominate_dim1, y = avg_con, col= party)) +
 	geom_point(col = sub2$color)+ geom_smooth(se = F) + 
 		scale_color_manual(values=c('blue', 'red'))  + ylim(c(0, 1.75)) + xlab('First Dimension, Nominate') + 
 		ylab('Average Number of Constituency Service Contacts Per Year') + facet_wrap(.~chamber_x)
+
+# g3
+
 ggsave(g3, file='/Users/jgrimmer/Dropbox/correspondence/figs/NominateEffort.pdf', height = 6, width = 6)
 
 
@@ -182,6 +217,9 @@ tenure<- d %>% group_by(year_in) %>% summarise(avg_over = mean(perYear),
 g5<- tenure %>% ggplot(aes(x = year_in, y = avg_over)) + geom_line(lwd = 2) + 
 	xlab('Years in Congress') + ylab('Average Number of Requests per Agency') + 
 		xlim(c(1, 20 )) + ylim(c(0, 1.5)) + ggtitle("Average Requests by Year in Congress")
+
+# g5
+
 ggsave(g5, file='/Users/jgrimmer/Dropbox/correspondence/figs/TenureDifference.pdf', height = 6, width = 6)
 
 
@@ -248,7 +286,10 @@ temp<- felm(perYear~eventual_chair |year_agency, data = d_test %>% subset(chair=
 
 write.dta(d_test, '/Users/jgrimmer/Dropbox/correspondence/data/PlaceboTest.dta')
 
+#TODO MAKE THIS DEPEND ON DATA 
 share<- c(0.09,0.07, 0.65, 0.03, 0.16)
+# /TODO 
+
 type<- c('Constituent', 'Constituent', 'Constituent', 'Policy', 'Policy')
 spec<- c('501c3/Gov.', 'Constituent\nCorporate', 'Individual', 'Corporate', 'General')
 
@@ -261,4 +302,7 @@ out$Helped_use <- factor(out$Helped, levels =levels(out$Helped)[c(5, 1, 2, 4,3)]
 b1<- out %>% ggplot(aes(x = Helped_use, y = share,  fill = Type)) +
 	 geom_bar(stat = 'identity') + ylab('Share of Correspondence') + xlab('') + 
 	 scale_fill_manual(values = c('cornflowerblue', 'red')) + theme(text=element_text(size = 20))
+
+b1
+
 ggsave(b1, file='~/Dropbox/correspondence/figs/ContactType.pdf', height = 6, width = 11)
