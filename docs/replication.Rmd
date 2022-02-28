@@ -121,6 +121,7 @@ setFixest_dict(cm)
 
 ## Total Letters 
 
+### Without agency-year FE:
 
 ```{r m-total-without-agency-year-FE,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
 testing = F
@@ -207,11 +208,11 @@ rows <- tibble(
 
 attr(rows, 'position') <- c(0, 24,25)
 
-modelsummary(models_total, stars = T, 
+m <- modelsummary(models_total, stars = T, 
              add_rows = rows, 
              coef_map = cm,
              gof_omit = "R.*|AIC|BIC|Log.*",
-             coef_omit = "(Intercept)")
+             coef_omit = "(Intercept)", output = "html") 
 
 modelsummary(models_total, # stars = T, 
              add_rows = rows,               
