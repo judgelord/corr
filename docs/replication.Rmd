@@ -125,9 +125,75 @@ format_table <- . %>% row_spec(row = 1, bold = T, hline_after = TRUE) %>%
   str_replace("Std.Errors", "Robust/Clustered Std. Errors") %>% 
   str_replace("FE: Legislator_x_Agency", "Legislator x Agency FE") %>%
   str_replace("FE: Year_x_Agency", "Year x Agency FE") %>% 
+  str_replace("FE: Year", "Year Fixed Effects") %>% 
+  str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
     str_replace_all("X|✓", "\\\\\\checkmark") 
 ```
 
+```{r}
+# helper functions 
+
+ggchair <- function(predicted = predicted) {
+  
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+predicted %>%  
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
+}
+
+
+ggtenure <- function(predicted = predicted) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, predicted, std.error) %>% 
+  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year = name %>% 
+             str_replace("more", "7 or more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("first", "1") 
+             ) %>% 
+    ungroup()
+
+predicted %>%  
+  ggplot() + 
+  aes(x = year, 
+      y = predicted, 
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+}
+```
 
 ---
 
@@ -155,7 +221,7 @@ m_total_cross <-feglm (perYear ~
 
 if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
 
-coefplot(m_total_cross, horiz = T) 
+coefplot(m_total_cross, horiz = T, drop = "(Intercept)") 
 
 
 
@@ -239,8 +305,8 @@ modelsummary(models_total, # stars = T,
              coef_omit = "(Intercept)",
              output = "latex",
              title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
-                          "Column 2 presents the difference-in-differences estimates",
+             notes = list("Column 1 shows average differences across committee assignments and years in Congress.",
+                          "Column 2 presents difference-in-differences estimates",
                           "Column 3 subsets to legislators who serve at least 3 years in Congress.",
                           "Column 4 takes the Log of the counts + 1 as the dependent variable.") %>% rev() ) %>% 
   format_table() %>%
@@ -283,83 +349,98 @@ values <- tidyr::expand(dcounts_tenure,
                         sixth = FALSE,
                         Legislator_x_Agency = "VA_15039",
                         Year_x_Agency = "VA_2018",
+                        Legislator = "15039",
+                        Year = "2018",
                         majority = TRUE,
                         presidents_party = presidents_party
                    ) %>% 
   drop_na(majority, chair)
+
+
+values_tenure <- tidyr::expand(dcounts_tenure,
+                        agency = "VA",
+                        chair = FALSE, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = first,
+                        second = second,
+                        third = third,
+                        fourth = fourth,
+                        fifth = fifth, 
+                        sixth = sixth,
+                        Legislator_x_Agency = "VA_15039",
+                        Year_x_Agency = "VA_2018",
+                        Legislator = "15039",
+                        Year = "2018",
+                        majority = TRUE,
+                        presidents_party = TRUE
+                   ) 
+
+
+
 ```
 
 
-- Figures: `figs/m-total-predicted-[1:2].png`
+- Figures: `figs/m-total-predicted-[1:4].png`
 
 ```{r m-total-predicted,  fig.show="hold", out.width="50%"}
 predicted <- predictions(m_total_cross,
                          newdata = values)
 
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
-
-
 # As a plot
 predicted %>%
   mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position =  position_dodge(width = -1)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() + 
   labs(title = "Predicted Number of Total Letters per Year\n Cross Sectional",
        x = "",
        y = "Predicted Number of Total Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+       shape = "") 
+
+# tenure
+predicted <- predictions(m_total_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+  labs(title = "Predicted Number of Total Letters\nCross Sectional",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "")
 
 
 # DND 
 predicted <- predictions(m_total_dnd,
                          newdata = values)
 
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
-
 
 # As a plot
 predicted %>%
-  # mutate(predicted = predicted*90,
-  #        std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() + 
   labs(title = "Predicted Number of Total Letters per Year\n Difference in Differences (Within Legislator)",
        x = "",
-       y = "Predicted Number of Total Letters",
+       y = "Predicted Number of Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+       shape = "") 
+
+# tenure
+predicted <- predictions(m_total_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Total Letters\nDifference in Differences",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "") 
 ```
 
 
@@ -380,7 +461,8 @@ m_con_cross <-feglm (perYear_con ~
            data = dcounts_tenure)
 
 if(testing){modelsummary(m_con_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
-coefplot(m_con_cross, horiz = T) 
+
+coefplot(m_con_cross, horiz = T, drop = "(Intercept)") 
 
 
 
@@ -447,8 +529,8 @@ modelsummary(models_con, # stars = T,
              coef_omit = "(Intercept)",
              output = "latex",
              title = "The Effect of Expierence and Institutional Power on Constituency Service", 
-             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
-                          "Column 2 presents the difference-in-differences estimates",
+             notes = list("Column 1 shows average differences across committee assignments and years in Congress.",
+                          "Column 2 presents difference-in-differences estimates",
                           "Column 3 subsets to legislators who serve at least 3 years in Congress.",
                           "Column 4 takes the Log of the counts + 1 as the dependent variable."))%>% 
   format_table() %>%
@@ -459,78 +541,40 @@ modelsummary(models_con, # stars = T,
 
 - Figures: `figs/m-con-predicted-[1:4].png`
 
-```{r m-con-predicted,  fig.show="hold", out.width="50%"}
+```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "", fig.subcap= ""}
 # A data frame of values at which to estimate probabilities:
 predicted <- predictions(m_con_cross,
                          newdata = values)
-
-# naming things for plots
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
 
 
 # A plot
 predicted %>%
   mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position = position_dodge(width = -1)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() + 
   labs(title = "Predicted Number of Constituency Letters per Year\n Cross Sectional",
        x = "",
        y = "Predicted Number of Constituency Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
-
+       shape = "") 
 
 # Predictions for DND Plot
 predicted <- predictions(m_con_dnd,
                          newdata = values)
-
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
 
 
 # DND plot
 predicted %>%
   # mutate(predicted = predicted*90,
   #        std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() + 
   labs(title = "Predicted Number of Constituency Letters per Year\n Difference in Differences (Within Legislator)",
        x = "",
        y = "Predicted Number of Constituency Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+       shape = "") 
 ```
 
 
@@ -552,7 +596,8 @@ m_policy_cross <-feglm (perYear_policy ~
            data = dcounts_tenure)
 
 if(testing){modelsummary(m_policy_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
-coefplot(m_policy_cross, horiz = T) 
+
+coefplot(m_policy_cross, horiz = T, drop = "(Intercept)") 
 
 
 
@@ -619,8 +664,8 @@ modelsummary(models_policy, # stars = T,
              coef_omit = "(Intercept)",
              output = "latex",
              title = "The Effect of Expierence and Institutional Power on Policy Work", 
-             notes = list("Column 1 shows the average differences across committee assignments and years in Congress.",
-                          "Column 2 presents the difference-in-differences estimates",
+             notes = list("Column 1 shows average differences across committee assignments and years in Congress.",
+                          "Column 2 presents difference-in-differences estimates",
                           "Column 3 subsets to legislators who serve at least 3 years in Congress.",
              "Column 4 takes the Log of the counts + 1 as the dependent variable.") %>% rev() ) %>% 
   format_table() %>%
@@ -629,85 +674,176 @@ modelsummary(models_policy, # stars = T,
 
 ### Predictions 
 
-- Figures: `figs/m-policy-predicted-[1:2].png`
+- Figures: `figs/m-policy-predicted-[1:4].png`
 
 ```{r m-policy-predicted,  fig.show="hold", out.width="50%"}
 predicted <- predictions(m_policy_cross,
                          newdata = values)
 
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
-
-
 # As a plot
 predicted %>%
   mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position =  position_dodge(width = -1)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() +
   labs(title = "Predicted Number of Policy Letters per Year\n Cross Sectional",
        x = "",
        y = "Predicted Number of Policy Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+       shape = "") 
 
 
 # Predictions for DND plot 
 predicted <- predictions(m_policy_dnd,
                          newdata = values)
 
-predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
-
 
 # DND plot
 predicted %>%
-  # mutate(predicted = predicted*90,
-  #        std.error = std.error*90) %>%
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  #geom_col(position = position_dodge(width = -1), alpha = .1, color = NA) +
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  ggchair() +
   labs(title = "Predicted Number of Policy Letters per Year\n Difference in Differences (Within Legislator)",
        x = "",
        y = "Predicted Number of Policy Letters",
        fill = "",
        color = "",
-       shape = "")  +
-  theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party)
+       shape = "")  
 ```
 
 # Ratio 
 
-```{r m-ratio,  fig.show="hold", out.width="50%"}
+- Figures: `figs/m-ratio-[1:2].png`
+
+```{r m-ratio,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
+dcounts_ratio %<>% 
+  mutate(Legislator = icpsr,
+         Year = year) %>% 
+  filter(year >2006 & year < 2019)
+
+m_ratio_cross <- feglm(ratio ~
+  chair + ranking_minority + prestige + majority +  presidents_party + 
+  first + second + third + fourth + fifth + sixth,
+cluster = "Legislator",
+data = dcounts_ratio)
+
+if(testing){modelsummary(m_ratio_cross, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_ratio_cross, horiz = T, drop = "(Intercept)") 
 
 
+
+# Diff in diff
+m_ratio_dnd <- feglm(ratio ~
+  chair + ranking_minority + prestige + majority + presidents_party + 
+  first + second + third + fourth + fifth + sixth | 
+    Legislator + Year,
+cluster = "Legislator",
+data = dcounts_ratio)
+
+if(testing){modelsummary(m_ratio_dnd, gof_omit = "R.*", coef_omit = "(Intercept)")}
+
+coefplot(m_ratio_dnd, horiz = T) 
 ```
 
+### Ratio Table
+
+- Table: `tables/models_ratio.tex` (sans stars)
+
+```{r models_ratio}
+models_ratio <- list(
+  "1" = m_ratio_cross,
+  "2" = m_ratio_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", "Majoirty", "President's Party"),
+  `1` = c("Count", "✓", "✓"),
+  `2` =c("Count", "✓", "✓")
+)
+
+attr(rows, 'position') <- c(0, 20,21)
+
+modelsummary(models_ratio, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)|majority|presidents_party")
+
+modelsummary(models_ratio, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = "R.*|AIC|BIC|Log.*", 
+             coef_omit = "(Intercept)",
+             output = "latex",
+             title = "The Effect of Expierence and Institutional Power on the Ratio of Constituency Service to Policy Work", 
+             notes = list("Column 1 shows average differences across committee assignments and years in Congress.",
+                          "Column 2 presents difference-in-differences estimates") %>% rev() ) %>% 
+  format_table() %>%
+   write_lines(file = here::here("tables", "models_policy.tex") )
+```
+
+### Predictions 
+
+- Figures: `figs/m-ratio-predicted-[1:4].png`
+
+```{r m-ratio-predicted, fig.show="hold", out.width="50%",  fig.show="hold", out.width="50%", fig.cap= "Ratio", fig.subcap= ""}
+predicted <- predictions(m_ratio_cross,
+                         newdata = values)
+
+
+
+# As a plot
+predicted %>%
+ggchair() +
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Cross Sectional",
+       x = "",
+       y = "Predicted Ratio of Constituent to Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")
+
+# tenure
+predicted <- predictions(m_ratio_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Cross Sectional",
+       x = "Year in Congress",
+       y = "Predicted Ratio of Constituent to Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+# Predictions for DND plot 
+predicted <- predictions(m_ratio_dnd,
+                         newdata = values)
+
+
+# DND plot
+predicted %>%
+  ggchair() + 
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Difference in Differences (Within Legislator)",
+       x = "",
+       y = "Predicted Ratio of Constituent to Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")
+
+# tenure
+predicted <- predictions(m_ratio_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\nDifference in Differences",
+       x = "Year in Congress",
+       y = "Predicted Ratio of Constituent to Policy Letters",
+       fill = "",
+       color = "",
+       shape = "")
+```
 
 # Per District
 
