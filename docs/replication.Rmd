@@ -84,7 +84,262 @@ The same three datasets are used in Replication.do
 load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
 load(here::here("data", "dcounts_per_district.Rdata"))
+load(here::here("data" , "members.Rdata"))
+
+
+# names for table 
+dcounts_tenure %<>% 
+  mutate(Legislator = icpsr,
+         Legislator_x_Agency = icpsr_agency,
+         Year_x_Agency = agency_year)
+
+dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+
+dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
 ```
+
+```{r count_by_tenure, eval=FALSE}
+dcounts_tenure2 <- dcounts_tenure %>%
+  group_by(icpsr, agency, perYear, perYear_con, perYear_policy, year) %>% 
+  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+  filter(value == 1) %>% 
+  distinct(icpsr, agency, year, perYear, perYear_con, perYear_policy, name) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7 or more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("first", "1") 
+             ) %>% 
+    ungroup() %>% 
+  group_by(icpsr, year, year_in_congress) %>% 
+      select(starts_with("per")) %>% 
+  # sum across agencies 
+  summarise(across(starts_with("per"), sum)) %>% 
+  ungroup() 
+
+dcounts_tenure2 %>% ungroup() %>% 
+  #group_by(icpsr) %>% 
+  tally(perYear)
+```
+
+
+
+### Values to predict at
+
+The most frequent legislator agency pair: McCain x VA with 2159 letters!
+
+<!--The most frequent year at the VA: 2018-->
+
+The average number of letters per agency is 1.29
+
+For predictions, we need an average member-year-agency triad. The average is 73 letters per legislator per year, a little over one letter per agency per year. The first table below shows the members who averaged 73, entered congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency. For realism, this person would ideally, at some point, become a chair. Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+
+
+```{r values, fig.width=5, fig.height=3}
+modal <- dcounts_tenure %>% 
+  group_by(icpsr) %>% 
+  filter(first_year > 2006, first_year < 2013, max_year > 6) %>% 
+  mutate(Chair = sum(chair, na.rm = T) >1) %>% 
+  group_by(icpsr, year) %>%
+  mutate(perLeg = sum(perYear)) %>% 
+  filter(perYear == 1, perLeg == 73 ) %>% 
+  select(perAgency = perYear, perLeg, icpsr, icpsr_agency, agency_year, first_year, max_year, Chair) %>% 
+  ungroup() %>% left_join(members)
+
+modal %>%
+  mutate(average = perLeg) %>% 
+  count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
+  kablebox()
+
+
+
+modal %<>% filter(Chair)
+
+dcounts_tenure %>% 
+    #filter(first_year > 2006, first_year < 2013, max_year > 6) %>% 
+  group_by(icpsr, year) %>% 
+  mutate (perLegislator = sum(perYear)) %>% 
+  ungroup() %>% 
+  mutate(meanLeg = mean(perLegislator),
+         meanYear = mean(perYear)) %>%
+  filter( abs(perLegislator - meanLeg) < 10,   
+          abs(perYear - meanYear) < 10 )  %>%
+  ggplot() +
+  aes(x = perYear, y = perLegislator) + 
+    geom_jitter() + 
+  geom_vline(aes(xintercept = meanYear), color = "blue") + 
+  geom_hline(aes(yintercept = meanLeg), color = "blue") + 
+  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year & perLegislator == 73, icpsr_agency, NA) ),
+                  color = "red", box.padding = 0.5, max.overlaps = Inf) + 
+  labs(x = "Contacts per Legislator per Agency per Year",
+       y = "Contacts per Legislator per Year")
+
+modal %>%
+  distinct(perAgency, bioname, icpsr_agency, agency_year) %>% 
+  kablebox()
+
+# other variable means
+# dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
+
+
+values <- tidyr::expand(dcounts_tenure,
+                        agency = "Treasury_IRS",
+                        chair = chair, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = FALSE,
+                        second = FALSE,
+                        third = FALSE,
+                        fourth = FALSE,
+                        fifth = FALSE, 
+                        sixth = FALSE,
+                        Legislator_x_Agency = "Treasury_IRS_20947",
+                        Year_x_Agency = "Treasury_IRS_2015",
+                        Legislator = "20947",
+                        Year = "2015",
+                        majority = TRUE,
+                        presidents_party = presidents_party
+                   ) %>% 
+  drop_na(majority, chair)
+
+values_max <- tidyr::expand(dcounts_tenure,
+                        agency = "VA",
+                        chair = chair, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = FALSE,
+                        second = FALSE,
+                        third = FALSE,
+                        fourth = FALSE,
+                        fifth = FALSE, 
+                        sixth = FALSE,
+                        Legislator_x_Agency = "VA_15039",
+                        Year_x_Agency = "VA_2018",
+                        Legislator = "15039",
+                        Year = "2018",
+                        majority = TRUE,
+                        presidents_party = presidents_party
+                   ) %>% 
+  drop_na(majority, chair)
+
+values_tenure <- tidyr::expand(dcounts_tenure,
+                        agency = "Treasury_IRS",
+                        chair = FALSE, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = first,
+                        second = second,
+                        third = third,
+                        fourth = fourth,
+                        fifth = fifth, 
+                        sixth = sixth,
+                        Legislator_x_Agency = "Treasury_IRS_20947",
+                        Year_x_Agency = "Treasury_IRS_2015",
+                        Legislator = "20947",
+                        Year = "2015",
+                        majority = TRUE,
+                        presidents_party = TRUE
+                   ) 
+
+
+values_tenure_max <- tidyr::expand(dcounts_tenure,
+                        agency = "VA",
+                        chair = FALSE, 
+                        ranking_minority	= FALSE, 
+                        prestige = TRUE, 
+                        first = first,
+                        second = second,
+                        third = third,
+                        fourth = fourth,
+                        fifth = fifth, 
+                        sixth = sixth,
+                        Legislator_x_Agency = "VA_15039",
+                        Year_x_Agency = "VA_2018",
+                        Legislator = "15039",
+                        Year = "2018",
+                        majority = TRUE,
+                        presidents_party = TRUE
+                   ) 
+```
+
+
+```{r}
+# helper functions 
+
+ggchair <- function(predicted = predicted) {
+  
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+predicted %>%  
+  ggplot() + 
+  aes(x = "", 
+      y = predicted, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
+}
+
+
+ggtenure <- function(predicted = predicted) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, predicted, std.error) %>% 
+  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7 or more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("first", "1") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+
+predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+      y = predicted, 
+      ymin = predicted - 1.96*std.error,
+      ymax = predicted + 1.96*std.error) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+  
+}
+```
+
+---
 
 # Counts per member per year
 
@@ -130,70 +385,6 @@ format_table <- . %>% row_spec(row = 1, bold = T, hline_after = TRUE) %>%
     str_replace_all("X|✓", "\\\\\\checkmark") 
 ```
 
-```{r}
-# helper functions 
-
-ggchair <- function(predicted = predicted) {
-  
-  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-  
-  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
-
-predicted %>%  
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
-}
-
-
-ggtenure <- function(predicted = predicted) {
-  
-predicted %<>%
-  # drop estimates from impossible values
-      group_by(rowid, predicted, std.error) %>% 
-  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
-         more = ifelse(sum == 0, 1,0)) %>% 
-    filter(sum < 2) %>% 
-    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
-    select(name, value) %>% 
-    filter(value == 1) %>% 
-    # clean up for presentation
-    mutate(year = name %>% 
-             str_replace("more", "7 or more") %>% 
-             str_replace("sixth", "6") %>% 
-             str_replace("fifth", "5") %>% 
-             str_replace("fourth", "4") %>% 
-             str_replace("third", "3") %>% 
-             str_replace("second", "2") %>% 
-             str_replace("first", "1") 
-             ) %>% 
-    ungroup()
-
-predicted %>%  
-  ggplot() + 
-  aes(x = year, 
-      y = predicted, 
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) 
-}
-```
 
 ---
 
@@ -203,11 +394,6 @@ predicted %>%
 
 ```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters", fig.subcap= ""}
 testing = F
-
-dcounts_tenure %<>% 
-  mutate(Legislator = icpsr,
-         Legislator_x_Agency = icpsr_agency,
-         Year_x_Agency = agency_year)
 
 # paper table 
 # 1 
@@ -316,83 +502,22 @@ modelsummary(models_total, # stars = T,
 
 ```
 
+
+
 ### Predictions 
-
-#### Values to predict at
-
-The most frequent legislator agency pair: McCain x VA
-
-The modal year at the VA: 2018
-
-```{r values}
-# modal agency 
-dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
-
-dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
-
-dcounts_tenure %>% group_by(Year_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
-
-# other variable means
- dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
-
-
-values <- tidyr::expand(dcounts_tenure,
-                        agency = "VA",
-                        chair = chair, 
-                        ranking_minority	= FALSE, 
-                        prestige = TRUE, 
-                        first = FALSE,
-                        second = FALSE,
-                        third = FALSE,
-                        fourth = FALSE,
-                        fifth = FALSE, 
-                        sixth = FALSE,
-                        Legislator_x_Agency = "VA_15039",
-                        Year_x_Agency = "VA_2018",
-                        Legislator = "15039",
-                        Year = "2018",
-                        majority = TRUE,
-                        presidents_party = presidents_party
-                   ) %>% 
-  drop_na(majority, chair)
-
-
-values_tenure <- tidyr::expand(dcounts_tenure,
-                        agency = "VA",
-                        chair = FALSE, 
-                        ranking_minority	= FALSE, 
-                        prestige = TRUE, 
-                        first = first,
-                        second = second,
-                        third = third,
-                        fourth = fourth,
-                        fifth = fifth, 
-                        sixth = sixth,
-                        Legislator_x_Agency = "VA_15039",
-                        Year_x_Agency = "VA_2018",
-                        Legislator = "15039",
-                        Year = "2018",
-                        majority = TRUE,
-                        presidents_party = TRUE
-                   ) 
-
-
-
-```
-
 
 - Figures: `figs/m-total-predicted-[1:4].png`
 
-```{r m-total-predicted,  fig.show="hold", out.width="50%"}
+```{r m-total-predicted,  fig.show="hold", out.width="50%", fig.cap= "Total", fig.subcap= ""}
 predicted <- predictions(m_total_cross,
                          newdata = values)
 
 # As a plot
 predicted %>%
-  mutate(predicted = predicted*90,
+    mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
   ggchair() + 
-  labs(title = "Predicted Number of Total Letters per Year\n Cross Sectional",
+  labs(title = "Predicted Number of Total Letters per Year\n(Cross-Sectional)",
        x = "",
        y = "Predicted Number of Total Letters",
        fill = "",
@@ -404,13 +529,15 @@ predicted <- predictions(m_total_cross,
                          newdata = values_tenure)
 
 predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>% 
 ggtenure() +
-  labs(title = "Predicted Number of Total Letters\nCross Sectional",
+  labs(title = "Predicted Number of Total Letters\n(Cross-Sectional)",
        x = "Year in Congress",
        y = "Predicted Number of Letters",
        fill = "",
        color = "",
-       shape = "")
+       shape = "") 
 
 
 # DND 
@@ -420,8 +547,10 @@ predicted <- predictions(m_total_dnd,
 
 # As a plot
 predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
   ggchair() + 
-  labs(title = "Predicted Number of Total Letters per Year\n Difference in Differences (Within Legislator)",
+  labs(title = "Predicted Number of Total Letters per Year\nDifference in Differences (Within Legislator)",
        x = "",
        y = "Predicted Number of Letters",
        fill = "",
@@ -433,9 +562,11 @@ predicted <- predictions(m_total_dnd,
                          newdata = values_tenure)
 
 predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
 ggtenure() +
-    geom_line(aes(x = as.numeric(year %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Number of Total Letters\nDifference in Differences",
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Total Letters\nDifference in Differences (Within Legislator)",
        x = "Year in Congress",
        y = "Predicted Number of Letters",
        fill = "",
@@ -541,7 +672,7 @@ modelsummary(models_con, # stars = T,
 
 - Figures: `figs/m-con-predicted-[1:4].png`
 
-```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "", fig.subcap= ""}
+```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "Constituency Service", fig.subcap= ""}
 # A data frame of values at which to estimate probabilities:
 predicted <- predictions(m_con_cross,
                          newdata = values)
@@ -552,12 +683,30 @@ predicted %>%
   mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
   ggchair() + 
-  labs(title = "Predicted Number of Constituency Letters per Year\n Cross Sectional",
+  labs(title = "Predicted Number of Constituency Letters per Year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Number of Constituency Letters",
+       y = "Predicted Number of Letters",
        fill = "",
        color = "",
        shape = "") 
+
+# tenure
+predicted <- predictions(m_con_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Constituency Service Letters\n(Cross Sectional)",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
 
 # Predictions for DND Plot
 predicted <- predictions(m_con_dnd,
@@ -566,12 +715,28 @@ predicted <- predictions(m_con_dnd,
 
 # DND plot
 predicted %>%
-  # mutate(predicted = predicted*90,
-  #        std.error = std.error*90) %>%
+  mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
   ggchair() + 
-  labs(title = "Predicted Number of Constituency Letters per Year\n Difference in Differences (Within Legislator)",
+  labs(title = "Predicted Number of Constituency Service Letters per Year\nDifference in Differences (Within Legislator)",
        x = "",
-       y = "Predicted Number of Constituency Letters",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# tenure
+predicted <- predictions(m_con_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Constituency Service Letters\nDifference in Differences (Within Legislator)",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
        fill = "",
        color = "",
        shape = "") 
@@ -676,7 +841,7 @@ modelsummary(models_policy, # stars = T,
 
 - Figures: `figs/m-policy-predicted-[1:4].png`
 
-```{r m-policy-predicted,  fig.show="hold", out.width="50%"}
+```{r m-policy-predicted,  fig.show="hold", out.width="50%", fig.cap= "Policy", fig.subcap= ""}
 predicted <- predictions(m_policy_cross,
                          newdata = values)
 
@@ -685,9 +850,25 @@ predicted %>%
   mutate(predicted = predicted*90,
          std.error = std.error*90) %>%
   ggchair() +
-  labs(title = "Predicted Number of Policy Letters per Year\n Cross Sectional",
+  labs(title = "Predicted Number of Policy Letters per Year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Number of Policy Letters",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# tenure
+predicted <- predictions(m_policy_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Policy Letters\n(Cross Sectional)",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
        fill = "",
        color = "",
        shape = "") 
@@ -700,13 +881,31 @@ predicted <- predictions(m_policy_dnd,
 
 # DND plot
 predicted %>%
+  mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
   ggchair() +
-  labs(title = "Predicted Number of Policy Letters per Year\n Difference in Differences (Within Legislator)",
+  labs(title = "Predicted Number of Policy Letters per Year\nDifference in Differences (Within Legislator)",
        x = "",
-       y = "Predicted Number of Policy Letters",
+       y = "Predicted Number of Letters",
        fill = "",
        color = "",
        shape = "")  
+
+# tenure
+predicted <- predictions(m_policy_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(predicted = predicted*90,
+         std.error = std.error*90) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Number of Policy Letters\nDifference in Differences (Within Legislator)",
+       x = "Year in Congress",
+       y = "Predicted Number of Letters",
+       fill = "",
+       color = "",
+       shape = "") 
 ```
 
 # Ratio 
@@ -785,7 +984,7 @@ modelsummary(models_ratio, # stars = T,
 
 - Figures: `figs/m-ratio-predicted-[1:4].png`
 
-```{r m-ratio-predicted, fig.show="hold", out.width="50%",  fig.show="hold", out.width="50%", fig.cap= "Ratio", fig.subcap= ""}
+```{r m-ratio-predicted, fig.show="hold", out.width="50%", fig.cap= "Ratio", fig.subcap= ""}
 predicted <- predictions(m_ratio_cross,
                          newdata = values)
 
@@ -794,7 +993,7 @@ predicted <- predictions(m_ratio_cross,
 # As a plot
 predicted %>%
 ggchair() +
-  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Cross Sectional",
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\n(Cross-Sectional)",
        x = "",
        y = "Predicted Ratio of Constituent to Policy Letters",
        fill = "",
@@ -807,7 +1006,7 @@ predicted <- predictions(m_ratio_cross,
 
 predicted %>%
 ggtenure() +
-  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Cross Sectional",
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\n(Cross-Sectional)",
        x = "Year in Congress",
        y = "Predicted Ratio of Constituent to Policy Letters",
        fill = "",
@@ -823,7 +1022,7 @@ predicted <- predictions(m_ratio_dnd,
 # DND plot
 predicted %>%
   ggchair() + 
-  labs(title = "Predicted Ratio of Constituent to Policy Letters\n Difference in Differences (Within Legislator)",
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\nDifference in Differences (Within Legislator)",
        x = "",
        y = "Predicted Ratio of Constituent to Policy Letters",
        fill = "",
@@ -836,8 +1035,8 @@ predicted <- predictions(m_ratio_dnd,
 
 predicted %>%
 ggtenure() +
-    geom_line(aes(x = as.numeric(year %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Ratio of Constituent to Policy Letters\nDifference in Differences",
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Ratio of Constituent to Policy Letters\nDifference in Differences (Within Legislator)",
        x = "Year in Congress",
        y = "Predicted Ratio of Constituent to Policy Letters",
        fill = "",
