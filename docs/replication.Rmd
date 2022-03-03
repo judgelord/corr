@@ -108,7 +108,7 @@ dcounts_tenure2 <- dcounts_tenure %>%
   distinct(icpsr, agency, year, perYear, perYear_con, perYear_policy, name) %>% 
     # clean up for presentation
     mutate(year_in_congress = name %>% 
-             str_replace("more", "7 or more") %>% 
+             str_replace("more", "7\nor more") %>% 
              str_replace("sixth", "6") %>% 
              str_replace("fifth", "5") %>% 
              str_replace("fourth", "4") %>% 
@@ -150,14 +150,13 @@ modal <- dcounts_tenure %>%
   mutate(perLeg = sum(perYear)) %>% 
   filter(perYear == 1, perLeg == 73 ) %>% 
   select(perAgency = perYear, perLeg, icpsr, icpsr_agency, agency_year, first_year, max_year, Chair) %>% 
-  ungroup() %>% left_join(members)
+  distinct() %>% 
+  ungroup() %>% left_join(members %>% select(bioname, icpsr))
 
 modal %>%
   mutate(average = perLeg) %>% 
   count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
   kablebox()
-
-
 
 modal %<>% filter(Chair)
 
@@ -230,7 +229,7 @@ values_max <- tidyr::expand(dcounts_tenure,
 
 values_tenure <- tidyr::expand(dcounts_tenure,
                         agency = "Treasury_IRS",
-                        chair = FALSE, 
+                        chair = chair, 
                         ranking_minority	= FALSE, 
                         prestige = TRUE, 
                         first = first,
@@ -300,7 +299,7 @@ ggtenure <- function(predicted = predicted) {
   
 predicted %<>%
   # drop estimates from impossible values
-      group_by(rowid, predicted, std.error) %>% 
+      group_by(rowid, predicted, std.error, chair) %>% 
   mutate(sum = sum(first, second, third, fourth, fifth, sixth),
          more = ifelse(sum == 0, 1,0)) %>% 
     filter(sum < 2) %>% 
@@ -309,7 +308,7 @@ predicted %<>%
     filter(value == 1) %>% 
     # clean up for presentation
     mutate(year_in_congress = name %>% 
-             str_replace("more", "7 or more") %>% 
+             str_replace("more", "7\nor more") %>% 
              str_replace("sixth", "6") %>% 
              str_replace("fifth", "5") %>% 
              str_replace("fourth", "4") %>% 
@@ -321,15 +320,22 @@ predicted %<>%
   
 # Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
 # predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+predicted %<>% filter(chair == 0 | name %in% c("sixth", "more"))
+
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
 
 predicted %>%  
   ungroup() %>% 
   ggplot() + 
   aes(x = year_in_congress, 
       y = predicted, 
+      shape = chair,
+      color = chair,
       ymin = predicted - 1.96*std.error,
       ymax = predicted + 1.96*std.error) + 
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
       theme_minimal() + 
