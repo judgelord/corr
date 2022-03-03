@@ -170,7 +170,7 @@ The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
 The average number of letters per agency is 1.29
 
-For predictions, we need an average member-year-agency triad. The average is 73 letters per legislator per year, a little over one letter per agency per year. The first table below shows the members who averaged 73, entered congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency. For realism, this person would ideally, at some point, become a chair. Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+For predictions, we need an average member-year-agency triad. The average is 73 letters per legislator per year, a little over one letter per agency per year. The first table below shows the members who averaged 73, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency. For realism, this person would ideally, at some point, become a chair. Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -542,11 +542,14 @@ beta <- m_total_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>
 se <- m_total_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 ```
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
 
-We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all 90 agencies, this represents an increase of approximately `r (-beta$first*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. 
+### Total Letters Narrative
 
-### Predictions 
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all 90 agencies, this represents an increase of approximately `r (-beta$first*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. 
+
+### Total Letters Predictions 
 
 - Figures: `figs/m-total-predicted-[1:4].png`
 
@@ -618,7 +621,7 @@ ggtenure() +
 ```
 
 
-## Constituency Service Letters
+## Constituency Service
 
 DV: Only letters coded as constituency service letters
 
@@ -677,7 +680,7 @@ if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = "(Intercept
 coefplot(m_logcon_dnd, horiz = T) 
 ```
 
-### Constituency Letters Table
+### Constituency Service Table
 
 - Table: `tables/models_con.tex` (sans stars)
 
@@ -715,11 +718,14 @@ beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% 
 se <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 ```
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_con}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive, but not significant at the .05 level. 
+
+### Constituency Service Narrative 
+
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_con}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. 
 We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all 90 agencies, this represents an increase of approximately `r (-beta$first*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. 
 
 
-### Predictions 
+### Constituency Service Predictions 
 
 - Figures: `figs/m-con-predicted-[1:4].png`
 
@@ -795,7 +801,7 @@ ggtenure() +
 
 
 
-## Policy Letters
+## Policy Work
 
 Only using letters coded as constituent letters 
 
@@ -854,7 +860,7 @@ if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = "(Intercept
 coefplot(m_logcon_dnd, horiz = T) 
 ```
 
-### Policy Letters Table
+### Policy Work Table
 
 - Table: `tables/models_policy.tex` (sans stars)
 
@@ -888,7 +894,7 @@ modelsummary(models_policy, # stars = T,
    write_lines(file = here::here("tables", "models_policy.tex") )
 ```
 
-### Predictions 
+### Policy Work Predictions 
 
 - Figures: `figs/m-policy-predicted-[1:4].png`
 
@@ -963,7 +969,10 @@ beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %
 se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 ```
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_policy}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+
+### Policy Work Narrative
+
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_policy}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average number of requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
 
 # Ratio 
 
