@@ -44,8 +44,8 @@ library(ggrepel)
 
 library(ggplot2); theme_set(theme_bw())
   options(
-    ggplot2.continuous.color = "viridis",
-    ggplot2.continuous.fill = "viridis"
+    ggplot2.continuous.color = "cividis",
+    ggplot2.continuous.fill = "cividis"
   )
   scale_color_discrete <- function(...)
     scale_color_viridis_d(..., direction = -1)
@@ -683,7 +683,7 @@ We classify legislator requests into five overall types:
 
 All data:
 ```{r data_by_type-tall, fig.height=3.5, fig.width=5.5}
-
+# paper figure 
 type_totals <- all_contacts2 %>% 
   filter(Type != "To be coded") %>%  
   mutate(total = n()) %>% 
@@ -728,7 +728,8 @@ type_totals %>%
     label = paste(type_totals$percent_t[5], "Policy Work"),
     #hjust = 1,
     vjust = -1
-  )
+  )+ 
+  scale_fill_viridis_d(option = "cividis", end = .8, direction = -1)
 
 
 
