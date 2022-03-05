@@ -411,10 +411,10 @@ dcounts %>%
 
 ##  Example
 
-Rep. Barbara Comstock worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endoresed and campaigned with her. 
+Rep. Barbara Comstock worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. 
 
 Notice several patterns
-- dip in constituncy service when Wolf is no longer running for re-eleiction
+- dip in constituency service when Wolf is no longer running for re-election
 - further dip with transition
 - quick rebound as Comstock gets her office in order
 - inheriting a highly-effective office, Comstock is far above average house member
@@ -440,7 +440,9 @@ dcounts %>%
   theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
-        axis.text.x = element_text(angle = 45))
+        axis.text.x = element_text(angle = 45))+ 
+    scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
+
 ```
 
 
@@ -465,7 +467,8 @@ dcounts %>%
   theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
-        axis.text.x = element_text(angle = 45))
+        axis.text.x = element_text(angle = 45))+ 
+    scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
 
 
 cq <- "(NY-14)"
@@ -489,7 +492,8 @@ dcounts %>%
   theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
-        axis.text.x = element_text(angle = 45))
+        axis.text.x = element_text(angle = 45))+ 
+    scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
 ```
 
 
@@ -506,11 +510,13 @@ dcounts %>%
   mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
   filter(cqlabel == cq, year > 2007, year <2017) %>% 
   ggplot() +
-  aes(x = year, y = n, 
+  aes(x = year, 
+      y = n, 
       fill = member_state %>% str_replace("-.*", "\\)")) + 
   geom_col(alpha = .5, position = "dodge") +
   geom_hline(aes(yintercept = mean_per_chamber), linetype = 2) + 
-  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
+  geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average",# min.segment.length = 0,
+            size = 3, vjust = 1.3, hjust = 0) + 
   scale_x_continuous(breaks = seq(2008, 2016, 1)) +
   labs(x = "",
        y = "Number of Requests", 
@@ -518,7 +524,8 @@ dcounts %>%
   theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
-        axis.text.x = element_text(angle = 45))
+        axis.text.x = element_text(angle = 45))+ 
+    scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
   
 ggsave(str_c("figs/districts/", cq, ".png"), 
        width = 5.3,
@@ -526,7 +533,9 @@ ggsave(str_c("figs/districts/", cq, ".png"),
   dpi = 1000)
 } 
 
-case_study("(NY-14)")
+case_study("(WI)")
+
+case_study("(WI-07)")
 
 cases <- unique(members$cqlabel) #%>% head()
 
@@ -597,6 +606,7 @@ mcconnell2013 <- dcounts %>% filter(bioname == "McCONNELL, Addison Mitchell (Mit
 p <- dcounts %>% 
   filter(year > 2006, year <2018) %>%
   distinct(bioname, per_bioname_year, year, chamber) %>% 
+  filter(per_bioname_year > 0) %>% 
   ggplot() + 
   geom_line(aes(x = year, 
                 y = per_bioname_year, 
@@ -622,19 +632,19 @@ p <- dcounts %>%
              label = "Mitch McConnell") +
   labs(x = "",
        color = " ",
-       y = paste("Requests per member per year"),
+       y = paste("Requests per Legislator per Year"),
        title = "") +
   scale_x_continuous(breaks = unique(dcounts$year)) + 
-  scale_color_viridis_d(begin = 0, end = .6) +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) +
   theme_minimal() + 
   theme(panel.background = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.x = element_text(angle = 45, vjust = 0)) 
+        axis.text.x = element_text(angle = 30, vjust = 0)) 
 
 # FIXME, this takes a long time 
 p
 
-ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=7)
+ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=6)
 ```   
 
 ## Requests by state population
