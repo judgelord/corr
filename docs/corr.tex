@@ -169,18 +169,22 @@ Legislators experience career shifts that may affect both their resources and th
 
 Table \ref{t:theory} shows expected changes in the absolute volume of constituency service and the ratio of policy work to constituency service due to \textit{shifting priorities} and \textit{changes in capacity}. The top-left cell of Table \ref{t:theory} shows our expectations if both theories are true \textit{and} the magnitude of the effect of increased capacity is large enough to overcome the countervailing effect of shifting priorities.
 
+{\renewcommand{\arraystretch}{1.5}%
+
+
 \begin{table}[]
 \caption{Divergent Predictions for the Change in the Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power}\label{t:theory}
 
-\begin{tabular}{p{.15\linewidth}|p{.20\linewidth}|p{.32\linewidth}|p{.33\linewidth}|}
+
+\begin{tabular}[t]{p{.15\linewidth}|p{.20\linewidth}|p{.32\linewidth}|p{.33\linewidth}|}
 %toprule 
-\hline
-\multicolumn{2}{l}{\multirow{2}{*}{}} & \multicolumn{2}{|c|}{Increasing Capacity Hypothesis} \\ \cline{3-4}
-\multicolumn{2}{l|}{}    &  Increase in Capacity  &   No Change in Capacity \\ \cline{1-4} 
+%\hline
+\multicolumn{2}{l}{\multirow{2}{*}{}} & \multicolumn{2}{ c }{Increasing Capacity Hypothesis} \\ \cline{3-4}
+\multicolumn{2}{l|}{}    &  Increase in Capacity  &   No Change in Capacity \\ \cline{2-4} 
 \multirow{4}{1.8cm}{Shifting Priorities Hypothesis}  &   \multirow{2}{2cm}{Priority to Policy}   &  Level of Service: 0 or $\uparrow$  &  Level of Service: $\downarrow$  \\ 
 & &  Ratio of $\frac{Policy}{Service}$: $\uparrow$   &   Ratio of $\frac{Policy}{Service}$: $\uparrow$  \\ \cline{2-4}
  &  No Change    &  Level of Service: $\uparrow$  & Level of Service: $0$ \\ 
- & in Priorities &   Ratio of $\frac{Policy}{Service}$: $0$  & Ratio of $\frac{Policy}{Service}$: $0$\\ \hline
+ & in Priorities &   Ratio of $\frac{Policy}{Service}$: $0$  & Ratio of $\frac{Policy}{Service}$: $0$\\ \cline{2-4}
 \end{tabular}
 \end{table}
 
@@ -197,6 +201,17 @@ A more challenging form of constituent demand exists if constituents redirect th
 To address these sorts of constituency demand concerns centered on constituents directing their demands toward legislators they know better, in Section \ref{s:demand} we focus on a series of robustness checks to rule out alternative constituency demand explanations. This includes showing that we have little evidence of requests spilling over within a state delegation.   
 
 While we will assess the implications of constituent demands for our results in our robustness check section, we note that legislators can create constituent demand for services--and therefore might be affected by the interventions we analyze in our study \citep{CainFerejohnFiorina1987}. Using their official resources, members of Congress can encourage requests from constituents for help navigating the federal bureaucracy through workshops, newsletters to constituents, social media posts, and even stories in local papers. Thus increases in constituents' demands may also reflect elected officials' capacity and efforts to solicit demand for constituency service.
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DATA %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{A Census of Legislator Requests to Federal Agencies} \label{s:data}
 To assess how experience and power affect constituency service, we filed  \input{../tables/foia_requests}Freedom Of Information Act (FOIA) requests with all federal departments, agencies, and sub-agencies for all records of incoming communication from members of Congress between January 1, 2007, and the date of our request.\footnote{In addition to our initial requests, collecting these data included over a thousand follow-up and clarification emails, dozens of hours on the phone with FOIA officers, and nearly 100 appeals of incomplete records or inappropriate denials, including multiple cases where we pursued and won orders from judges requiring compliance our request. By rigorously pursuing a census of records, we limit any response bias that may exist in more easily-obtained samples.} Between February 2017 and February 2021, we received data on \input{../tables/n}instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of  \input{../tables/n2007-2017}contacts.\footnote{Some agencies did not provide records for the full span of years. Our models include legislator-by-agency fixed effects to account for any left censoring, ensuring that our comparisons leverage variation within an agency, limiting the opportunity for left-censoring to affect our results.}  %TODO DEVIN WILL UPDATE THESE NUMBERS
