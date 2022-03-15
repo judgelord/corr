@@ -118,8 +118,8 @@ capacity <- tibble::tibble(
     scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   labs(title = "Increasing Capacity",
-       x = "Volume of Policy Work\n(Capacity x Policy Share)",
-       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
   theme(legend.position = "", 
         panel.grid.minor = element_blank() )
 
@@ -172,8 +172,8 @@ priority <- tibble::tibble(
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   #scale_color_gradient(low = "grey", high = "black") +
   labs(title = "Shifting Priorities",
-       x = "Volume of Policy Work\n(Capacity x Policy Share)",
-       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") +
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") +
   theme(legend.position = "",         
         #panel.grid.major = element_blank(),
         panel.grid.minor = element_blank() )
@@ -229,8 +229,8 @@ both <- tibble::tibble(
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   #scale_color_gradient(low = "grey", high = "black") +
   labs(title = "Increasing Capacity + Shifting Priorities",
-       x = "Volume of Policy Work\n(Capacity x Policy Share)",
-       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
   theme(legend.position = "",          panel.grid.minor = element_blank() )
 
 
@@ -282,8 +282,8 @@ ggplot() +
   geom_text(aes(x = mean_x, y = mean_y), check_overlap = T,
           size = 3) + 
   labs(title = "Increasing Capacity + Shifting Priorities",
-       x = "Volume of Policy Work\n(Capacity x Policy Share)",
-       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
   theme(legend.position = "",          panel.grid.minor = element_blank() )
 
 
