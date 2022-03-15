@@ -111,7 +111,7 @@ The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
 The average is 73 letters per legislator per year, a little over 1.29 letters per agency per year.
 
-For predictions, we need an average member-year-agency triad.  The first table below shows the members who averaged 73, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged 73, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -276,6 +276,7 @@ predicted %>%
         panel.grid.major.x = element_blank()) 
   
 }
+
 ```
 
 ---
@@ -447,9 +448,14 @@ modelsummary(models_total, # stars = T,
   write_lines(file = here::here("tables", "models_total.tex") )
 
 
-beta <- m_total_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+beta <- m_total_dnd$coefficients %>%
+  round(3) %>% 
+  as_tibble(rownames = "beta") %>% 
+  pivot_wider(names_from = beta)
 
-se <- m_total_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+se <- m_total_dnd$se %>%
+  round(3) %>% as_tibble(rownames = "se") %>%
+  pivot_wider(names_from = se)
 ```
 
 
@@ -877,9 +883,37 @@ se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider
 ### Policy Work Narrative
 
 Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total} except that we subset the data to only legislator requests hand-coded as policy work. 
-Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
+Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
 
 # Ratio 
+
+<!--An elected official's level of constituency service $y$ depends on their capacity, $x$, and priority for policy work over constituency service, $\delta \in [0, 1]$ (that is their ratio of policy work to constituency service) such that $y_i = x_i (1-\delta_i)$.-->
+
+```{r, eval= FALSE}
+tibble::tibble(
+  priority = seq(.2, .8, by = .2),
+  capacity = c(100, 100, 100, 100),
+  slope = c(-1)
+) %>% 
+  ggplot() +
+  aes(x = capacity*priority,
+      y = capacity*(1-priority) ,
+      slope = slope, 
+      intercept = capacity,
+      label = str_c(capacity*priority, ", ", capacity*(1-priority))) + 
+  geom_abline(slope = -1, intercept = c(100, 200), linetype = c(100,200)) + 
+    #geom_hline(yintercept = .75, linetype = 2) + 
+  #geom_vline(xintercept = .2, linetype = 2) + 
+ stat_function(fun =  ~ 4*.x , geom = "line", color = "blue") +
+   #stat_function(fun =  ~ 1*.x , geom = "line", linetype = 2, color = "blue") +
+  #geom_label(vjust = 0) + 
+  geom_point() +
+  ylim(c(0,200)) + 
+  xlim(c(0, 200)) + 
+  labs(x = "Policy Work\n Capacity x Policy Share",
+       y = "Constituency Service\n Capacity x (1-Policy Share)")
+```
+
 
 - Figures: `figs/m-ratio-[1:2].png`
 
@@ -957,7 +991,7 @@ se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(
 
 ### Ratio Narrative 
 
-Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. While there is little evidence that time in Congress affects legislator priorities, institutional positions do. We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes an decrease of `r -beta$ranking_minority`  in the ratio.
+Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. While there is little evidence that time in Congress affects legislator priorities, institutional positions do. We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
 
 
 
