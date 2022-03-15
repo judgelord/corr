@@ -887,32 +887,7 @@ Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from 
 
 # Ratio 
 
-<!--An elected official's level of constituency service $y$ depends on their capacity, $x$, and priority for policy work over constituency service, $\delta \in [0, 1]$ (that is their ratio of policy work to constituency service) such that $y_i = x_i (1-\delta_i)$.-->
 
-```{r, eval= FALSE}
-tibble::tibble(
-  priority = seq(.2, .8, by = .2),
-  capacity = c(100, 100, 100, 100),
-  slope = c(-1)
-) %>% 
-  ggplot() +
-  aes(x = capacity*priority,
-      y = capacity*(1-priority) ,
-      slope = slope, 
-      intercept = capacity,
-      label = str_c(capacity*priority, ", ", capacity*(1-priority))) + 
-  geom_abline(slope = -1, intercept = c(100, 200), linetype = c(100,200)) + 
-    #geom_hline(yintercept = .75, linetype = 2) + 
-  #geom_vline(xintercept = .2, linetype = 2) + 
- stat_function(fun =  ~ 4*.x , geom = "line", color = "blue") +
-   #stat_function(fun =  ~ 1*.x , geom = "line", linetype = 2, color = "blue") +
-  #geom_label(vjust = 0) + 
-  geom_point() +
-  ylim(c(0,200)) + 
-  xlim(c(0, 200)) + 
-  labs(x = "Policy Work\n Capacity x Policy Share",
-       y = "Constituency Service\n Capacity x (1-Policy Share)")
-```
 
 
 - Figures: `figs/m-ratio-[1:2].png`

@@ -1,0 +1,289 @@
+---
+title: "The Effects of Shifting Priorities and Capacity on Congressional Policy Work and Constituency Service"
+output:
+    html_document:
+      highlight: zenburn
+      toc: true
+      toc_float: true
+      code_folding: hide
+    pdf_document:
+      toc: true
+      keep_tex: true
+      header-includes:
+       - \usepackage{subfig}
+
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r global.options, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = TRUE, 
+                      fig.width=4, 
+                      fig.height = 4,
+                      out.width = "49%",
+                      fig.show = "hold",
+                      fig.cap = "",
+                      fig.subcap = "",
+                      split = T,
+                      fig.align = 'center', 
+                      fig.path='figs/',
+                      fig.retina = 6,
+                      warning=FALSE, 
+                      message=FALSE)
+
+# inline numbers round to 2
+knit_hooks$set(inline = function(x) {
+  if (is.na(as.numeric(x))) {
+    return(x)
+    } else 
+        return(round(x,2))
+})
+
+
+# plot color defaults 
+library(ggplot2); theme_set(theme_bw())
+  options(
+    ggplot2.continuous.color = "cividis",
+    ggplot2.continuous.fill = "cividis"
+  )
+  scale_color_discrete <- function(...)
+    scale_color_viridis_d(..., direction = -1)
+  scale_fill_discrete <- function(...)
+    scale_fill_viridis_d(..., direction = -1)
+  
+# html table formatting
+kablebox <- . %>%  
+  head(100) %>%
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "200px")
+
+kablebox_long <- . %>% 
+  head(100) %>% 
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "500px")
+```
+
+An elected official's level of policy work, $x$, depends on their overall capacity, $c$, and priority for policy work over constituency service, $p \in [0, 1]$ (that is the share of contacts that are policy work rather than constituency service) such that $y_i = c_i (1-p_i)$.
+An elected official's level of constituency service, $y$, likewise depends on their overall capacity and priorities such that $y_i = c_i (1-p_i)$.
+For any fixed level of capacity, $y_i = c_i-x_i$ specifies a line of possible divisions of capacity between policy work and constituency service. Increasing capacity pushes this "capacity frontier" line to the upper right (subfigure 1). Where on this line a legislator exists at any point in time depends on their relative priority for policy work and constituency service (subfigure 2). If capacity and priorities shift simultaneously, priorities can shift toward policy while levels of constituency service are maintained or even increase (subfigure 3). When shifting priorities and increasing capacity occur simultaneously, the relative magnitude of these two effects determines whether constituency service will increase or decrease (subfigure 4).
+
+
+```{r 2x2-fig, fig.cap="", fig.subcap= c("a", "b", "c", "d")}
+library(ggplot2); theme_set(theme_minimal())
+
+
+
+# CAPACITY
+tibble::tibble(
+  priority = .2,
+  capacity = c(100, 150) 
+  ) %>% 
+  ggplot() +
+  aes(x = capacity*priority,
+      y = capacity*(1-priority) ,
+      #color = capacity, 
+      #alpha = capacity, 
+      intercept = capacity,
+      label = str_c(capacity*priority, ", ", capacity*(1-priority))) + 
+  geom_abline(slope = -1, 
+              intercept = c(100, 110, 120,130,140, 150), 
+                            linetype = 1,
+              alpha = c(.5,.6,.7,.8,.9,1)) + 
+    geom_point() +
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 148*.2, 
+           yend = 148*.8,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  annotate("text", 
+          label = "50% Increase in capacity while maintaining\na 4:1 ratio of constituency service to\npolicy work (80% constitunecy service)", 
+           x = 150*.2, 
+           y = 150*.8,
+          hjust = -.01,
+          vjust = -.1,
+          color = "blue",
+          size = 3) +
+  geom_label(x = 0, y = c(100, 150), 
+             label = c("1x", "1.5x"),
+             size = 3 ) + 
+    scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  labs(title = "Increasing Capacity",
+       x = "Volume of Policy Work\n(Capacity x Policy Share)",
+       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+  theme(legend.position = "", 
+        panel.grid.minor = element_blank() )
+
+
+
+
+# PRIORITY 
+tibble::tibble(
+  priority = c(.2,.25, .4),
+  capacity = c(100) 
+  ) %>% 
+  mutate(
+    x = capacity*priority,
+      y = capacity*(1-priority)
+  ) %>% 
+  ggplot() +
+  aes(x = x,
+      y = y ) + 
+  geom_abline(slope = -1,
+              intercept = c(100),
+              linetype = 1,
+              alpha = c(.1)) +
+   stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
+     stat_function(fun =  ~ 3.5*.x , geom = "line", linetype = 2, alpha = .6) +
+   stat_function(fun =  ~ 3*.x , geom = "line", linetype = 2, alpha = .7) +
+   stat_function(fun =  ~ 2.5*.x , geom = "line", linetype = 2, alpha = .8) +
+   stat_function(fun =  ~ 2*.x , geom = "line", linetype = 2, alpha = .9) +
+   stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
+
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 100*.4, 
+           yend = 100*.6,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  geom_point() +
+  annotate("text", 
+          label = "Shifting priority toward policy work\nwithout increasing capacity", 
+           x = 100*.4, 
+           y = 100*.6,
+          hjust = -.01,
+          vjust = 1.1,
+          color = "blue",
+          size = 3) +
+  geom_label(aes(x = 150*c(.24, .33, .66),
+                 y = 150 ),
+                   min.segment.length = 15,
+             label = c("4:1", "3:1", "3:2") ,
+          size = 3) + 
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  #scale_color_gradient(low = "grey", high = "black") +
+  labs(title = "Shifting Priorities",
+       x = "Volume of Policy Work\n(Capacity x Policy Share)",
+       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") +
+  theme(legend.position = "",         
+        #panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank() )
+
+
+
+# BOTH  
+tibble::tibble(
+  priority = c(.2, .4),
+  capacity = c(100, 150) 
+  ) %>% 
+  mutate(
+    x = capacity*priority,
+      y = capacity*(1-priority)
+  ) %>% 
+  ggplot() +
+  aes(x = x,
+      y = y ) + 
+  geom_abline(slope = -1,
+              intercept = c(100, 150),
+              linetype = 1,
+              alpha = c(.1,1)) +
+   stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
+   #  stat_function(fun =  ~ 3.5*.x , geom = "line", linetype = 2, alpha = .6) +
+  # stat_function(fun =  ~ 3*.x , geom = "line", linetype = 2, alpha = .7) +
+ #  stat_function(fun =  ~ 2.5*.x , geom = "line", linetype = 2, alpha = .8) +
+#   stat_function(fun =  ~ 2*.x , geom = "line", linetype = 2, alpha = .9) +
+   stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
+  geom_label(aes(x = 150*c(.24, .66),
+                 y = 150 ),
+                   min.segment.length = 15,
+             label = c("4:1", "3:2") ,
+          size = 3) + 
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 148*.4, 
+           yend = 149*.6,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  geom_point() +
+  annotate("text", 
+          label = "Shifting priority toward policy work\n AND increasing capacity by 50%", 
+           x = 150*.4, 
+           y = 150*.6,
+          hjust = -.07,
+          vjust = .5,
+          color = "blue",
+          size = 3) +
+    geom_label(x = 0, y = c(100, 150), 
+             label = c("1x", "1.5x"),
+             size = 3) + 
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  #scale_color_gradient(low = "grey", high = "black") +
+  labs(title = "Increasing Capacity + Shifting Priorities",
+       x = "Volume of Policy Work\n(Capacity x Policy Share)",
+       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+  theme(legend.position = "",          panel.grid.minor = element_blank() )
+
+
+
+# BOTH  
+more_c <- tibble(x = c(0, 20, 37.5,0),
+       y = c(100, 80, 150,150) ) %>% 
+  mutate(label = "A")
+
+less_c <- tibble(x = c(0, 20, 0,0),
+       y = c(0, 80, 80, 0) ) %>% 
+  mutate(label = "D")
+
+
+more_p <- tibble(x = c(20, 37.5, 150, 150),
+       y = c(80, 150, 150, 80) ) %>% 
+  mutate(label = "B")
+
+less_p <- tibble(x = c(100, 20, 150, 150),
+       y = c(0, 80, 80, 0) ) %>% 
+  mutate(label = "C")
+
+
+# REGIONS 
+more_p %>%
+ full_join( less_p) %>% #full_join(more_c) %>% 
+  group_by(label) %>% 
+  mutate(mean_x = mean(x),
+         mean_y = mean(y),
+         name = label %>% 
+           str_replace("B", "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work.") %>% 
+           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service.")) %>% 
+  ungroup() %>% 
+ggplot() +
+  aes(x = x,
+      y = y,
+      fill = label,
+      label = name) + 
+  geom_polygon( alpha = .5) + 
+    geom_abline(slope = -1,
+              intercept = c(100),
+              linetype = 1,
+              alpha = c(.1)) +
+     stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
+  geom_point(x = 20, y = 80) + 
+  scale_fill_grey() +
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  geom_text(aes(x = mean_x, y = mean_y), check_overlap = T,
+          size = 3) + 
+  labs(title = "Increasing Capacity + Shifting Priorities",
+       x = "Volume of Policy Work\n(Capacity x Policy Share)",
+       y = "Volume of Constituency Service\n (Capacity x Constituency Service Share)") + 
+  theme(legend.position = "",          panel.grid.minor = element_blank() )
+```
