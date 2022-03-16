@@ -84,7 +84,7 @@ library(patchwork)
 # CAPACITY
 capacity <- tibble::tibble(
   priority = .2,
-  capacity = c(100, 150) 
+  capacity = c(100, 110, 120,130,140, 150)
   ) %>% 
   ggplot() +
   aes(x = capacity*priority,
@@ -93,9 +93,11 @@ capacity <- tibble::tibble(
       #alpha = capacity, 
       intercept = capacity,
       label = str_c(capacity*priority, ", ", capacity*(1-priority))) + 
-  geom_abline(slope = -1, 
-              intercept = c(100, 110, 120,130,140, 150), 
-                            linetype = 1,
+   geom_segment(x = c(0,0,0,0,0,0),
+                 xend = c(100, 110, 120,130,140, 150),
+                 y = c(100, 110, 120,130,140, 150),
+                 yend = c(0,0,0,0,0,0),
+              linetype = 1,
               alpha = c(.5,.6,.7,.8,.9,1)) + 
     geom_point() +
   geom_segment(x = 100*.2, 
@@ -112,8 +114,9 @@ capacity <- tibble::tibble(
           vjust = -.1,
           color = "blue",
           size = 3) +
-  geom_label(x = 0, y = c(100, 150), 
-             label = c("1x", "1.5x"),
+  geom_label(x = 0, 
+             y = c(100, 110, 120,130,140, 150), 
+             label = c("1x", NA, NA, NA, NA, "1.5x"),
              size = 3 ) + 
     scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
@@ -138,8 +141,10 @@ priority <- tibble::tibble(
   ggplot() +
   aes(x = x,
       y = y ) + 
-  geom_abline(slope = -1,
-              intercept = c(100),
+        geom_segment(x = c(0),
+                 xend = c(100),
+                 y = c(100),
+                 yend = c(0),
               linetype = 1,
               alpha = c(.1)) +
    stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
@@ -192,10 +197,12 @@ both <- tibble::tibble(
   ggplot() +
   aes(x = x,
       y = y ) + 
-  geom_abline(slope = -1,
-              intercept = c(100, 150),
+      geom_segment(x = c(0, 0),
+                 xend = c(100,150),
+                 y = c(100, 150),
+                 yend = c(0,0),
               linetype = 1,
-              alpha = c(.1,1)) +
+              alpha = c(.1, 1)) +
    stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
    stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
   geom_label(aes(x = 150*c(.24, .66),
@@ -265,8 +272,10 @@ ggplot() +
       fill = label,
       label = name) + 
   geom_polygon( alpha = .5) + 
-    geom_abline(slope = -1,
-              intercept = c(100),
+    geom_segment(x = 0,
+                 xend = 100,
+                 y = 100,
+                 yend = 0,
               linetype = 1,
               alpha = c(.1)) +
      stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .5) +
