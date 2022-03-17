@@ -72,7 +72,7 @@ kablebox_long <- . %>%
   scroll_box(height = "500px")
 ```
 
-An elected official's level of policy work, $x$, depends on their overall capacity, $c$, and relative priority for constituency service versus policy work over constituency service, $p \in [0, 1]$ (that is, the share of contacts that are constituency service rather than policy work) such that $x_i = c_i (1-p_i)$.
+An elected official's level of policy work, $x$, depends on their overall capacity, $c$, and relative priority for constituency service versus policy work, $p \in [0, 1]$ (that is, the share of contacts that are constituency service rather than policy work) such that $x_i = c_i (1-p_i)$.
 An elected official's level of constituency service, $y$, likewise depends on their overall capacity and priorities such that $y_i = c_i p_i$.
 For any given level of capacity, $y_i = c_i-x_i$ specifies a line of possible divisions of capacity between policy work and constituency service. Increasing capacity pushes this "capacity frontier" line to the upper right (subfigure 1). Where on this line a legislator exists at any point in time depends on their relative priority for policy work and constituency service (subfigure 2). If capacity and priorities shift simultaneously, priorities can shift toward policy while levels of constituency service are maintained or even increase (subfigure 3). When shifting priorities and increasing capacity occur simultaneously, the relative magnitude of these two effects determines whether constituency service will increase or decrease (subfigure 4).
 
@@ -246,11 +246,11 @@ less_c <- tibble(x = c(0, 20, 0,0),
 
 
 more_p <- tibble(x = c(20, 37.5, 150, 150),
-       y = c(80, 150, 150, 80) ) %>% 
+       y = c(79, 150, 150, 79) ) %>% 
   mutate(label = "B")
 
 less_p <- tibble(x = c(100, 20, 150, 150),
-       y = c(0, 80, 80, 0) ) %>% 
+       y = c(0, 79, 79, 0) ) %>% 
   mutate(label = "C")
 
 
