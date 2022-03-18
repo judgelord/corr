@@ -74,7 +74,12 @@ kablebox_long <- . %>%
 
 An elected official's level of policy work, $x$, depends on their overall capacity, $c$, and relative priority for constituency service versus policy work, $p \in [0, 1]$ (that is, the share of contacts that are constituency service rather than policy work) such that $x_i = c_i (1-p_i)$.
 An elected official's level of constituency service, $y$, likewise depends on their overall capacity and priorities such that $y_i = c_i p_i$.
-For any given level of capacity, $y_i = c_i-x_i$ specifies a line of possible divisions of capacity between policy work and constituency service. Increasing capacity pushes this "capacity frontier" line to the upper right (subfigure 1). Where on this line a legislator exists at any point in time depends on their relative priority for policy work and constituency service (subfigure 2). If capacity and priorities shift simultaneously, priorities can shift toward policy while levels of constituency service are maintained or even increase (subfigure 3). When shifting priorities and increasing capacity occur simultaneously, the relative magnitude of these two effects determines whether constituency service will increase or decrease (subfigure 4).
+For any given level of capacity, $y_i = c_i-x_i$ specifies a line of possible divisions of capacity between policy work and constituency service. Increasing capacity pushes this "capacity frontier" line to the upper right (subfigure 1). Where on this line a legislator exists at any point in time depends on their relative priority for policy work and constituency service (subfigure 2). If capacity and priorities shift simultaneously, priorities can shift toward policy while levels of constituency service are maintained or even increase (subfigure 3). When shifting priorities and increasing capacity occur simultaneously, the relative magnitude of these two effects determines whether constituency service will increase or decrease (subfigure 4). When $c_1p_1 > c_2p_2$, constituency service decreases. 
+When $c_1p_1 < c_2p_2$ constituency service increases. 
+When $c_1p_1 = c_2p_2$, there is no change in constituency service. 
+
+
+
 
 
 ```{r 2x2-fig, fig.show="hold", echo=FALSE}
@@ -97,7 +102,7 @@ capacity <- tibble::tibble(
                  yend = c(0,0,0,0,0,0),
               linetype = 1,
               alpha = c(.1,.2,.4,.6,.8,1)) + 
-    geom_point() +
+    geom_point(alpha = c(.5, 1,1,1,1,1) ) +
   geom_segment(x = 100*.2, 
            y = 100*.8,
            xend = 148*.2, 
@@ -115,7 +120,8 @@ capacity <- tibble::tibble(
   geom_label(x = 0, 
              y = c(100, 110, 120,130,140, 150), 
              label = c("1x", NA, NA, NA, NA, "1.5x"),
-             size = 3 ) + 
+             size = 3,
+             hjust = .44 ) + 
     scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   labs(title = "Increasing Capacity",
@@ -158,7 +164,7 @@ priority <- tibble::tibble(
            yend = 100*.6,
            arrow = arrow(type = "closed", length = unit(.1, "in")),
            color = "blue") + 
-  geom_point() +
+  geom_point(alpha = c(.5,1) ) +
   annotate("text", 
           label = "Shifting priority toward policy work\nwithout increasing capacity", 
            x = 100*.4, 
@@ -213,18 +219,18 @@ both <- tibble::tibble(
            yend = 149*.6,
            arrow = arrow(type = "closed", length = unit(.1, "in")),
            color = "blue") + 
-  geom_point() +
+  geom_point(alpha = c(.5,1) ) +
   annotate("text", 
           label = "Shifting priority toward policy work\n AND increasing capacity by 50%", 
            x = 150*.4, 
            y = 150*.6,
-          hjust = -.07,
+          hjust = -.06,
           vjust = .5,
           color = "blue",
           size = 3) +
     geom_label(x = 0, y = c(100, 150), 
              label = c("1x", "1.5x"),
-             size = 3) + 
+             size = 3,hjust = .44) + 
   scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   #scale_color_gradient(low = "grey", high = "black") +
@@ -245,11 +251,11 @@ less_c <- tibble(x = c(0, 20, 0,0),
   mutate(label = "D")
 
 
-more_p <- tibble(x = c(20, 37.5, 150, 150),
+more_p <- tibble(x = c(19.8, 37.5, 150, 150),
        y = c(79, 150, 150, 79) ) %>% 
   mutate(label = "B")
 
-less_p <- tibble(x = c(100, 20, 150, 150),
+less_p <- tibble(x = c(100, 21, 150, 150),
        y = c(0, 79, 79, 0) ) %>% 
   mutate(label = "C")
 
@@ -275,14 +281,15 @@ ggplot() +
                  y = 100,
                  yend = 0,
               linetype = 1,
-              alpha = c(.1)) +
+              alpha = c(.01)) +
      stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .1) +
-  geom_point(x = 20, y = 80) + 
+  geom_point(x = 20, y = 80, alpha = .5, color = "grey") + 
   scale_fill_grey() +
   scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   geom_text(aes(x = mean_x, y = mean_y), check_overlap = T,
-          size = 3) + 
+          size = 3,
+          vjust =.25) + 
   labs(title = "Increasing Capacity + Shifting Priorities",
        x = "Volume of Policy Work",
        y = "Volume of Constituency Service") + 
