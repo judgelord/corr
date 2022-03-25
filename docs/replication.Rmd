@@ -30,7 +30,7 @@ library(here)
 library(ggrepel)
 
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = TRUE, 
+                      cache = FALSE, 
                       fig.width=4.5, 
                       fig.height = 3.5,
                       split = T,
@@ -316,7 +316,8 @@ setFixest_dict(cm)
 gof_omit = "R.*|AIC|BIC|Log.*|Std.*"
 
 # table formatting to match stata (sort of)
-format_table <- . %>% row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
+format_table <- . %>% 
+  row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
       kable_styling(font_size = 11) %>% 
                     #full_width = TRUE, 
                     #latex_options = c("repeat_header")) %>%
@@ -327,6 +328,8 @@ format_table <- . %>% row_spec(row = 1, bold = T, hline_after = TRUE) %>%
   str_replace("FE: Year", "Year Fixed Effects") %>% 
   str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
     str_replace_all("X|✓", "\\\\\\checkmark") %>% 
+  # a random midrule appeared in the wrong place 
+  #str_remove("\\midrule") %>% 
   #  extract just the table, no caption etc
   str_extract("\\\\begin\\{tabular\\}(\n|.)*tabular\\}") 
 ```
@@ -414,7 +417,7 @@ models_total <- list(
 rows <- tibble(
   term = c("Dependent Variable", 
            "Majority",
-           "Presidents` Party",
+           "President's Party",
            "All Legislators", 
            "Served At Least 2nd Term"),
   `(1)` = c("Count", "✓", "✓", "✓", ""),
@@ -433,7 +436,7 @@ modelsummary(models_total, stars = T,
              gof_omit = gof_omit,
              coef_omit = coef_omit,
              title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("Robust standard errors in parentheses, clustered by legislator."))
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
 
 # TeX 
 modelsummary(models_total, # stars = T, 
@@ -613,7 +616,8 @@ modelsummary(models_con, stars = T,
              add_rows = rows, 
              coef_map = cm,
              gof_omit = gof_omit, 
-             coef_omit = coef_omit)
+             coef_omit = coef_omit) %>% 
+  row_spec(row = 1, bold = T, hline_after = TRUE) 
 
 modelsummary(models_con, # stars = T, 
              add_rows = rows,               
@@ -791,7 +795,8 @@ modelsummary(models_policy, stars = T,
              coef_map = cm,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator." ))
+             notes = list("Robust standard errors in parentheses, clustered by legislator." )) %>% 
+  row_spec(row = 1, bold = T, hline_after = TRUE) 
 
 modelsummary(models_policy, # stars = T, 
              add_rows = rows,               
@@ -946,7 +951,7 @@ modelsummary(models_ratio, stars = T,
              coef_map = cm,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator.") )
+             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
 
 modelsummary(models_ratio, # stars = T, 
              add_rows = rows,               
