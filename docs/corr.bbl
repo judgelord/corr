@@ -1,5 +1,10 @@
 \begin{thebibliography}{xx}
 
+\harvarditem{Arnold}{1979}{Arnold1979}
+Arnold, R.~Douglas. 1979.
+\newblock {\em Congress and the Bureaucracy: A Theory of Influence}.
+\newblock Yale University Press.
+
 \harvarditem{Ashworth \harvardand\ Bueno~de
   Mesquita}{2006}{AshworthBuenodeMesquita2006}
 Ashworth, Scott \harvardand\ Ethan Bueno~de Mesquita. 2006.
@@ -27,6 +32,17 @@ Cain, Bruce, John Ferejohn \harvardand\ Morris Fiorina. 1987.
   Independence}.
 \newblock Harvard University Press.
 
+\harvarditem{Carpenter}{2001}{Carpenter2001}
+Carpenter, Daniel. 2001.
+\newblock {\em The Forging of Bureaucratic Autonomy: Reputations, Networks, and
+  Policy Innovation in Executive Agencies, 1862-1928}.
+\newblock Princeton Univ Press.
+
+\harvarditem{DeGregorio}{1995}{DeGregorio1995}
+DeGregorio, Christine. 1995.
+\newblock ``Staff Utilization in the U.S. Congress: Committee Chairs and Senior
+  Aides.''  28:261--275.
+
 \harvarditem{Eckman}{2017}{Eckman2017}
 Eckman, Sarah~J. 2017.
 \newblock ``Constituent Services: Overview and Resources.'' Congressional
@@ -49,6 +65,17 @@ Fenno, Richard~F. 1978.
 \newblock {\em Home Style: House Members in their Districts}.
 \newblock Addison Wesley.
 
+\harvarditem{Fouirnaies \harvardand\ Hall}{2021}{Fouirnaies2021}
+Fouirnaies, Alexander \harvardand\ Andrew~B. Hall. 2021.
+\newblock How Do Electoral Incentives Affect Legislator Behavior? Evidence from
+  U.S. State Legislatures.
+
+\harvarditem{Fox \harvardand\ Hammond}{1977}{Fox1977}
+Fox, Harrison~W. \harvardand\ Susan~Webb Hammond. 1977.
+\newblock {\em Congressional Staffs: The Invisible Force in American
+  Lawmaking}.
+\newblock Free Press.
+
 \harvarditem{Gordon \harvardand\ Landa}{2009}{gordon2009advantages}
 Gordon, Sanford~C \harvardand\ Dimitri Landa. 2009.
 \newblock ``Do the advantages of incumbency advantage incumbents?'' {\em The
@@ -59,13 +86,60 @@ Grimmer, Justin \harvardand\ Eleanor~Neff Powell. 2013.
 \newblock ``Congressmen in Exile: The Politics and Consequences of Involuntary
   Committee Removal.'' {\em Journal of Politics} 75(4):907--920.
 
+\harvarditem{Grose}{2011}{Grose2011}
+Grose, Christian~R. 2011.
+\newblock {\em {Congress in black and white: race and representation in
+  Washington and at home}}.
+\newblock Cambridge University Press.
+
+\harvarditem[Hertel-Fernandez, Mildenberger \harvardand\
+  Stokes]{Hertel-Fernandez, Mildenberger \harvardand\
+  Stokes}{2019}{HertelFernandez2019}
+Hertel-Fernandez, Alexander, Matto Mildenberger \harvardand\ Leah~C. Stokes.
+  2019.
+\newblock ``Legislative Staff and Representation in Congress.'' {\em American
+  Political Science Review} 113(1):1--18.
+
+\harvarditem{Jesse M.~Crosson \harvardand\ Wiseman}{2020}{CrossonEtAl2020}
+Jesse M.~Crosson, Geoffrey M.~Lorenz, Craig~Volden \harvardand\ Alan Wiseman.
+  2020.
+\newblock How Experienced Legislative Staff Contribute to Effective Lawmaking.
+  In {\em Congress Overwhelmed: The Decline in Congressional Capacity and
+  Prospects for Reform}, ed. Timothy~M. LaPira, Lee Drutman \harvardand\
+  Kevin~R. Kosar.
+\newblock Chicago:  University of Chicago Press pp.~209--224.
+
 \harvarditem{King}{1991}{King1991}
 King, Gary. 1991.
 \newblock ``Constituency Service and the Incumbency Advantage.'' {\em British
   Journal of Politics} 21(1):119--128.
 
-\harvarditem{Lowande}{2018}{Lowande2018JOP}
-Lowande, Kenneth. 2018.
+\harvarditem[LaPira, Drutman \harvardand\ Kosar]{LaPira, Drutman \harvardand\
+  Kosar}{2020}{LaPira2020}
+LaPira, Timothy~M., Lee Drutman \harvardand\ Kevin~R. Kosar. 2020.
+\newblock {\em Congress Overwhelmed: The Decline in Congressional Capacity and
+  Prospects for Reform}.
+\newblock University of Chicago Press.
+
+\harvarditem{Lazarus}{2010}{Lazarus2010}
+Lazarus, Jeffrey. 2010.
+\newblock ``{Giving the People What They Want? The Distribution of Earmarks in
+  the U.S. House of Representatives}.'' {\em American Journal of Political
+  Science} 54(2):338--353.
+
+\harvarditem{Lewis \harvardand\ Selin}{2012}{LewisSelin2012}
+Lewis, David~E. \harvardand\ Jennifer~L. Selin. 2012.
+\newblock ``{ACUS Sourcebook of United States Executive Agencies}.'' {\em
+  Administrative Conference of the United States} .
+
+\harvarditem[Lewis et~al.]{Lewis, Poole, Rosenthal, Boche, Rudkin \harvardand\
+  Sonnet}{2018}{dwnominate2018}
+Lewis, Jeffrey~B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin
+  \harvardand\ Luke Sonnet. 2018.
+\newblock ``Voteview: Congressional Roll-Call Votes Database.''.
+
+\harvarditem{Lowande}{2019}{Lowande2018JOP}
+Lowande, Kenneth. 2019.
 \newblock ``{Politicization and Responsiveness in Executive Agencies}.'' {\em
   Journal of Politics} .
 
@@ -77,11 +151,28 @@ Lowande, Kenneth, Melinda Ritchie \harvardand\ Erinn Lauterbach. 2018.
   \url{https://sites.lsa.umich.edu/lowande/wp-content/uploads/sites/581/2018/06/dr-v2.pdf}.
   Date Accessed: August 20, 2018.
 
+\harvarditem{McCrain}{2018}{McCrain2018}
+McCrain, Joshua. 2018.
+\newblock ``Revolving Door Lobbyists and the Value of Congressional Staff
+  Connections.'' {\em Journal of Politics} 80(4):1369--1383.
+
 \harvarditem{Mills \harvardand\ Kalaf-Hughes}{2015}{MillsKalafHuges2015}
 Mills, Russell \harvardand\ Nicole Kalaf-Hughes. 2015.
 \newblock ``{The Evolution of Distributive Benefits: The Rise of Letter-Marking
   in the United States Congress}.'' {\em The Journal of Economics and Politics}
   22.
+
+\harvarditem{Montgomery \harvardand\ Nyhan}{2017}{MontgomeryNyhan2017}
+Montgomery, Jacob~M \harvardand\ Brendan Nyhan. 2017.
+\newblock ``The Effects of Congressional Staff Networks in the US House of
+  Representatives.'' {\em The Journal of Politics} 79(3):745--761.
+
+\harvarditem{Reynolds}{2020}{Reynolds2020}
+Reynolds, Molly~E. 2020.
+\newblock The Decline in Congressional Capacity.  In {\em Congress Overwhelmed:
+  The Decline in Congressional Capacity and Prospects for Reform}, ed.
+  Timothy~M. LaPira, Lee Drutman \harvardand\ Kevin~R. Kosar.
+\newblock Chicago:  University of Chicago Press pp.~209--224.
 
 \harvarditem{Ritchie}{2017}{Ritchie2017}
 Ritchie, Melinda~N. 2017.
@@ -89,11 +180,22 @@ Ritchie, Melinda~N. 2017.
   Communication of Senators with the US Department of Labor}.'' {\em Journal of
   Politics} .
 
+\harvarditem{Ritchie \harvardand\ You}{2018}{RitchieYou2018}
+Ritchie, Melinda~N \harvardand\ Hye~Young You. 2018.
+\newblock ``{Legislators as Lobbyists}.''
+  \url{https://hyeyoungyou.files.wordpress.com/2018/07/legislators_as_lobbyists.pdf}.
+  Date Accessed: August 20, 2018.
+
 \harvarditem{Rosenblatt}{2016}{Rosenblatt2016}
 Rosenblatt, Adam. 2016.
 \newblock ``Please, no more calls to `drain the swamp.' It's an insult to
   swamps.'' Washington Post.
-  \url{https://www.washingtonpost.com/posteverything/wp/2016/12/29/please-no-more-calls-todrain-the-swamp-its-an-insult-to-swamps/?utm_term=.3b4221e90db3}.
+  \url{https://www.washingtonpost.com/posteverything/wp/2016/12/29/please-no-more-calls-to-drain-the-swamp-its-an-insult-to-swamps/}.
   Dec. 29, 2016.
+
+\harvarditem{Stewart \harvardand\ Woon}{2017}{StewartWoon2017}
+Stewart, III, Charles \harvardand\ Jonathan Woon. 2017.
+\newblock ``Congressional Committee Assignments, 103rd to 115th Congresses,
+  1993--2017: House of Representatives.''.
 
 \end{thebibliography}
