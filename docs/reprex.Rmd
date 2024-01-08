@@ -110,7 +110,7 @@ n <- nrow(dcounts_tenure)
 
 sim <- dcounts_tenure %>% 
   # REPLACE DV WITH NORMAL DIST
-  mutate(perYear = rnorm(n, 1)
+  mutate(perYear = rnorm(n, year-2007)
          # OTHER VARS LEFT ALONE 
          # chair,
          # first,
@@ -368,7 +368,7 @@ format_table <- . %>%
 
 - Figures: `figs/m-total-[1:4].png`
 
-```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("1","2","3","4")}
+```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("cross-sectional","diff-in-diff","cross-sectional re-elected","diff-in-diff re-elected")}
 testing = F
 
 # paper table 
