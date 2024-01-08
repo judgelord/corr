@@ -72,6 +72,14 @@ kablebox_long <- . %>%
   scroll_box(height = "500px")
 ```
 
+Based on the [replication code](https://judgelord.github.io/corr/replication) for [this paper](https://judgelord.github.io/corr/corr.pdf), this workbook aims to explore Reviewer 2s objection: 
+
+> "All legislators that remain in the dataset between t and t+1 increase in experience 1 unit. Thus, there is no identifying variation to separate the effect of experience from the effect of time shocks in the within-individual specification.
+
+> Thus, the coefficients on the dummy variables indicating different levels of legislative experience are not identified in the OLS regression with time- and legislator fixed effects." 
+
+
+
 # Replication data
 
 From `code/replication.R`, which starts with the main data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
@@ -95,47 +103,19 @@ dcounts_tenure %<>%
          Legislator_x_Agency = icpsr_agency,
          Year_x_Agency = agency_year)
 
-# total per agency
-dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
-
-# total per legislator-agency pair 
-dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+dcounts_tenure %>% head() %>% kablebox()
 ```
 
-# MAKE FAKE DATA 
-
-
-```{r echo = TRUE,  code_folding = "show"}
-n <- nrow(dcounts_tenure)
-
-sim <- dcounts_tenure %>% 
-  # REPLACE DV WITH NORMAL DIST
-  mutate(perYear = rnorm(n, year-2007)
-         # OTHER VARS LEFT ALONE 
-         # chair,
-         # first,
-         # second,
-         # third,
-         # fourth,
-         # fifth,
-         # sixth,
-         # Year, 
-         # Agency,
-         # Legislator
-  ) 
-
-dcounts_tenure <- sim
-```
-
----
+Reviewer 2s objection is about the models using (1) counts per member-year, so that is the DV I focus on here. 
 
 ### Values to predict at
 
-The most frequent legislator agency pair: McCain x VA with 2159 letters!
+The most frequent legislator agency pair: McCain x VA with 2159 letters.
 
 The average is 73 letters per legislator per year, a little over 1.29 letters per agency per year.
 
 For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged 73, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -150,37 +130,10 @@ modal <- dcounts_tenure %>%
   distinct() %>% 
   ungroup() %>% left_join(members %>% select(bioname, icpsr))
 
-modal %>%
-  mutate(average = perLeg) %>% 
-  count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
-  kablebox()
+
 
 modal %<>% filter(Chair)
 
-dcounts_tenure %>% 
-  group_by(icpsr, year) %>% 
-  mutate (perLegislator = sum(perYear)) %>% 
-  ungroup() %>% 
-  mutate(meanLeg = mean(perLegislator),
-         meanYear = mean(perYear)) %>%
-  filter( abs(perLegislator - meanLeg) < 10,   
-          abs(perYear - meanYear) < 10 )  %>%
-  ggplot() +
-  aes(x = perYear, y = perLegislator) + 
-    geom_jitter() + 
-  geom_vline(aes(xintercept = meanYear), color = "blue") + 
-  geom_hline(aes(yintercept = meanLeg), color = "blue") + 
-  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year & perLegislator == 73, icpsr_agency, NA) ),
-                  color = "red", box.padding = 0.5, max.overlaps = Inf) + 
-  labs(x = "Contacts per Legislator per Agency per Year",
-       y = "Contacts per Legislator per Year")
-
-modal %>%
-  distinct(perAgency, bioname, icpsr_agency, agency_year) %>% 
-  kablebox()
-
-## other variable means
-# dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
 
 # by chair and presidents' party
 values <- tidyr::expand(dcounts_tenure,
@@ -226,82 +179,82 @@ values_tenure <- tidyr::expand(dcounts_tenure,
 ```
 
 
-```{r}
-# helper functions to plot predicted values
-ggchair <- function(predicted = predicted) {
-  
-  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-  
-  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+# Simulated data
 
-predicted %>%  
-  ggplot() + 
-  aes(x = "", 
-      y = predicted, 
-      fill = chair,
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
-}
+## Counts per legislator per agency per year
+
+I replace the dependent variable, the count of letters that each legislator writes to each agency each year with a normal distribution with a mean 1 (the true mean in the data is 1.29). 
+
+I also introduce a correlation with the calendar year by adding +1 for each year beyond 2007 (the first year in the data.) In this simulation 2017 would have a mean of 11. 
+
+Later, I will introduce a correlation with tenure. (See "100 simulations section" below)
 
 
-ggtenure <- function(predicted = predicted) {
-  
-predicted %<>%
-  # drop estimates from impossible values
-      group_by(rowid, predicted, std.error, chair) %>% 
-  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
-         more = ifelse(sum == 0, 1,0)) %>% 
-    filter(sum < 2) %>% 
-    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
-    select(name, value) %>% 
-    filter(value == 1) %>% 
-    # clean up for presentation
-    mutate(year_in_congress = name %>% 
-             str_replace("more", "7\nor more") %>% 
-             str_replace("sixth", "6") %>% 
-             str_replace("fifth", "5") %>% 
-             str_replace("fourth", "4") %>% 
-             str_replace("third", "3") %>% 
-             str_replace("second", "2") %>% 
-             str_replace("first", "1") 
-             ) %>% 
-    ungroup()
-  
-# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
-# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
-  
-predicted %<>% filter(chair == 0 | name %in% c("sixth", "more"))
+```{r echo = TRUE,  code_folding = "show"}
+n <- nrow(dcounts_tenure)
 
-  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
-  
+sim <- dcounts_tenure %>% 
+  # REPLACE DV WITH NORMAL DIST
+  mutate(perYear = rnorm(n, year-2007)
+         # OTHER VARS LEFT ALONE 
+         # chair,
+         # first,
+         # second,
+         # third,
+         # fourth,
+         # fifth,
+         # sixth,
+         # Year, 
+         # Agency,
+         # Legislator
+  ) 
 
-predicted %>%  
-  ungroup() %>% 
-  ggplot() + 
-  aes(x = year_in_congress, 
-      y = predicted, 
-      shape = chair,
-      color = chair,
-      ymin = predicted - 1.96*std.error,
-      ymax = predicted + 1.96*std.error) + 
-  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) 
-  
-}
+dcounts_tenure <- sim
+```
+
+---
+
+# Models 
+
+Our primary models are a series of difference-in-differences regressions that examine changes that are within legislator and agency pairs.
+
+Estimates from Model 2 (Column 2 below) provides the estimated effects from the difference-in-differences specification. 
+
+$Y_{ijt}  = {\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} $
+
+Where $Y_{ijt}$ represents the number of requests legislator $i$ makes to agency $j$ in year $t$. Our analysis in this section is at the legislator-agency-year level. $\gamma_{ij}$ is a fixed effect for the legislator-agency pair. This fixed effect accounts for legislators' characteristics, such as legislators who are more skillful at filling constituency service requests than other legislators. Critically for our research design, this fixed effect also enables us to account for time-invariant constituent demands, ensuring differences in constituent demand do not drive our results. It also accounts for state and districts characteristics, including population, demographics, and local industries that might be particularly likely to request help with specific agencies. This difference-in-difference design ensures that coefficients ${\beta}$ capture variation related to changes in institutional power or experience, not other factors that may vary across districts, legislators, or agencies. The model also accounts for the different periods for which data were available from each agency. $\delta_{jt}$ is an agency-year fixed effect. This takes into account agency-level shocks that may affect legislator requests. 
+
+Assuming that legislators' trends in the level of requests follow parallel paths, $\boldsymbol{\beta}$ represents the average effect of changing institutional power on a legislator's provision of constituency service.
+
+In this same regression we also include indicators for legislators' first six years in Congress, $ \sum_{s = 1}^{6} \eta_{s} \text{tenure}_{it}$. The effects of interest $\eta_{1}, \eta_{2} : \eta_{6}$ describe how a legislator's provision of constituency service at levels of seniority between one and six years differ from legislators who serve beyond six years. We focus on constituency service levels in each of the first six years of a legislator's tenure to assess how constituency service changes over their initial years in Congress. This design allows us to assess the extent to which new legislators face start-up costs. 
+
+
+# Estimation
+
+Fixed effects general linear model `fixest::fixest`
 
 ```
+feglm (perYear ~ 
+ chair + ranking_minority + prestige +
+ first + second + third + fourth + fifth + sixth + 
+ majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+ cluster = "Legislator",
+ data = dcounts_tenure)
+```
+
+Where
+
+`perYear`  = $Y_{ijt}$ = Letters per legislator $i$ per agency $j$ per year $t$ 
+
+`chair`= $\textbf{Committee Position}_{it}$ = Legislator $i$ is a committee chair in year $t$  
+
+`first + second + third + fourth + fifth + sixth ` = $\text{I}\left(\text{tenure}_{it} = s\right)$ = Legislator i is in their $s$ (first, second, third, fourth, fifth, sixth) year of service in calendar year $t$
+
+$\gamma_{ij}$ = a fixed effect for the legislator-agency pair =  `Legislator_x_Agency`
+
+ $\delta_{jt}$ = an agency-year fixed effect = `Year_x_Agency`
+
+
 
 ---
 
@@ -366,9 +319,16 @@ format_table <- . %>%
 
 ## Total Letters 
 
+### Coeficient Plots
+
 - Figures: `figs/m-total-[1:4].png`
 
-```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("cross-sectional","diff-in-diff","cross-sectional re-elected","diff-in-diff re-elected")}
+1. "cross-sectional"
+2. "diff-in-diff"
+3. "cross-sectional re-elected"
+4. "diff-in-diff re-elected"
+
+```{r m-total-sim,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("cross-sectional","diff-in-diff","cross-sectional re-elected","diff-in-diff re-elected")}
 testing = F
 
 # paper table 
@@ -505,9 +465,297 @@ se <- m_total_dnd$se %>%
 ```
 
 
-### Total Letters Narrative
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all 90 agencies, this represents an increase of approximately `r (beta$chair*90) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+### Total Letters Predictions 
 
-We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all 90 agencies, this represents an increase of approximately `r (-beta$first*90) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*90) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
+- Figures: `figs/m-total-predicted-[1:4].png`
+
+
+
+```{r}
+# helper functions to plot predicted values
+ggchair <- function(predicted = predicted) {
+  
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+predicted %>%  
+  ggplot() + 
+  aes(x = "", 
+      y = estimate, 
+      fill = chair,
+      shape = chair,
+      color = chair,
+      ymin = conf.low,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
+}
+
+
+ggtenure <- function(predicted = predicted) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, estimate, conf.low, conf.high, chair) %>% 
+  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("first", "1") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+predicted %<>% filter(chair == 0 | name %in% c("sixth", "more"))
+
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+
+predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+      y = estimate, 
+      shape = chair,
+      color = chair,
+      ymin = conf.low,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+  
+}
+
+```
+
+
+```{r m-total-predicted-sim,  fig.show="hold", out.width="50%", fig.cap= "Total", fig.subcap= c("1","2","3","4")}
+predicted <- predictions(m_total_cross,
+                         newdata = values)
+
+# Cross-sectional predictions
+predicted %>%
+    mutate(estimate = estimate*90,
+         conf.low = conf.low*90, 
+           conf.high = conf.high*90) %>%
+  ggchair() + 
+  labs(title = "Predicted Total Letters per Year\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted Total Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_total_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*90,
+         conf.low = conf.low*90, 
+           conf.high = conf.high*90) %>% 
+ggtenure() +
+  labs(title = "Predicted Total Letters Per Year\n(Cross-Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+# diff in diff 
+predicted <- predictions(m_total_dnd,
+                         newdata = values)
+
+
+# predictions by chair and presidents' party
+predicted %>%
+    mutate(estimate = estimate*90,
+           conf.low = conf.low*90, 
+           conf.high = conf.high*90) %>%
+  ggchair() + 
+  labs(title = "Predicted Total Letters per Year\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_total_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*90,
+           conf.low = conf.low*90, 
+           conf.high = conf.high*90) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Total Letters Per Year\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+```
+
+
+# 100 simulations
+
+Subletting data to legislators in their first 6 years and setting the mean of the simulated DV (letters per legislator per year per agency) to their year (tenure) in office. 
+
+```{r sims}
+# A function to estimate diff in diff with a new random sample for DV 
+sim_data <- dcounts_tenure %>% filter(tenure<7, tenure>0)
+
+# sim_data$tenure
+```
+
+
+## Cross sectional
+
+
+```{r sim-cross}
+simulation_cross <- function(x){
+  
+  set.seed(x)
+  
+  data <- sim_data %>% 
+  # REPLACE DV WITH NORMAL DIST
+  mutate(perYear = rnorm(n, tenure)) # year-2007))
+
+m_total <-feglm (perYear ~ 
+                       #chair + ranking_minority + prestige + 
+                    first + second + third + fourth + fifth + sixth | Year_x_Agency, 
+                    cluster = "Legislator",
+                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
+           data = data)
+
+beta <- m_total$coefficients %>%
+  #round(3) %>% 
+  as_tibble(rownames = "beta") %>% 
+  pivot_wider(names_from = beta)
+
+return(beta)
+}
+
+# run 100 times 
+sims <- map_dfr(.x = 1:100, .f =  simulation_cross)
+
+# # plot estimates
+# sims %>% 
+#   ggplot() +
+#   aes(x = first) + 
+#   geom_density(fill = "grey")  #+  geom_vline(xintercept = 1)
+
+sims %>% 
+  ggplot() +
+  aes(x = second) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = third) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = fourth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = fifth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = sixth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+```
+
+
+
+## Diff in diff 
+
+```{r sim-dnd}
+simulation_dnd <- function(x){
+  
+  set.seed(x)
+  
+  data <- sim_data %>% 
+  # REPLACE DV WITH NORMAL DIST
+  mutate(perYear = rnorm(n, tenure)) # year-2007))
+
+m_total_dnd <-feglm (perYear ~ 
+                      # chair + ranking_minority + prestige + 
+                      # majority + presidents_party 
+                      first + second + third + fourth + fifth + sixth | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator",
+                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
+           data = data)
+
+beta <- m_total_dnd$coefficients %>%
+  #round(3) %>% 
+  as_tibble(rownames = "beta") %>% 
+  pivot_wider(names_from = beta)
+
+return(beta)
+}
+
+# run 100 times 
+sims <- map_dfr(.x = 1:100, .f =  simulation_dnd)
+
+# plot estimates
+# sims %>% 
+#   ggplot() +
+#   aes(x = first) + 
+#   geom_density(fill = "grey")  #+  geom_vline(xintercept = 1)
+
+sims %>% 
+  ggplot() +
+  aes(x = second) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = third) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = fourth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = fifth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+
+sims %>% 
+  ggplot() +
+  aes(x = sixth) + 
+  geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
+```
 
