@@ -629,7 +629,34 @@ Subletting data to legislators in their first 6 years and setting the mean of th
 # A function to estimate diff in diff with a new random sample for DV 
 sim_data <- dcounts_tenure %>% filter(tenure<7, tenure>0)
 
+if(FALSE){
+icpsr <- 1:500
+years <- 2010:2020
+  
+sim_data <- expand_grid(icpsr, years) %>% 
+  # REPLACE DV WITH NORMAL DIST
+  group_by(icpsr) %>%
+  mutate(perYear = rnorm(n, tenure),
+         year_elected = runif(n, 2000, 2020),
+         tenure = year - yearelected,
+         chair = runif(n, 0,1),
+         chair = ifelse(tenure>6, chair, 0)
+         ) %>% 
+    # remove impossible values
+    filter(yearelected <= year)
+           
+         # chair,
+         # first,
+         # second,
+         # third,
+         # fourth,
+         # fifth,
+         # sixth,
+         # Year, 
+         # Agency,
+         # Legislator
 # sim_data$tenure
+}
 ```
 
 
@@ -759,3 +786,65 @@ sims %>%
   geom_density(fill = "grey") #+ geom_vline(xintercept = 2)
 ```
 
+
+## Reviewer simulation code 
+
+```
+matrix B = J(1000, 7, .)
+matrix colnames B = exp1 exp2 exp3 exp4 exp5 exp6 chair
+       
+qui forval j = 1/1000 {
+       
+       
+
+        *first create 500 districts observed over 10 time periods
+        clear
+        set obs 500
+        gen dist_id = _n
+        //make time periods
+        expand 10
+        bys dist_id: gen time = _n
+       
+        *Next, create legislators in each district (entering and exiting at different times)
+        gen random = runiform()
+        bys dist_id: gen new_elected = random>0.75 | _n==1 // randomly determine when legislators are kicked out
+        bys dist_id new_elected (time) : gen leg_number = _n if new_elected==1 // generate a number of each legislator
+        drop random new_elected
+        sort dist_id time
+        bys dist_id: replace leg_number = leg_number[_n-1] if leg_number==. &  leg_number[_n-1]!=. // assign number to each legislator
+        egen dist_leg_id = group(dist_id leg_number) // make legislator-district id
+
+
+       
+        *create variables
+        bys dist_leg_id (time): gen experience = _n // create experience for each legislator
+       
+        bys dist_leg_id: egen quality = max(experience) // fixed legislator quality, positive correlation between quality and experience
+       
+
+        gen chair = 0
+        replace chair =1 if  runiform()>0.5 & experience>3
+       
+        *create outcome: additive separability: quality, experience, chair and time
+        gen outcome = quality + experience + chair + time +rnormal(0,1)
+       
+        gen experience_firstsix = experience
+        replace experience_firstsix = 0 if experience>6 // set reference category to experience in year 7 and more
+       
+       
+        ** run regression
+        areg outcome chair i.experience_firstsix i.time, absorb(dist_leg_id )  // the diff-in-diff identifies the effect of chair, but not the effect of experience
+
+        *store point estimates
+        forval v=1/6 {
+                matrix B[`j', `v'] = _b[`v'.experience_firstsix]
+        }
+        matrix B[`j', 7] = _b[chair]
+       
+}      
+
+matrix list B
+clear
+svmat B, names(matcol)
+collapse B*
+```
