@@ -355,6 +355,16 @@ type2xyear %>%
   kablebox()
 
 
+#  averages 
+dcounts %>%
+  group_by(year, bioname) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>% 
+  ungroup() %>% 
+  arrange(-n) %>%
+  summarise(mean_per_year = mean(n) %>% round(0)) %>% 
+  kablebox()
+
+
 # chamber averages 
 dcounts %>%
   group_by(chamber, year, bioname) %>% 
