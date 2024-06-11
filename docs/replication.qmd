@@ -102,9 +102,9 @@ dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% s
 
 The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
-The average is 73 letters per legislator per year, a little over 1.29 letters per agency per year.
+The average is 81 letters per legislator per year, a little over 1.29 letters per agency per year.
 
-For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged 73, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged 81, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -139,7 +139,7 @@ dcounts_tenure %>%
     geom_jitter() + 
   geom_vline(aes(xintercept = meanYear), color = "blue") + 
   geom_hline(aes(yintercept = meanLeg), color = "blue") + 
-  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year & perLegislator == 73, icpsr_agency, NA) ),
+  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year & perLegislator == 81, icpsr_agency, NA) ),
                   color = "red", box.padding = 0.5, max.overlaps = Inf) + 
   labs(x = "Contacts per Legislator per Agency per Year",
        y = "Contacts per Legislator per Year")
