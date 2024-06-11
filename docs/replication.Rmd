@@ -462,9 +462,7 @@ modelsummary(models_total, # stars = T,
              coef_omit = coef_omit,
              output = "latex",
              #title = "\\\\footnotesize The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator.")) %>% 
-  format_table() %>%
-  write_lines(file = here::here("docs", "tables", "models_total.tex") )
+             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator."))   %>%  format_table()  %>% write_lines(file = here::here("docs", "tables", "models_total.tex") )
 
 
 beta <- m_total_dnd$coefficients %>%

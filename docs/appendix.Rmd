@@ -183,11 +183,23 @@ FOIA %>% select(-Coded) %>%
 ```{r data, cache=FALSE}
 # can't cache data
 
-# raw data 
-load(here::here("data", "all_contacts2.Rdata"))
+# new raw data 
+load(
+  here::here("data", "all_contacts.Rdata") %>% 
+       str_replace("Correspondence","correspondence_data")
+     ) 
+
+all_contacts %>% count(TYPE != "NA") %>% pull(n) %>% .[[2]] %>% write(file = here::here("docs/tables/n_coded"))
+# 
+# # old raw data 
+# load(
+#   here::here("data", "all_contacts2.Rdata") 
+#      ) 
+
+
 all_contacts2 <- all_contacts #FIXME 
 
-load(here::here("data", "all_contacts_paper.Rdata"))
+#load(here::here("data", "all_contacts_paper.Rdata"))
 
 all_contacts2 %<>% mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituency\nService", NA) ) %>%
   mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
@@ -724,7 +736,7 @@ type_totals %<>% mutate(Type = Type %>%
 type_totals %>% 
   ggplot() + 
   geom_col(alpha = .7,aes(x = Type, fill = type, y = nT) ) + 
-  scale_y_continuous(breaks = seq(0,500000, 50000), limits = c(0,300000)) + 
+  scale_y_continuous(breaks = seq(0,500000, 50000), limits = c(0,500000)) + 
   labs(x = "",
        fill = "",
        y = paste("Number of Contacts"),
@@ -737,14 +749,14 @@ type_totals %>%
         legend.position ="none") + 
   ggpubr::geom_bracket(
     xmin = type_totals$Type[1], xmax = type_totals$Type[3], 
-    y.position = 260000,
+    y.position = 380000,
     label = paste(type_totals$percent_t[1], "Constituency Service" ),
     #hjust = 1,
     vjust = -1
   ) + 
   ggpubr::geom_bracket(
     xmin = type_totals$Type[4], xmax = type_totals$Type[5], 
-    y.position = 75000,
+    y.position = 85000,
     label = paste(type_totals$percent_t[5], "Policy Work"),
     #hjust = 1,
     vjust = -1
@@ -782,16 +794,17 @@ all_contacts2 %>%
 ```
 
 Horizontal format:
+
 ```{r data_by_type, fig.height=2, fig.width=6, results='hide'}
 type_totals %<>% 
   #distinct(type, Type, nT)
-  mutate(Type = Type %>% str_replace(",\n", ", "))
+  mutate(Type = Type %>% str_replace(",\n", ", ")) 
 
 type_totals %>% 
   ggplot() + 
   geom_col(alpha = .7,aes(x = Type, fill = type, y = nT/1000) ) + 
   coord_flip() + 
-  scale_y_continuous(breaks = seq(0,500, 50), limits = c(0,500)) + 
+  scale_y_continuous(breaks = seq(0,500, 100), limits = c(0,700)) + 
   labs(x = "",
        fill = "",
        y = paste("Number of Contacts (Thousands)"),
@@ -803,15 +816,15 @@ type_totals %>%
         axis.text.x.top = element_text(),
         legend.position ="none") + 
   ggpubr::geom_bracket(
-    xmin = type_totals$Type[1], xmax = type_totals$Type[3], y.position = 300,
-    label = paste(type_totals$percent_t[1], type_totals$type[1]),
+    xmin = type_totals$Type[1], xmax = type_totals$Type[3], y.position = 400,
+    label = paste0(type_totals$percent_t[1], "\n", type_totals$type[1]),
     hjust = -.3,
     vjust = 1.5,
     label.size = 3.5
   ) + 
   ggpubr::geom_bracket(
     xmin = type_totals$Type[4], xmax = type_totals$Type[5], y.position = 100,
-    label = paste(type_totals$percent_t[5], type_totals$type[5]),
+    label = paste0(type_totals$percent_t[5], "\n", type_totals$type[5]),
     hjust = -.3,
     vjust = 1,
     label.size = 3.5

@@ -46,11 +46,12 @@ d<- left_join(d, members %>% select(congress, icpsr, party,party_code, state_abb
 # nom<- read.delim('/Users/jgrimmer/Correspondence/data/nominate_data.csv', sep=',')
 load(here::here("data", "members.Rdata"))
 
-nom2<- nom %>% group_by(icpsr) %>% summarise(first_cong = min(congress))
+nom2<- members %>% group_by(icpsr) %>% summarise(first_cong = min(congress))
 
 nom2$first_year <- 1787 + 2*nom2$first_cong
 
-df<- left_join(d, nom2, by ='icpsr' )
+df<- left_join(d, nom2, by ='icpsr' )# FIXME (THESE JOINS ARE DUPLICATING VARIABLES)
+
 df$tenure<- df$year - df$first_year
 df$first<- ifelse(df$tenure==0, 1, 0)
 df$second<- ifelse(df$tenure==1, 1, 0)
@@ -60,6 +61,8 @@ df$fifth<- ifelse(df$tenure==4, 1, 0)
 df$sixth<- ifelse(df$tenure==5, 1, 0)
 
 colnames(agency_vars)
+
+# FIXME (THESE JOINS ARE DUPLICATING VARIABLES)
 df<- left_join(df, agency_vars %>% select(agency, icpsr, chamber, year, oversight_committee, oversight_committee_chair), by = c('agency', 'icpsr', 'year'))
 
 df$icpsr_agency<- paste(df$agency, df$icpsr, sep='_')
@@ -71,7 +74,8 @@ df$tenure <- df$year - df$first_year
 
 final_tenure<- df %>% group_by(icpsr) %>%  summarise(max_year = max(tenure))
 
-df<- left_join(df, final_tenure , by = 'icpsr')
+df<- left_join(df, final_tenure , by = 'icpsr') # FIXME
+
 df$survive <- ifelse((df$chamber.x=='House' & df$max_year>1)| (df$chamber.x=='Senate' & df$max_year>5),1, 0 )
 df$chamber <- df$chamber.x
 
@@ -90,7 +94,7 @@ df %>% filter(n > 1) %>% select(icpsr, party, chamber, year, agency)
 df2<- df %>% filter(n == 1)
 
 
-write.dta(df2, file='~/Dropbox/Correspondence/Data/AgencyComm.dta')
+write.dta(df2, file= here::here('data/AgencyComm.dta'))
 
 dcounts_tenure <- df2
 save(dcounts_tenure, file = here::here("data", "dcounts_tenure.Rdata"))
@@ -110,7 +114,7 @@ doubles$remove<- ifelse(doubles$count>1, 1, 0)
 
 d_rat2<- left_join(d_rat, doubles, by = c('year','icpsr'))
 d_rat2<-d_rat2 %>% subset(remove==0)
-write.dta(d_rat2, file='~/Dropbox/Correspondence/Data/ProportionContact.dta')
+write.dta(d_rat2, here::here('data/ProportionContact.dta'))
 
 dcounts_ratio <- d_rat2
 save(dcounts_ratio, file = here::here("data", "dcounts_ratio.Rdata"))
@@ -152,7 +156,7 @@ state_level$state_new<- state_new
 perDist<- left_join(perDist, select(state_level, state_new, mean_new, state, year), by = c('state', 'year'))
 
 
-write.dta(perDist, '~/Dropbox/correspondence/data/DistrictLevel.dta')
+write.dta(perDist, here::here('data/DistrictLevel.dta'))
 
 
 dcounts_per_district <- perDist
@@ -164,8 +168,8 @@ save(dcounts_per_district, file = here::here("data", "dcounts_per_district.Rdata
 #### making the figures for the slides
 
 library(readstata13)
-d<- read.dta13('/users/jgrimmer/Dropbox/Correspondence/Data/AgencyComm.dta')
-d2<- read.dta13('/users/jgrimmer/Dropbox/Correspondence/Data/ProportionContact.dta')
+d<- read.dta13(here::here('data/AgencyComm.dta'))
+d2<- read.dta13(here::here('data/ProportionContact.dta'))
 
 #FIXME replace names with these when it won't mess justin up
 d <- dcounts_tenure %>% mutate(nominate_dim1 = nominate.dim1,
@@ -192,7 +196,7 @@ g3<- sub2 %>% ggplot(aes(x = nominate_dim1, y = avg_con, col= party)) +
 
 # g3
 
-ggsave(g3, file='/Users/jgrimmer/Dropbox/correspondence/figs/NominateEffort.pdf', height = 6, width = 6)
+ggsave(g3, file = here::here('figs/NominateEffort.pdf'), height = 6, width = 6)
 
 
 store<- sub %>% group_by(chair, ranking_minority) %>% summarise(avg_over = mean(avg_over),
@@ -284,7 +288,7 @@ library(lfe)
 
 temp<- felm(perYear~eventual_chair |year_agency, data = d_test %>% subset(chair==0) )
 
-write.dta(d_test, '/Users/jgrimmer/Dropbox/correspondence/data/PlaceboTest.dta')
+write.dta(d_test, here::here('data/PlaceboTest.dta'))
 
 #TODO MAKE THIS DEPEND ON DATA 
 share<- c(0.09,0.07, 0.65, 0.03, 0.16)
@@ -305,4 +309,5 @@ b1<- out %>% ggplot(aes(x = Helped_use, y = share,  fill = Type)) +
 
 b1
 
-ggsave(b1, file='~/Dropbox/correspondence/figs/ContactType.pdf', height = 6, width = 11)
+ggsave(b1, file = here::here('data/ContactType.pdf'), height = 6, width = 11)
+
