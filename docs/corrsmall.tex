@@ -8,7 +8,7 @@
 \usepackage{csquotes}
 \usepackage{lscape}
 \usepackage{setspace}
-\usepackage{ulem}
+%\usepackage{ulem}
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,
@@ -23,7 +23,24 @@
  }{\end{itemize}}
 \urlstyle{same} % don't use monospace font for urls
 
- \title{The Effects of Shifting Priorities and Capacity on Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies}
+
+% for modelsummary
+\usepackage{siunitx}
+\newcolumntype{d}{S[input-symbols = ()]}
+
+% for tinytable
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+%\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+%\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+
+
+
+ \title{How Shifting Priorities and Capacity Affect Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies}
   \author{Devin Judge-Lord\thanks{Assistant Professor, University of Michigan} \and Eleanor Neff Powell\thanks{Booth Fowler Associate Professor, University of Wisconsin-Madison} \and Justin Grimmer\thanks{Professor, Stanford University and Senior Fellow, Hoover Institution} }
   \date{\today}
 
@@ -31,9 +48,6 @@
 \usepackage{multirow}
 \bibliographystyle{apsr}
 
-% for modelsummary
-\usepackage{siunitx}
-\newcolumntype{d}{S[input-symbols = ()]}
 
 
 \begin{document}
@@ -45,15 +59,15 @@
 \begin{abstract}
 When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation. 
 We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity. 
-To assess how institutional power shapes behavior, we assemble a massive new database of \input{tables/n} legislator requests to a near census of departments, agencies, and sub-agencies between 2007 and 2023.
-Leveraging variation within legislator-agency pairs, we find that legislators prioritize policy work as they gain power but simultaneously maintain their levels of constituency service.
-Leveraging variation within district-agency pairs, we find that new legislators do less policy work textit{and} constituency service than more senior legislators.
+To assess how institutional power shapes behavior, we assemble a massive new database of \input{tables/n} legislator requests to a near census of departments, agencies, and sub-agencies between 2007 and 2020.
+We find that legislators prioritize policy work as they gain institutional power (e.g., a committee chair) but simultaneously maintain their levels of constituency service.
+Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service \textit{and} less policy work.
 Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
 
 %When elected officials gain power, do they use it to provide more constituent service or to affect broad public policies? Answering this question informs debates over how legislator capacity, term limits, and institutional power affect political representation. We distinguish two countervailing effects of increased institutional power: 1) as elected officials gain power, they allocate relatively more effort to policy over constituency service, and 2) institutional power provides additional resources and, therefore, increases their overall capacity. To assess the extent to which these countervailing effects of institutional power affect behavior, we assemble a massive new database of \input{tables/n} congressional requests to federal agencies between 2007 and 2018 obtained through \input{tables/foia_requests} FOIA requests, a near census of departments, agencies, and sub-agencies. We find that most legislator contacts with the bureaucracy are constituency service, regardless of institutional position and tenure. We leverage variation within legislator-agency pairs to hold constant the pressures unique to legislators and study their careers, and leverage variation in district-agency pairs to hold constant district features such as district demand for constituency service. We show that legislators prioritize policy work as they gain power and experience, but increasing overall capacity enables them to maintain the same level of constituency service. Consistent with our theory that service depends on capacity, we show that new legislators do less policy work and constituency service than their more senior colleagues. In a series of robustness checks, we show that our findings do not result from exogenous variation in constituent demand. Rather than long-serving and powerful elected officials diverting attention from their district, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
 \end{abstract}
 
-Word Count: 10523 % abstract = 150 (as of 4-24-2024) 
+Word Count: 9649 % abstract = 150 (as of 4-25-2024) 
 
 % The manuscript must include a title page featuring an abstract of no more than 150 words, followed by a word count for the manuscript. 
 
@@ -323,7 +337,7 @@ Figure \ref{f:peryear} shows the number of requests per legislator over time, hi
 
 \section{The Effect of Experience and Institutional Power}\label{s:results} 
 
-Using this dataset of requests to federal agencies, we estimate the effect of institutional power on legislator behavior. First, we test theories rooted in legislator capacity by modeling the effects of institutional power on the overall \textit{level} of constituency service. Next, we test theories rooted in legislators' priorities by modeling the effects of institutional power on the  \textit{ratio} of policy work to constituency service. %Finally, we estimate the combined substantive impact of increasing capacity and shifting priorities. 
+Using this dataset of requests to federal agencies, we estimate the effect of institutional power on legislator behavior. First, we test theories rooted in legislator capacity by modeling the effects of institutional power on a legislator's overall \textit{level} of constituency service. Next, we test theories rooted in legislators' priorities by modeling the effects of institutional power on a legislator's  \textit{ratio} of policy work to constituency service. %Finally, we estimate the combined substantive impact of increasing capacity and shifting priorities. 
 
 \subsection{The Effects of Experience and Institutional Power on Levels of Constituency Service}\label{s:prestige}
 
@@ -346,29 +360,31 @@ This specification, however, is not the best specification to assess how electin
 %\subsection{The Effects of Experience and Institutional Power on the Level of Constituency Service} 
 
 
+\subsubsection{The Effect of Institutional Power on Levels of Constituency Service}\label{s:prestigeresults}
+
 \begin{table}[hbt!]
 \caption{The Effect of Experience and Institutional Power on Constituency Service} \label{t:models_total}
 \begin{minipage}{\textwidth}
 \begin{center}
 % \input{tables/FinalTable_1} % stata table was missing FE
-\input{tables/models_total.tex} % this one is from replication.rmd
+\input{tables/models_total} % this one is from replication.rmd
 \end{center}
 \footnotetext{This table shows how the number of contacts changes as legislators acquire more experience and power. Column 1 shows the average differences across committee assignments and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least three years. Column 4 takes the Log of the counts + 1 as the dependent variable.}
 \end{minipage}
 \end{table}
 
-Table \ref{t:models_total} provides the coefficient estimates from Equation \ref{e:diff1}. We focus first on the estimated effect of increased committee prestige. Table \ref{t:models_total} shows that as legislators acquire more prestige, their rates of constituency service increase. All coefficients represent the average additional requests per year \textit{per agency}; per legislator per year effects are simply these coefficients times 83 (the number of agencies).
-% IN THE RAW DATA, THERE ARE 90 AGENCIES, BUT MAYBE SOME GET DROPPED? 
-Model 1 (the first column of Table \ref{t:models_total}) shows this is true in a cross-sectional comparison across legislators. Model 1 excludes the legislator-agency and year-agency fixed effects, but it does include controls for majority status and being from the same party as the president. 
-
-\subsubsection{The Effect of Institutional Power on Levels of Constituency Service}\label{s:prestigeresults} 
-
-Table 1 shows that committee chairs, ranking members, members of prestige committees, and oversight committee members provide substantially more constituency service than other legislators. However, these cross-sectional differences conflate a legislator's institutional position with other legislator characteristics. If legislators who are better at their jobs or exert more effort also receive more prestigious committee positions, then the estimates from Model 1 confound legislators' overall ability with their institutional position.   
+Table \ref{t:models_total} shows estimates from Equation \ref{e:diff1}. All coefficients represent the average additional requests per year \textit{per agency}; per legislator per year effects are simply these coefficients times \input{tables/n_agencies} (the number of agencies).
+% IN THE RAW DATA, THERE ARE \input{tables/n_agencies} AGENCIES, BUT MAYBE SOME GET DROPPED? 
 
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table \ref{t:models_total}) provide the estimated effects from the difference-in-differences specification in Equation \ref{e:diff1}. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of 0.27 requests \textit{per agency} (95-percent confidence interval [0.09, 0.45]). Across all 90 agencies, this represents an increase of approximately 24 additional requests per year, 24.1\% of the average number of requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of 0.15 contacts per agency while joining a prestige committee causes a 0.27 per agency increase in the number of contacts a legislator makes. Across all 90 agencies in these data, this represents an increase of approximately 14 and 24 additional requests per year, respectively. Given the overall average of 72 letters per year, these differences are substantial. 
 
-% We estimate that the experience gained between the first and second year in Congress causes an increase of 0.24 requests \textit{per agency}. The experience gained between the first and seventh years causes an increase of 0.51 per agency. Across all 90 agencies in these data, this represents an increase of approximately 46 additional requests per year, 45.5\% of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.28 per agency, an increase of approximately 25 additional requests per year, 24.5\% of the average number of requests per year in our data.
+Model 1 (the first column of Table \ref{t:models_total}) shows a cross-sectional comparison across legislators. Legislators with more institutional power have higher rates of constituency service. %Model 1 excludes the legislator-agency and year-agency fixed effects but controls for majority status and being from the same party as the president.
+Committee chairs, ranking members, and members of prestige committees %and oversight committee members 
+provide substantially more constituency service than other legislators. However, these cross-sectional differences may be the result of other legislator characteristics. If legislators who are better at their jobs or exert more effort also receive more prestigious committee positions, then the estimates from Model 1 confound legislators' overall ability with their institutional position.   
+
+To address potential confounding, Model 2 (Column 2 of Table \ref{t:models_total}) shows the difference-in-differences specification in Equation \ref{e:diff1}. Across all measures of institutional power, we find that acquiring power increases the number of requests that a given legislator makes. Becoming a committee chair causes an increase of 0.27 requests \textit{per agency} (95-percent confidence interval [0.09, 0.45]). Across all \input{tables/n_agencies} agencies, this represents an increase of approximately 24 additional requests per year, a 24\% increase over the average number of requests. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for joining a prestige committee. %Becoming a ranking member of a committee causes an increase of 0.15 contacts per agency while joining a prestige committee causes a 0.27 per agency increase in the number of contacts a legislator makes. Across all \input{tables/n_agencies} agencies in these data, this represents an increase of approximately 14 and 24 additional requests per year, respectively. Given the overall average of 72 letters per year, these differences are substantial. 
+
+% We estimate that the experience gained between the first and second year in Congress causes an increase of 0.24 requests \textit{per agency}. The experience gained between the first and seventh years causes an increase of 0.51 per agency. Across all \input{tables/n_agencies} agencies in these data, this represents an increase of approximately 46 additional requests per year, 45.5\% of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.28 per agency, an increase of approximately 25 additional requests per year, 24.5\% of the average number of requests per year in our data.
 
 
 
@@ -378,7 +394,7 @@ To address potential confounding in across-legislator comparisons, the estimates
 \includegraphics[width = .8\textwidth]{figs/m-total-predicted-3}
 \end{figure}
 
-Figure \ref{f:m-total-predicted} shows the predicted total number of letters in Congress and committee chair status (comparing predictions for counterfactuals where the same legislator did and did not receive a chairmanship in their sixth year).\footnote{Predictions are based on a legislator-agency pair where (1) the legislators' average annual contacts equaled the overall average, (2) the legislators' number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.} 
+Figure \ref{f:m-total-predicted} shows the predicted total number of letters per year by whether a legislator is a member of the president's party and whether they are a chair (comparing predictions for counterfactuals where the same legislator did and did not receive a chair position in their sixth year).\footnote{Predictions are based on a legislator-agency pair where (1) the legislators' average annual contacts equaled the overall average, (2) the legislators' number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.} 
 % legislators make significantly fewer requests to agencies in their first year than the following year. Subsequent increases are less significant. However, t
 There is a significant increase when a legislator becomes a committee chair. There is no significant difference when a member has a co-partisan president.
 
@@ -389,17 +405,18 @@ This section has shown that acquiring institutional power causes legislators to 
 
 \subsubsection{The Effect of Legislator Experience on Levels of Constituency Service}\label{s:tenure} 
 
-As legislators acquire more power, they increase their provision of constituency service. While this suggests that more powerful legislators are paying more attention to their constituents, it could still be the case that legislators decrease their constituency service provision the longer they spend in office. To test whether this is the case, we use the estimates in Table \ref{t:models_total} but now focus on the coefficients in legislators' first six years in office. The reference group is representatives who have served longer than six years.\footnote{Interpreting these coefficients requires that we assume the effects of tenure and committee assignment are linearly separable. This assumption is reasonable because most legislators do not become chairs, ranking members, or join prestige committees in their first six years, and almost none in their first two years.} 
+%As legislators acquire more power, they do more constituency service. While this suggests that more powerful legislators are paying more attention to their constituents, it could still be the case that legislators decrease their constituency service provision the longer they spend in office. To test whether this is the case, we use the estimates in Table \ref{t:models_total} but now focus on the coefficients in legislators' first six years in office. The reference group is representatives who have served longer than six years.\footnote{Interpreting these coefficients requires that we assume the effects of tenure and committee assignment are linearly separable. This assumption is reasonable because most legislators do not become chairs, ranking members, or join prestige committees in their first six years, and almost none in their first two years.} 
 
-The first column of Table \ref{t:models_total} shows large cross-sectional differences: legislators in their first year make fewer contacts than more experienced legislators. First-year legislators make approximately 0.255 fewer requests per agency than legislators in their seventh year or beyond. This difference shrinks in the second year and then is mostly gone. But we advise caution in interpreting the differences in Column 1 because they conflate the effect of increased experience with other characteristics that may correlate with whether a legislator remains in office and, thus whether we observe them in later years.   
+%The first column of Table \ref{t:models_total} shows large cross-sectional differences: legislators in their first year make fewer contacts than more experienced legislators. First-year legislators make approximately 0.255 fewer requests per agency than legislators in their seventh year or beyond. This difference shrinks in the second year and then is mostly gone. But we advise caution in interpreting the differences in Column 1 because they conflate the effect of increased experience with other characteristics that may correlate with whether a legislator remains in office and, thus whether we observe them in later years.   
 
-To account for possible differences in legislators who obtain different levels of tenure, the second column of Table \ref{t:models_total} estimates the difference-in-differences specification in Equation \ref{e:diff1}. The tenure coefficients show that legislators provide less constituency service in their first year in office. As they acquire experience, they make more requests to federal agencies. In their first year in office, legislators provide 21.33 (90 $\times$ (.512 - .275)) fewer requests per agency than legislators in their second year and 29.07 (90 $\times$ (.512 - .189)) fewer requests than legislators in their third year---both differences are statistically significant at conventional levels. The overall increase in levels of constituency service from a legislator's first to third year is similar in size to the increase that comes from becoming a member of the oversight committee. Once legislators enter their fourth year, their behavior no longer differs from more experienced legislators. We find small and statistically insignificant differences for legislators in their fourth through sixth years. As legislators acquire experience and build their office's organizational capacity in their first two years, they make more contacts with federal agencies.  
+%To account for possible differences in legislators who obtain different levels of tenure, the second column of Table \ref{t:models_total} estimates the difference-in-differences specification in Equation \ref{e:diff1}. The tenure coefficients show that legislators provide less constituency service in their first year in office. As they acquire experience, they make more requests to federal agencies. In their first year in office, legislators provide 21.33 (\input{tables/n_agencies} $\times$ (.512 - .275)) fewer requests per agency than legislators in their second year and 29.07 (\input{tables/n_agencies} $\times$ (.512 - .189)) fewer requests than legislators in their third year---both differences are statistically significant at conventional levels. The overall increase in levels of constituency service from a legislator's first to third year is similar in size to the increase that comes from becoming a member of the oversight committee. Once legislators enter their fourth year, their behavior no longer differs from more experienced legislators. We find small and statistically insignificant differences for legislators in their fourth through sixth years. As legislators acquire experience and build their office's organizational capacity in their first two years, they make more contacts with federal agencies.  
 
-As with the analysis of committee prestige, the findings in Table \ref{t:models_total} are robust to alternative specifications. Despite the difference-in-difference design, we might still be concerned that the set of legislators who served a third year differs from those who served a first year. If this were the case, our findings would result from both the experience and a selection effect due to House members who win reelection, a potential indication that they are better able to perform the job than other legislators. To address the potentially different samples each year, the third column of Table \ref{t:models_total} assesses the changes in the number of contacts of federal agencies for legislators who serve for at least three years. The pattern is similar: legislators initially provide less constituency service in their first two years than in subsequent years. Column 4 in Table \ref{t:models_total} shows that the results are robust to analyzing $\log(Y_{ijt} + 1)$, ensuring that our results are not because of outliers. Additional models in the Online Appendix estimate the same models as Table \ref{t:models_total} on hand-coded subsets of the data, showing similar results. 
+%As with the analysis of committee prestige, the findings in Table \ref{t:models_total} are robust to alternative specifications. Despite the difference-in-difference design, we might still be concerned that the set of legislators who served a third year differs from those who served a first year. If this were the case, our findings would result from both the experience and a selection effect due to House members who win reelection, a potential indication that they are better able to perform the job than other legislators. To address the potentially different samples each year, the third column of Table \ref{t:models_total} assesses the changes in the number of contacts of federal agencies for legislators who serve for at least three years. The pattern is similar: legislators initially provide less constituency service in their first two years than in subsequent years. Column 4 in Table \ref{t:models_total} shows that the results are robust to analyzing $\log(Y_{ijt} + 1)$, ensuring that our results are not because of outliers. Additional models in the Online Appendix estimate the same models as Table \ref{t:models_total} on hand-coded subsets of the data, showing similar results. 
 
-\subsubsection{The Effect of Electing a New Representative on the Level of Constituency Service}\label{s:tenure_dist}
+%\subsubsection{The Effect of Electing a New Representative on the Level of Constituency Service}\label{s:tenure_dist}
 
-In the previous section, we showed that legislators make fewer requests to federal agencies in their first year in office but that the number of requests stabilizes after their third year. We now turn to a related question: how does the level of constituency service to a district change after the election of a new representative? Rather than examining changes in the number of requests by making within-legislator comparisons, we now make within-district comparisons to assess how electing a new legislator affects the total number of requests a district's representative makes. In other words, within-district comparisons enable us to assess the costs or benefits of electing a new representative compared to an incumbent.%\footnote{For an illustration of changes in one district over time, see Appendix \ref{s:wi}, which shows the number of requests from legislators representing Wisconsin's 7th District over time}. %% FOOTNOTE IF WE MOVE THE EXAMPLE BACK TO THE APPENDIX
+%In the previous section, we showed that legislators make fewer requests to federal agencies in their first year in office but that the number of requests stabilizes after their third year. 
+We now turn to a related question: how does the level of constituency service to a district change after the election of a new representative? Rather than examining changes in the number of requests by making within-legislator comparisons, we now make within-district comparisons to assess how electing a new legislator affects the total number of requests a district's representative makes. In other words, within-district comparisons enable us to assess the costs or benefits of electing a new representative compared to an incumbent.%\footnote{For an illustration of changes in one district over time, see Appendix \ref{s:wi}, which shows the number of requests from legislators representing Wisconsin's 7th District over time}. %% FOOTNOTE IF WE MOVE THE EXAMPLE BACK TO THE APPENDIX
 
 %\subsection{Example} \label{s:wi}
 
@@ -532,7 +549,7 @@ This section presents a more direct test of whether constituent demand explains 
 To assess whether constituents redirect demand toward other more experienced legislators when new members replace their more experienced incumbent representative, we examine how experienced legislators' levels of constituency service change in response to having new representatives in their state. We measure new members in the state in two ways: either the proportion of a state delegation that is new or an indicator of whether there is a new legislator in the delegation. As in Section \ref{s:prestigeresults}, we measure the number of requests a district's representative makes in a particular year. Using this dependent variable, we estimate a series of difference-in-differences regressions where the treatment is new members in the state (Table \ref{t:spill1}). We include district and year fixed effects. We restrict the regression to incumbent legislators only because we are interested in assessing whether constituents with new legislators direct their constituency service requests to these incumbents. 
    
 \begin{table}[hbt!]
-\caption{Little Evidence of Spillovers from New Legislators} \label{t:spill1}
+\caption{No Evidence of Spillovers from New Legislators} \label{t:spill1}
 
 \begin{minipage}{\textwidth}
 \begin{center}
