@@ -83,6 +83,24 @@ load(here::here("data" , "members.Rdata"))
 
 n_agency <- dcounts_tenure$agency |> unique() |> length()
 
+# check N
+dcounts_tenure %>% tally(perYear)
+dcounts_ratio %>% tally(perCon)
+dcounts_ratio %>% tally(perPol)
+dcounts_per_district %>% ungroup %>%  tally(perYear)
+
+# check n per year 
+dcounts_tenure %>% group_by(year) %>% tally(perYear) |> kablebox_long()
+
+# mean 
+perYear_mean1 <- dcounts_tenure$perYear |> mean()
+perYear_mean1
+perYear_mean2 <- dcounts_tenure |> 
+  group_by(icpsr, year) |> 
+  transmute(perYearTotal = sum(perYear))
+perYear_mean2 <- mean(perYear_mean2$perYearTotal) |> round()
+
+
 
 # var names for tables
 dcounts_tenure %<>% 
@@ -96,15 +114,15 @@ dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arr
 # total per legislator-agency pair 
 dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
 ```
-
+1
 
 ### Values to predict at
 
 The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
-The average is 81 letters per legislator per year, a little over 1.29 letters per agency per year.
+The average is  `r perYear_mean2` letters per legislator per year, `r perYear_mean1` letters per agency per year.
 
-For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged 81, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer 1.29). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, Phil Roe meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which Phil Roe submitted one letter in 2015, so predictions are at Phil Roe X IRS X 2015. Other legislators, years, and agencies are simply intercept shifts. 
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, John Barrasso meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which John Barrasso submitted one letter in 2007, so predictions are at John Barrasso X IRS X 2007. Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -114,7 +132,7 @@ modal <- dcounts_tenure %>%
   mutate(Chair = sum(chair, na.rm = T) >1) %>% 
   group_by(icpsr, year) %>%
   mutate(perLeg = sum(perYear)) %>% 
-  filter(perYear == 1, perLeg == 81 ) %>% #FIXME MAKE THIS VARIABLE 
+  filter(perYear == 1, perLeg == perYear_mean2  ) %>% #FIXME MAKE THIS VARIABLE 
   select(perAgency = perYear, perLeg, icpsr, icpsr_agency, agency_year, first_year, max_year, Chair) %>% 
   distinct() %>% 
   ungroup() %>% left_join(members %>% select(bioname, icpsr))
@@ -122,24 +140,29 @@ modal <- dcounts_tenure %>%
 modal %>%
   mutate(average = perLeg) %>% 
   count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
+  distinct() %>%
   kablebox()
 
-modal %<>% filter(Chair)
+modal %<>% filter(Chair) %>% distinct()
+
+modal %>%
+  kablebox()
 
 dcounts_tenure %>% 
   group_by(icpsr, year) %>% 
-  mutate (perLegislator = sum(perYear)) %>% 
+  mutate(perYearTotal = sum(perYear)) %>%
+  #mutate (perLegislator = sum(perYear)) %>% 
   ungroup() %>% 
-  mutate(meanLeg = mean(perLegislator),
+  mutate(meanLeg = mean(perYearTotal),
          meanYear = mean(perYear)) %>%
-  filter( abs(perLegislator - meanLeg) < 10,   
-          abs(perYear - meanYear) < 10 )  %>%
+  filter( abs(perYearTotal - perYear_mean2) < 10,   
+          perYear < 10 )  %>% 
   ggplot() +
-  aes(x = perYear, y = perLegislator) + 
+  aes(x = perYear, y = perYearTotal) + 
     geom_jitter() + 
   geom_vline(aes(xintercept = meanYear), color = "blue") + 
   geom_hline(aes(yintercept = meanLeg), color = "blue") + 
-  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year & perLegislator == 81, icpsr_agency, NA) ),
+  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year , icpsr_agency, NA) ),
                   color = "red", box.padding = 0.5, max.overlaps = Inf) + 
   labs(x = "Contacts per Legislator per Agency per Year",
        y = "Contacts per Legislator per Year")
@@ -318,21 +341,41 @@ config_modelsummary(factory_default = 'kableExtra')
 
 # table formatting to match stata (sort of)
 format_table <- . %>% 
-  kableExtra::row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
-  kableExtra::kable_styling(font_size = 11) %>% 
+  # OLD modelsummary based on kableExtra package (broken): https://stackoverflow.com/questions/78422275/argument-is-of-length-zero-from-kableextra-after-updating-rstudio
+  #kableExtra::row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
+  #kableExtra::kable_styling(font_size = 11) %>% 
                     #full_width = TRUE, 
                     #latex_options = c("repeat_header")) %>%
+  # NEW modelsummary based on tinytable package: https://vincentarelbundock.github.io/tinytable/vignettes/format.html
+    as.character() %>% 
   str_replace("Num.Obs.", "Observations") %>% 
-  str_replace("Std.Errors", "Robust/Clustered Std. Errors") %>% 
-  str_replace("FE: Legislator_x_Agency", "Legislator x Agency FE") %>%
-  str_replace("FE: Year_x_Agency", "Year x Agency FE") %>% 
+  str_replace("Std.Errors", "\footnotesize Robust/Clustered Std. Errors") %>% 
+  str_replace("FE: Legislator.*x.*Agency", "Legislator x Agency FE") %>%
+  str_replace("FE: Year.*x.*Agency", "Year x Agency FE") %>% 
   str_replace("FE: Year", "Year Fixed Effects") %>% 
   str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
     str_replace_all("X|✓", "\\\\\\checkmark") %>% 
   # a random midrule appeared in the wrong place 
   #str_remove("\\midrule") %>% 
   #  extract just the table, no caption etc
-  str_extract("\\\\begin\\{tabular\\}(\n|.)*tabular\\}") 
+  str_remove_all("\\\\begin\\{table\\}|\\\\centering|\\\\end\\{table\\}")
+
+# for testing table formatting
+if(F){
+# TeX 
+modelsummary(models_total,  # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+    tinytable::format_tt(
+    digits = 2,
+    fontsize = 11,
+    num_mark_big = ",") |>
+  format_table()  
+}
 ```
 
 
@@ -468,10 +511,9 @@ modelsummary(models_total,  # stars = T,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
              output = "latex",
-             #title = "\\\\footnotesize The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator."))  %>% #class()  
-  #format_table()  %>% 
-write_lines(file = here::here("docs", "tables", "models_total.tex") )
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+  format_table()  %>% 
+  write_lines(file = here::here("docs", "tables", "models_total.tex") )
 
 
 beta <- m_total_dnd$coefficients %>%
@@ -648,8 +690,8 @@ modelsummary(models_con, # stars = T,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator."))%>% 
-  #format_table() %>%
+             notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
+  format_table() %>%
   write_lines(file = here::here("docs", "tables", "models_con.tex") )
 
 beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
@@ -827,8 +869,8 @@ modelsummary(models_policy, # stars = T,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator." )) %>% 
-  #format_table() %>%
+             notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
+  format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_policy.tex") )
 ```
 
@@ -1000,9 +1042,9 @@ modelsummary(models_ratio, # stars = T,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list("\\\\footnotesize Robust standard errors in parentheses, clustered by legislator.") ) %>% 
+             notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
   # format to match stata output (sort of)
-  #format_table() %>%
+  format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_ratio.tex") )
 
 beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)

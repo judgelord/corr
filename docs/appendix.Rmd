@@ -166,7 +166,7 @@ x2 %>%
 # Data  
 ```{r, eval=TRUE}
 FOIA <- read_csv(here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")) %>% 
-  mutate(Department = Department %>% str_remove("Department of ")) 
+  mutate(Department = Department %>% str_remove_all("Department of the|Department of ")) 
 
 FOIA %>% 
   kablebox_long()
@@ -177,7 +177,7 @@ FOIA %>% select(-Coded) %>%
   row_spec(row = 16, hline_after = TRUE) %>%
   row_spec(row = 17, bold = T) %>% 
   #kable_styling(font_size = 9, full_width = TRUE) %>% 
-       write_file(here::here("tables", "FOIA.tex")) 
+       write_file(here::here("docs", "tables", "FOIA.tex")) 
 ```
 
 ```{r data, cache=FALSE}
@@ -189,12 +189,25 @@ load(
        str_replace("Correspondence","correspondence_data")
      ) 
 
+all_contacts %>% count() %>% pull(n)  %>% write(file = here::here("docs/tables/n"))
+
 all_contacts %>% count(TYPE != "NA") %>% pull(n) %>% .[[2]] %>% write(file = here::here("docs/tables/n_coded"))
+
+n_agencies <- all_contacts $agency %>% unique() %>% length()
+
+write(n_agencies, file = here::here("docs", "tables", "n_agencies"))
 # 
 # # old raw data 
 # load(
 #   here::here("data", "all_contacts2.Rdata") 
 #      ) 
+
+all_contacts |> count(agency) |> kablebox()
+
+all_contacts |> count(year) |> kablebox()
+
+
+all_contacts %>% filter(year >2006, year <2018) %>%  dim()
 
 
 all_contacts2 <- all_contacts #FIXME 
@@ -476,6 +489,7 @@ dcounts %>%
   ungroup() %>% 
   group_by(chamber) %>% 
   mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
+    filter(cqlabel == cq, year > 2007, year <2018) %>% 
   ggplot() +
   aes(x = year, y = n, 
       fill = member_state %>% str_replace("-.*", "\\)")) + 
@@ -500,7 +514,8 @@ dcounts %>%
   ungroup() %>% 
   group_by(chamber) %>% 
   mutate(mean_per_chamber = mean(n) %>% round(0)) %>% 
-  filter(cqlabel == cq, year > 2007, year <2019) %>% 
+  filter(cqlabel == cq, year > 2007, year <2018) %>% 
+  #drop_na(year) %>%
   ggplot() +
   aes(x = year, y = n, 
       fill = member_state %>% str_replace("-.*", "\\)")) + 
@@ -1181,7 +1196,7 @@ Combining model estimates for the shift in the level of requests and relative pr
 These estimates are calculated by adding diff-in-diff regression coefficients for committee chairs' increased levels of requests to the baseline levels for non-chairs. We also adjust the ratio of policy work to constituency service based on the diff-in-diff regression coefficients for committee chairs' increased policy work ratio.
 
 ```{r chairs-est, fig.cap="Difference-in-Difference Estimates of Change in Levels of Constituency Service and Policy Work as Legislators Gain Power", fig.width=4, fig.height=3}
-n_agencies <- dcounts_min$agency %>% unique() %>% length()
+
 
 #FIXME replace with tidy model output 
 # TABLE 1

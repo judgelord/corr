@@ -1,37 +1,48 @@
-\begin{tabular}[t]{lcccc}
+
+
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={ Robust standard errors in parentheses, clustered by legislator.},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]},
+column{1}={halign=l,},
+column{2}={halign=c,},
+column{3}={halign=c,},
+column{4}={halign=c,},
+column{5}={halign=c,},
+hline{25}={1,2,3,4,5}{solid, 0.05em, black},
+}                     %% tabularray inner close
 \toprule
-  & (1) & (2) & (3) & (4)\\
-\midrule
-\textbf{Dependent Variable} & \textbf{Count} & \textbf{Count} & \textbf{Count} & \textbf{Log(Count+1)}\\
-\midrule
-Committee Chair & \num{0.199} & \num{0.158} & \num{0.159} & \num{0.036}\\
- & (\num{0.027}) & (\num{0.034}) & (\num{0.034}) & (\num{0.007})\\
-Ranking Member & \num{0.145} & \num{0.090} & \num{0.092} & \num{0.025}\\
- & (\num{0.028}) & (\num{0.024}) & (\num{0.024}) & (\num{0.005})\\
-Prestige Committee & \num{0.049} & \num{0.031} & \num{0.031} & \num{0.010}\\
- & (\num{0.009}) & (\num{0.010}) & (\num{0.010}) & (\num{0.003})\\
-First Year & \num{-0.076} & \num{-0.076} & \num{-0.070} & \num{-0.030}\\
- & (\num{0.007}) & (\num{0.016}) & (\num{0.016}) & \vphantom{1} (\num{0.004})\\
-Second Year & \num{-0.045} & \num{-0.042} & \num{-0.040} & \num{-0.018}\\
- & (\num{0.007}) & (\num{0.016}) & (\num{0.016}) & (\num{0.004})\\
-Third Year & \num{-0.042} & \num{-0.031} & \num{-0.033} & \num{-0.013}\\
- & (\num{0.008}) & (\num{0.013}) & (\num{0.013}) & (\num{0.004})\\
-Fourth Year & \num{-0.021} & \num{-0.011} & \num{-0.013} & \num{-0.006}\\
- & (\num{0.009}) & (\num{0.013}) & (\num{0.013}) & (\num{0.004})\\
-Fifth Year & \num{-0.022} & \num{-0.009} & \num{-0.011} & \num{-0.006}\\
- & (\num{0.009}) & (\num{0.011}) & (\num{0.011}) & (\num{0.003})\\
-Sixth Year & \num{-0.011} & \num{0.002} & \num{0.003} & \num{-0.006}\\
- & (\num{0.012}) & (\num{0.012}) & (\num{0.012}) & (\num{0.003})\\
-Majority & \num{0.005} & \num{-0.001} & \num{0.000} & \num{-0.002}\\
- & (\num{0.006}) & (\num{0.006}) & (\num{0.006}) & (\num{0.002})\\
-President's Party & \num{0.031} & \num{0.008} & \num{0.009} & \num{0.004}\\
- & (\num{0.008}) & (\num{0.006}) & (\num{0.006}) & (\num{0.001})\\
-\midrule
-All Legislators & \checkmark & \checkmark &  & \checkmark\\
-Served At Least 2nd Term &  &  & \checkmark & \\
-Observations & \num{412111} & \num{412111} & \num{388997} & \num{412111}\\
-Year x Agency FE & \checkmark & \checkmark & \checkmark & \checkmark\\
-Legislator x Agency FE &  & \checkmark & \checkmark & \checkmark\\
+& (1) & (2) & (3) & (4) \\ \midrule %% TinyTableHeader
+Dependent Variable          & Count          & Count          & Count          & Log(Count+1)   \\
+Committee Chair             & \num{0.211}   & \num{0.174}   & \num{0.175}   & \num{0.041}   \\
+& (\num{0.029}) & (\num{0.034}) & (\num{0.034}) & (\num{0.007}) \\
+Ranking Member              & \num{0.156}   & \num{0.107}   & \num{0.108}   & \num{0.028}   \\
+& (\num{0.030}) & (\num{0.027}) & (\num{0.027}) & (\num{0.006}) \\
+Prestige Committee          & \num{0.053}   & \num{0.031}   & \num{0.032}   & \num{0.010}   \\
+& (\num{0.010}) & (\num{0.010}) & (\num{0.010}) & (\num{0.003}) \\
+First Year                  & \num{-0.081}  & \num{-0.060}  & \num{-0.059}  & \num{-0.027}  \\
+& (\num{0.007}) & (\num{0.017}) & (\num{0.017}) & (\num{0.005}) \\
+Second Year                 & \num{-0.050}  & \num{-0.029}  & \num{-0.026}  & \num{-0.015}  \\
+& (\num{0.008}) & (\num{0.017}) & (\num{0.017}) & (\num{0.005}) \\
+Third Year                  & \num{-0.046}  & \num{-0.019}  & \num{-0.021}  & \num{-0.011}  \\
+& (\num{0.008}) & (\num{0.014}) & (\num{0.014}) & (\num{0.004}) \\
+Fourth Year                 & \num{-0.026}  & \num{-0.001}  & \num{-0.003}  & \num{-0.004}  \\
+& (\num{0.009}) & (\num{0.014}) & (\num{0.014}) & (\num{0.004}) \\
+Fifth Year                  & \num{-0.028}  & \num{-0.004}  & \num{-0.006}  & \num{-0.005}  \\
+& (\num{0.009}) & (\num{0.011}) & (\num{0.011}) & (\num{0.003}) \\
+Sixth Year                  & \num{-0.013}  & \num{0.009}   & \num{0.010}   & \num{-0.004}  \\
+& (\num{0.012}) & (\num{0.012}) & (\num{0.012}) & (\num{0.003}) \\
+Majority                    & \num{0.002}   & \num{-0.003}  & \num{-0.003}  & \num{-0.002}  \\
+& (\num{0.006}) & (\num{0.006}) & (\num{0.006}) & (\num{0.002}) \\
+President's Party           & \num{0.036}   & \num{0.012}   & \num{0.012}   & \num{0.005}   \\
+& (\num{0.008}) & (\num{0.006}) & (\num{0.006}) & (\num{0.002}) \\
+All Legislators             & \checkmark              & \checkmark              &                & \checkmark              \\
+Served At Least 2nd Term    &                &                & \checkmark              &                \\
+Observations                    & \num{435744}  & \num{435744}  & \num{420270}  & \num{435744}  \\
+Year x Agency FE       & \checkmark              & \checkmark              & \checkmark              & \checkmark              \\
+Legislator x Agency FE &                & \checkmark              & \checkmark              & \checkmark              \\
 \bottomrule
-\multicolumn{5}{l}{\rule{0pt}{1em}\footnotesize Robust standard errors in parentheses, clustered by legislator.}\\
-\end{tabular}
+\end{talltblr}
+
