@@ -296,10 +296,21 @@ type2017 <- d %>%
   summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
   ungroup()
 
+type2020 <- d %>% 
+  filter(year> 2006, year < 2021) %>%
+  group_by(type) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
+  ungroup()
+
+write(sum(type2020$n), file = "docs/tables/n2007-2020")
+
 coded <- d %>% 
+    filter(year> 2006, year < 2021) %>%
   mutate(coded = !is.na(type)) %>% 
   group_by(coded) %>% 
   summarise(n = sum(per_icpsr_chamber_year_agency_type)) 
+
+coded %>% filter(coded) %>% .$n |> write(file = "docs/tables/n2007-2020coded")
 
 coded_ratio = coded$n[2]/(sum(coded$n))
 
@@ -354,7 +365,7 @@ type2xprestige <- dcounts %>%
   mutate(percent = n / sum(n) *100) 
 
 
-type2xprestigechair%>% 
+type2xprestige%>% 
   kablebox()
 
 
@@ -582,7 +593,7 @@ cases <- unique(members$cqlabel) #%>% head()
 
 ---
 
-Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2017, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
+Between February 2017 and February 2021, we received data on `r as.integer(sum(type$n))` instances of members of Congress contacting federal agencies. We focus on requests made from 2007-2012, resulting in a data set of `r as.integer(sum(type2017$n))` contacts from members of Congress with federal agencies.
 
 
 ## Requests by percentile
@@ -590,7 +601,7 @@ Between February 2017 and February 2021, we received data on `r as.integer(sum(t
 
 ```{r percentiles, fig.height=3.4, fig.width=6, cache=TRUE}
 
-dcounts %>% 
+percentiles <- dcounts %>% 
     group_by(member_state, chamber, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
   group_by(member_state, chamber) %>% 
   summarise(mean = mean(n)) %>% 
@@ -599,7 +610,12 @@ dcounts %>%
   mutate(Percentile = ntile(mean, 100),
          rank = dense_rank(-mean)) %>% 
   arrange(-Percentile) %>% 
-  dplyr::select(member_state, Percentile, mean, chamber,rank) %>% distinct() %>% 
+  dplyr::select(member_state, Percentile, mean, chamber,rank) %>% distinct() 
+
+
+percentiles |> arrange(rank) |> kablebox()
+
+percentiles %>% 
     ggplot() + 
     geom_col(aes(x = Percentile, y = mean), 
              color = "grey", 
