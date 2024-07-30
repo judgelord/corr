@@ -1003,7 +1003,7 @@ se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(
 
 ### Ratio Narrative 
 
-Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. While there is little evidence that time in Congress affects legislator priorities, institutional positions do. We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
+Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification.  We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
 
 
 

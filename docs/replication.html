@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -188,9 +188,8 @@ window.Quarto = {
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dcounts_tenure <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> <span class="fu">tally</span>(perYear) <span class="sc">|&gt;</span> <span class="fu">kablebox_long</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">year</th>
@@ -287,7 +286,6 @@ window.Quarto = {
 </div>
 
 </div>
-</div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mean </span></span>
@@ -316,9 +314,8 @@ window.Quarto = {
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>dcounts_tenure <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(agency) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n =</span> perYear <span class="sc">%&gt;%</span> <span class="fu">sum</span>()) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="sc">-</span>n) <span class="sc">%&gt;%</span> <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">agency</th>
@@ -699,16 +696,14 @@ window.Quarto = {
 </div>
 
 </div>
-</div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># total per legislator-agency pair </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dcounts_tenure <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Legislator_x_Agency) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n =</span> perYear <span class="sc">%&gt;%</span> <span class="fu">sum</span>()) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="sc">-</span>n) <span class="sc">%&gt;%</span> <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Legislator_x_Agency</th>
@@ -1122,7 +1117,6 @@ window.Quarto = {
 
 </div>
 </div>
-</div>
 <p>1</p>
 <section id="values-to-predict-at" class="level3">
 <h3 class="anchored" data-anchor-id="values-to-predict-at">Values to predict at</h3>
@@ -1150,9 +1144,8 @@ window.Quarto = {
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">average</th>
@@ -1249,7 +1242,6 @@ window.Quarto = {
 </div>
 
 </div>
-</div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>modal <span class="sc">%&lt;&gt;%</span> <span class="fu">filter</span>(Chair) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>()</span>
@@ -1258,9 +1250,8 @@ window.Quarto = {
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">year</th>
@@ -1497,7 +1488,6 @@ window.Quarto = {
 </div>
 
 </div>
-</div>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dcounts_tenure <span class="sc">%&gt;%</span> </span>
@@ -1533,9 +1523,8 @@ window.Quarto = {
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">perAgency</th>
@@ -1657,7 +1646,6 @@ window.Quarto = {
 </table>
 </div>
 
-</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2024,8 +2012,7 @@ window.Quarto = {
 <span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by legislator."</span>)) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <caption>The Effect of Expierence and Institutional Power on Legislator Contacts</caption>
 <thead>
 <tr class="header">
@@ -2246,7 +2233,6 @@ window.Quarto = {
 </table>
 
 
-</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2507,8 +2493,7 @@ window.Quarto = {
 <span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
@@ -2728,7 +2713,6 @@ window.Quarto = {
 </table>
 
 
-</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2983,8 +2967,7 @@ window.Quarto = {
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
@@ -3204,7 +3187,6 @@ window.Quarto = {
 </table>
 
 
-</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3440,8 +3422,7 @@ window.Quarto = {
 <span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by legislator."</span>) ) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
@@ -3591,7 +3572,6 @@ window.Quarto = {
 </table>
 
 
-</div>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
