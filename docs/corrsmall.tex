@@ -39,9 +39,18 @@
 %\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 
 
+\usepackage{titletoc}
+\newcommand\DoToC{%
+  \startcontents
+  \printcontents{}{1}{\textbf{Online Supporting Information}\vskip3pt\hrule\vskip5pt}
+  \vskip3pt\hrule\vskip5pt
+}
+
+
 
  \title{How Shifting Priorities and Capacity Affect Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies}
-% \author{Devin Judge-Lord\thanks{Assistant Professor, University of Michigan} \and Eleanor Neff Powell\thanks{Associate Professor, University of Wisconsin-Madison} \and Justin Grimmer\thanks{Professor, Stanford University and Senior Fellow, Hoover Institution} }
+
+\author{Devin Judge-Lord\thanks{Assistant Professor, University of Michigan} \and Eleanor Neff Powell\thanks{Associate Professor, University of Wisconsin-Madison} \and Justin Grimmer\thanks{Professor, Stanford University and Senior Fellow, Hoover Institution} }
   \date{\today}
 
 \usepackage{booktabs} % To thicken table lines
@@ -76,8 +85,11 @@ Word Count: 9580 % abstract = 150 (as of 7-25-2024)
 %%% DO NOT REMOVE THIS LINE. For automatic word count.
 %TC:endignore
 
-\onehalfspacing
+\doublespacing
+%\onehalfspacing
 \clearpage
+
+
 
 
 \section{Introduction}
@@ -349,7 +361,7 @@ Our primary models are difference-in-differences regressions, similar to the spe
 Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} \label{e:diff1}
 \end{eqnarray}
 
-Our analysis in this section is at the legislator-agency-year level. $Y_{ijt}$ is the number of requests legislator $i$ makes to agency $j$ in year $t$. $\gamma_{ij}$ is a fixed effect for the legislator-agency pair. This fixed effect controls for legislators' characteristics, such as legislators who are more skillful at filling constituency service requests than others. Critically for our research design, this fixed effect also \textbf{accounts for time-invariant constituent demand}, ensuring that differences in constituent requests across legislators do not drive our results. It also accounts for state and district characteristics, including population, demographics, and local industries that might be particularly likely to request help from specific agencies. This difference-in-difference design ensures that coefficients $\boldsymbol{\beta}$ capture variation related to changes in institutional power, not other factors that may vary across districts, legislators, or agencies. The model also accounts for the different periods for which data were available from each agency. $\delta_{jt}$ is an agency-year fixed effect. This takes into account agency-specific shocks that may affect legislator requests. 
+Our analysis in this section is at the legislator-agency-year level. $Y_{ijt}$ is the number of requests legislator $i$ makes to agency $j$ in year $t$. $\gamma_{ij}$ is a fixed effect for the legislator-agency pair. This fixed effect controls for legislators' characteristics, such as legislators who are more skillful at filling constituency service requests than others. Critically for our research design, this fixed effect also \textbf{accounts for time-invariant constituent demand}, ensuring that differences in constituent requests across legislators do not drive our results. It also accounts for state and district characteristics, including population, demographics, and local industries that might be particularly likely to request help from specific agencies. This difference-in-difference design ensures that coefficients $\boldsymbol{\beta}$ capture variation related to changes in institutional power, not other factors that may vary across districts, legislators, or agencies. The model also accounts for the different periods for which data were available from each agency. $\delta_{jt}$ is an agency-year fixed effect. This takes into account agency-specific shocks that may affect legislator requests. 
 
 Assuming that legislators' trends in the number of requests to a given agency follow parallel paths over time, $\boldsymbol{\beta}$ represents the average effect of changing institutional position on a legislator's provision of constituency service. We focus on three measures of a legislator's position: (1) whether they are a committee chair, (2) whether they are a ranking member of a committee, and (3) whether they are members of a prestige committee. Each position represents a different way legislators can acquire more power. As a legislator becomes a committee chair or ranking member, they have increased responsibilities when drafting and revising legislation. They also have increased access to committee resources to accomplish policy goals, particularly the power to direct committee staff. Similarly, legislators who join more prestigious committees gain opportunities to shepherd policy through the legislative process.
 
@@ -644,14 +656,8 @@ As legislators gain experience and power, they both gain the capacity to make mo
 %TODO BETTER CONCLUSION
 %Rather than forgetting about the district and contracting Potomac Fever, it appears that more experience and power in Congress enables legislators to deliver particular goods to the district more effectively.  
 
-\singlespacing
 
 \bibliography{congress2019}
-
-\clearpage
-\appendix
-\setcounter{table}{0}
-\renewcommand{\thetable}{A\arabic{table}}
 
 
 \input{appendix}
