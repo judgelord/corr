@@ -247,17 +247,18 @@ n <- dcounts |> ungroup() |>  group_by(chamber, member_state, icpsr) |> summaris
 ns <- list(n$n, n1$n1, n2$n2, n3$n3, n4$n4, n5$n5)
 
 
-
+round1 <- . %>% round(2)
 
 t <- tibble(
   . = c("Overall", "Type 1", "Type 2", "Type 3", "Type 4", "Type 5"),
-  Overall = map2_chr(list(n$n), ns, cor),
-  Type1 = map2_chr(list(n1$n1), ns, cor),
-  Type2 = map2_chr(list(n2$n2), ns, cor),
-  Type3 = map2_chr(list(n3$n3), ns, cor),
-  Type4 = map2_chr(list(n4$n4), ns, cor),
-    Type5 = map2_chr(list(n5$n5), ns, cor)
-)
+  Overall = map2_dbl(list(n$n), ns, cor),
+  Type1 = map2_dbl(list(n1$n1), ns, cor),
+  Type2 = map2_dbl(list(n2$n2), ns, cor),
+  Type3 = map2_dbl(list(n3$n3), ns, cor),
+  Type4 = map2_dbl(list(n4$n4), ns, cor),
+    Type5 = map2_dbl(list(n5$n5), ns, cor)
+) |>
+  mutate_if(is.numeric, round1)
 
 t %>% kablebox_long()
 
@@ -369,7 +370,8 @@ t <- tibble(
   Type3 = map2_chr(list(p3$Percentile3), percentiles, cor),
   Type4 = map2_chr(list(p4$Percentile4), percentiles, cor),
     Type5 = map2_chr(list(p5$Percentile5), percentiles, cor)
-)
+) |>
+  mutate_if(is.numeric, round1)
 
 t %>% kablebox_long()
 
