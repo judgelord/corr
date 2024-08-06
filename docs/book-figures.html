@@ -3442,7 +3442,7 @@ NA
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>n4 <span class="ot">&lt;-</span> <span class="fu">filter</span>(n, TYPE <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">|&gt;</span> <span class="fu">distinct</span>(member_state, icpsr, chamber, <span class="at">n4 =</span> n)<span class="sc">|&gt;</span> <span class="fu">arrange</span>(member_state)</span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>n5 <span class="ot">&lt;-</span> <span class="fu">filter</span>(n, TYPE <span class="sc">==</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> <span class="fu">distinct</span>(member_state, icpsr, chamber, <span class="at">n5 =</span> n)<span class="sc">|&gt;</span> <span class="fu">arrange</span>(member_state)</span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>n <span class="ot">&lt;-</span> dcounts <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span>  <span class="fu">group_by</span>(chamber, member_state, icpsr) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(per_icpsr_chamber_year_agency_type))  </span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>n <span class="ot">&lt;-</span> dcounts <span class="sc">|&gt;</span> <span class="fu">ungroup</span>() <span class="sc">|&gt;</span>  <span class="fu">group_by</span>(chamber, member_state, icpsr) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(per_icpsr_chamber_year_agency_type))  <span class="sc">|&gt;</span> <span class="fu">arrange</span>(member_state)</span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>ns <span class="ot">&lt;-</span> <span class="fu">list</span>(n<span class="sc">$</span>n, n1<span class="sc">$</span>n1, n2<span class="sc">$</span>n2, n3<span class="sc">$</span>n3, n4<span class="sc">$</span>n4, n5<span class="sc">$</span>n5)</span>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a></span>
@@ -3521,19 +3521,19 @@ Overall
 Chi-sq = 978056 p = 0
 </td>
 <td style="text-align:left;">
-Chi-sq = 402446.9 p = 0.769105704623522
+Chi-sq = 554991.3 p = 0
 </td>
 <td style="text-align:left;">
-Chi-sq = 91415.6 p = 1
+Chi-sq = 154876 p = 0
 </td>
 <td style="text-align:left;">
-Chi-sq = 106598.1 p = 1
+Chi-sq = 176479.4 p = 0
 </td>
 <td style="text-align:left;">
-Chi-sq = 47622.9 p = 1
+Chi-sq = 83377.9 p = 0
 </td>
 <td style="text-align:left;">
-Chi-sq = 156144 p = 1
+Chi-sq = 252142.6 p = 0
 </td>
 </tr>
 <tr>
@@ -3541,7 +3541,7 @@ Chi-sq = 156144 p = 1
 Type 1
 </td>
 <td style="text-align:left;">
-Chi-sq = 402446.9 p = 0.769105704624786
+Chi-sq = 554991.3 p = 0
 </td>
 <td style="text-align:left;">
 Chi-sq = 769058 p = 0
@@ -3564,7 +3564,7 @@ Chi-sq = 212139.6 p = 0
 Type 2
 </td>
 <td style="text-align:left;">
-Chi-sq = 91415.6 p = 1
+Chi-sq = 154876 p = 0
 </td>
 <td style="text-align:left;">
 Chi-sq = 139141 p = 0
@@ -3587,7 +3587,7 @@ Chi-sq = 90665.7 p = 0
 Type 3
 </td>
 <td style="text-align:left;">
-Chi-sq = 106598.1 p = 1
+Chi-sq = 176479.4 p = 0
 </td>
 <td style="text-align:left;">
 Chi-sq = 156473.8 p = 0
@@ -3610,7 +3610,7 @@ Chi-sq = 109166.7 p = 0
 Type 4
 </td>
 <td style="text-align:left;">
-Chi-sq = 47622.9 p = 1
+Chi-sq = 83377.9 p = 0
 </td>
 <td style="text-align:left;">
 Chi-sq = 73636.9 p = 0
@@ -3633,7 +3633,7 @@ Chi-sq = 58649.6 p = 0
 Type 5
 </td>
 <td style="text-align:left;">
-Chi-sq = 156144 p = 1
+Chi-sq = 252142.6 p = 0
 </td>
 <td style="text-align:left;">
 Chi-sq = 212139.6 p = 0
