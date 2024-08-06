@@ -231,7 +231,7 @@ type2xyear <- dcounts %>% mutate(years = year  - yearelected) %>%
   mutate(percent = n / sum(n) *100) 
 ```
 
-## Counts
+## Counts correlation
 
 ```{r counts-by-type}
 n <- dcounts |> ungroup() |>  group_by(chamber, member_state, icpsr, TYPE) |> summarise(n = sum(per_icpsr_chamber_year_agency_type))  
@@ -247,24 +247,19 @@ n <- dcounts |> ungroup() |>  group_by(chamber, member_state, icpsr) |> summaris
 ns <- list(n$n, n1$n1, n2$n2, n3$n3, n4$n4, n5$n5)
 
 
-# ttest <- function(x, y){
-#   pvalue <- t.test(x, y) %>% .$p.value
-#   stat <-  t.test(x, y) %>% .$`statistic`
-#   
-#   return(paste("t =", round(stat, 1), "    p =", round(pvalue, 2)))
-# }
-# 
-# t <- tibble(
-#   . = c("Overall", "Type 1", "Type 2", "Type 3", "Type 4", "Type 5"),
-#   Overall = map2_chr(list(n$n), ns, ttest),
-#   Type1 = map2_chr(list(n1$n1), ns, ttest),
-#   Type2 = map2_chr(list(n2$n2), ns, ttest),
-#   Type3 = map2_chr(list(n3$n3), ns, ttest),
-#   Type4 = map2_chr(list(n4$n4), ns, ttest),
-#     Type5 = map2_chr(list(n5$n5), ns, ttest)
-# )
-# 
-# t %>% kablebox_long()
+
+
+t <- tibble(
+  . = c("Overall", "Type 1", "Type 2", "Type 3", "Type 4", "Type 5"),
+  Overall = map2_chr(list(n$n), ns, cor),
+  Type1 = map2_chr(list(n1$n1), ns, cor),
+  Type2 = map2_chr(list(n2$n2), ns, cor),
+  Type3 = map2_chr(list(n3$n3), ns, cor),
+  Type4 = map2_chr(list(n4$n4), ns, cor),
+    Type5 = map2_chr(list(n5$n5), ns, cor)
+)
+
+t %>% kablebox_long()
 
 
 chitest <- function(x, y){
@@ -335,7 +330,8 @@ p %>%
 
 ## Percentile by type
 
-### Chi-sq test 
+### correlation 
+
 ```{r}
 p <- dcounts %>% 
   filter(TYPE %in% c(1,2,3,4,5)) %>% 
@@ -362,25 +358,20 @@ p %<>% left_join(p1) %>% left_join(p2) %>% left_join(p3) %>% left_join(p4) %>% l
 percentiles <- list(#p$Percentile,# PLACIBO: runif(n = length(p$Percentile)), 
                     p1$Percentile1, p2$Percentile2, p3$Percentile3, p4$Percentile4, p5$Percentile5)
 
-# ttest <- function(x, y){
-#   pvalue <- t.test(x, y) %>% .$p.value
-#   stat <-  t.test(x, y) %>% .$`statistic`
-#   
-#   return(paste("t =", round(stat, 1), "    p =", pvalue))
-# }
-# 
-# t <- tibble(
-#   . = c(#"Overall", 
-#         "Type 1", "Type 2", "Type 3", "Type 4", "Type 5"),
-#   #Overall = map2_chr(list(p$Percentile), percentiles, ttest),
-#   Type1 = map2_chr(list(p1$Percentile1), percentiles, ttest),
-#   Type2 = map2_chr(list(p2$Percentile2), percentiles, ttest),
-#   Type3 = map2_chr(list(p3$Percentile3), percentiles, ttest),
-#   Type4 = map2_chr(list(p4$Percentile4), percentiles, ttest),
-#     Type5 = map2_chr(list(p5$Percentile5), percentiles, ttest)
-# )
-# 
-# t %>% kablebox_long()
+
+
+t <- tibble(
+  . = c(#"Overall",
+        "Type 1", "Type 2", "Type 3", "Type 4", "Type 5"),
+  #Overall = map2_chr(list(p$Percentile), percentiles, cor),
+  Type1 = map2_chr(list(p1$Percentile1), percentiles, cor),
+  Type2 = map2_chr(list(p2$Percentile2), percentiles, cor),
+  Type3 = map2_chr(list(p3$Percentile3), percentiles, cor),
+  Type4 = map2_chr(list(p4$Percentile4), percentiles, cor),
+    Type5 = map2_chr(list(p5$Percentile5), percentiles, cor)
+)
+
+t %>% kablebox_long()
 
 
 chitest <- function(x, y){
