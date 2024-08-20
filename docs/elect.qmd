@@ -88,9 +88,28 @@ members %<>% mutate(competitive = ifelse(dpres > 45 & dpres < 55,
 load(here::here("data", "dcounts_tenure.Rdata")) 
 dcounts_tenure %<>% left_join(members)
 load(here::here("data", "dcounts_ratio.Rdata"))
-dcounts_ratio %<>% left_join(members)
+# count(dcounts_ratio, icpsr, year, sort = T)
+
+dcounts_ratio %<>% 
+  mutate(congress = as.numeric(round((year - 2001.1)/2)) + 107) %>% 
+  select(-any_of(c("prestige", "prestige_chair", "chair", "ranking_minority", "majority","presidents_party"))) %>%
+  left_join(members) %>%
+  distinct()
+
+# the only duplicates should be chamber switchers
+dups <- count(dcounts_ratio, icpsr, year, chamber, sort = T) %>% filter(n > 1) %>% transmute(icpsr_year = paste0(icpsr, year))
+
+dups <- dcounts_ratio %>% filter(paste0(icpsr, year) %in% dups$icpsr_year)
+
 load(here::here("data", "dcounts_per_district.Rdata"))
-dcounts_per_district %<>% left_join(members)
+
+dcounts_per_district %<>% 
+  mutate(congress = as.numeric(round((year - 2001.1)/2)) + 107) %>% 
+  left_join(members) %>% arrange(state_dist)
+
+# check for duplicates 
+# dcounts_per_district %>% ungroup() %>%  count(icpsr, chamber, year, sort = T) %>% filter(chamber == "House")
+
 
 # var names for tables
 dcounts_tenure %<>% 
@@ -102,10 +121,10 @@ dcounts_tenure %<>%
 n_agency <- dcounts_tenure$agency |> unique() |> length()
 
 # check N
-dcounts_tenure %>% tally(perYear)
-dcounts_ratio %>% tally(perCon)
-dcounts_ratio %>% tally(perPol)
-dcounts_per_district %>% ungroup %>%  tally(perYear)
+dcounts_tenure %>% tally(perYear, name = "Total in member-count data")
+dcounts_ratio %>% tally(perCon, name = "Constituent")
+dcounts_ratio %>% tally(perPol, name = "Policy")
+dcounts_per_district %>% ungroup %>%  tally(perYear, name = "Total in district-level data")
 
 # check n per year 
 dcounts_tenure %>% group_by(year) %>% tally(perYear) |> kablebox_long()
@@ -151,7 +170,17 @@ dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arr
 # total per legislator-agency pair 
 dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
 ```
-1
+
+
+```{r}
+dcounts_tenure %>% 
+  mutate(tenure = year - yearelected) %>%
+  ggplot() + 
+  aes(x = tenure, y = perYear) +
+  geom_point() + 
+  geom_smooth()
+
+```
 
 ### Values to predict at
 
