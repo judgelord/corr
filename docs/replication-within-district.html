@@ -84,7 +84,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#replication-data" id="toc-replication-data" class="nav-link active" data-scroll-target="#replication-data">Replication data</a></li>
   <li><a href="#per-district" id="toc-per-district" class="nav-link" data-scroll-target="#per-district">Per District</a>
   <ul class="collapse">
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
+  <ul class="collapse">
+  <li><a href="#same-party-lookup-table" id="toc-same-party-lookup-table" class="nav-link" data-scroll-target="#same-party-lookup-table"><code>Same party</code> lookup table</a></li>
+  </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
   <li><a href="#figures-figsm-district-14.png" id="toc-figures-figsm-district-14.png" class="nav-link" data-scroll-target="#figures-figsm-district-14.png">Figures: <code>figs/m-district-[1:4].png</code></a></li>
@@ -133,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dcounts_tenure.Rdata"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dcounts_ratio.Rdata"</span>))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dcounts_per_district.Rdata"</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span> , <span class="st">"members.Rdata"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"members.Rdata"</span>))</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n_agency <span class="ot">&lt;-</span> dcounts_tenure<span class="sc">$</span>agency <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -236,13 +239,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#TODO deal with chamber switchers ? or maybe we don't need to since everything is calculted grouped at chamber level?</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#TODO deal with chamber switchers ? or maybe we don't need to since everything is calculated grouped at chamber level?</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># count(members, bioname, icpsr, congress, sort = T) |&gt; filter(n &gt;1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Same party look up table accounting for redistricting (i.e., not counting cases where a district in with the same number elects someone of a different party after redistricting)</p>
-<p>There are many NA’s because we only observe “same party” when there is turnover <em>within</em> a redistircting cycle. Seats that do not turn over for an entire cycle (e.g.&nbsp;2002-2012) are FALSE (“0”) for “new member” and have no value for “same party.” Other districts are NA until there is turnover. Thus, adding “same party” causes significant data loss due to NAs.</p>
-<p>We go from 7666 to 2822 observations.</p>
+<section id="same-party-lookup-table" class="level3">
+<h3 class="anchored" data-anchor-id="same-party-lookup-table"><code>Same party</code> lookup table</h3>
+<p>The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do NOT count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt.</p>
+<p>Many NAs exist for the <code>same party</code> variable because we only observe it when there is turnover <em>within</em> a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE (“0”) for “new member” and have no value for “same party.” Other districts are NA until there is turnover. Thus, adding “same party” causes significant data loss due to NAs.</p>
+<ul>
+<li>Specifically, we go from 7666 to 2822 observations when including <code>same_party</code> in the models below.</li>
+</ul>
+<p>There is also a challenge measuring turnover in the Senate where “districts” have two members. We deal with this by saying that if there is a change in the partisanship of a state’s Senate delegation, the <code>same party</code> is FALSE. This should generally capture the parallel dynamic. If there are two Democrats and one is replaced by a Republican, the <code>same party</code> is FALSE. If there are two Democrats and a Democrat is elected, the <code>same party</code> is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, <code>same_party</code> is FALSE. As per the VoteView convention, Senate delegations are District “0” (e.g., “alabama_0”). Split Senate delegations appear as “Democratic Party;Republican Party” in the table below.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
@@ -250,34 +258,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>year_congress <span class="ot">&lt;-</span> dcounts_tenure <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(year, congress)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># add  congress variable </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Add Congress variable </span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add congress variable </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add Congress variable </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(year_congress)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>members <span class="sc">%&lt;&gt;%</span> <span class="fu">left_join</span>(year_congress) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(icpsr, year)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>duplicates <span class="ot">&lt;-</span><span class="fu">distinct</span>(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member)  <span class="sc">%&gt;%</span> <span class="fu">count</span>(icpsr, chamber, congress, state_dist) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) </span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># becasue members of the house are new one year and not the other, we can't do "new" at the congress level </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Because members of the house are new one year and not the other, we can't do "new" at the Congress level </span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># inner_join(duplicates, dcounts_per_district)</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># make variable for prior seat holder party </span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># make a variable for the prior seatholder party </span></span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>party_crosswalk <span class="ot">&lt;-</span> members  <span class="sc">%&gt;%</span> </span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add new member and state_dist (accounting for redistricting)</span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">distinct</span>(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member, year)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Begin at 2000 census redistricting </span></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span> <span class="dv">2001</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make additional new member and state_dist to fill in NAs with "0" (i.e. 2002-2012 districting cycle )</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make additional new member and state_dist to fill in NAs with "0" (i.e., 2002-2012 districting cycle )</span></span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_dist2 =</span> <span class="fu">paste</span>(state, district_code, <span class="st">"0"</span>, <span class="at">sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>           <span class="fu">str_replace</span>(<span class="st">"0_0"</span>, <span class="st">"0"</span>),</span>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">state_dist =</span> <span class="fu">coalesce</span>(state_dist, state_dist2)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state_dist, chamber, congress) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># combine ICPSR IDS for senators to get senate delegation to know if it changed </span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(icpsr) <span class="sc">|&gt;</span> <span class="co"># make sure they are in the same order </span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">icpsr =</span> <span class="fu">unique</span>(icpsr) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">";"</span>)) <span class="sc">%&gt;%</span> <span class="co"># collapse senate icpsrs</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># combine ICPSR IDS for senators to get the senate delegation to know if it changed </span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(icpsr) <span class="sc">|&gt;</span> <span class="co"># Make sure they are in the same order </span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">icpsr =</span> <span class="fu">unique</span>(icpsr) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">";"</span>)) <span class="sc">%&gt;%</span> <span class="co"># collapse senate spurs</span></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state_dist, chamber) <span class="sc">|&gt;</span> </span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(congress) <span class="sc">|&gt;</span> </span>
@@ -287,12 +295,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">new_member =</span>  <span class="fu">coalesce</span>(new_member, <span class="fu">as.numeric</span>(new_member2))) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(congress, state_dist, state, district_code, party_name, new_member, year <span class="co">#, new_member2, icpsr, lag_icpsr        </span></span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>           ) <span class="sc">%&gt;%</span> <span class="co">#FIXME DROPPING OBS HERE</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># # for senate, capture mixed delegations </span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># # for Senate, capture mixed delegations </span></span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state_dist, congress) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(party_name) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_dist_party =</span> <span class="fu">unique</span>(party_name) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">";"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># state_dist is missing for some obs in members, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting</span></span>
 <span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state_dist2 =</span> <span class="fu">paste</span>(state, district_code, <span class="at">sep =</span> <span class="st">"_"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(congress, state_dist,  state_dist_party, new_member, year <span class="co">#, new_member2, icpsr, lag_icpsr</span></span>
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
@@ -308,9 +316,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">fill</span>(same_party, <span class="at">.direction =</span> <span class="st">"down"</span>)  <span class="sc">%&gt;%</span> </span>
 <span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>party_crosswalk  <span class="sc">|&gt;</span> <span class="co">#filter(chamber == "House") |&gt; </span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(state_dist, congress, state_dist_party, lag_p, same_party, new_member, year <span class="co">#, new_member2, icpsr, lag_icpsr</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>         )  <span class="sc">|&gt;</span> <span class="fu">kablebox_long</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co"># LOOK FOR MISSING OBS BY CONGRESS </span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#members |&gt; count(congress)</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co">#party_crosswalk |&gt; ungroup() |&gt; count(congress, is.na(state_dist))</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co">#party_crosswalk |&gt; ungroup() |&gt; filter(is.na(state_dist), congress &gt; 109)</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>party_crosswalk  <span class="sc">|&gt;</span> <span class="co">#filter(chamber == "House") |&gt; </span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(state_dist, congress, state_dist_party, lag_p, same_party, new_member, year <span class="co">#, new_member2, icpsr, lag_icpsr</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>         )  <span class="sc">|&gt;</span> <span class="fu">kablebox_long</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; ">
@@ -1232,26 +1246,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#members |&gt; count(congress)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#party_crosswalk |&gt; ungroup() |&gt; count(congress, is.na(state_dist))</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#party_crosswalk |&gt; ungroup() |&gt; filter(is.na(state_dist), congress &gt; 109)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add same_party variable to district counts data </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(party_crosswalk ) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(state_dist, congress) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(same_party) <span class="sc">|&gt;</span> </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add same_party variable to district counts data </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(party_crosswalk ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(state_dist, congress) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">|&gt;</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(same_party) <span class="sc">|&gt;</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
@@ -1282,1034 +1289,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">|&gt;</span> <span class="co">#filter(chamber == "House") |&gt; </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member)   <span class="sc">|&gt;</span> <span class="fu">kablebox</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; ">
-<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">icpsr</th>
-<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">state_dist</th>
-<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">congress</th>
-<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">state_dist_party</th>
-<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">lag_p</th>
-<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">same_party</th>
-<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">new_member</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41704</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">41705</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41704</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">41705</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">49700</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41705</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">41705</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">94659</td>
-<td style="text-align: left;">alabama_0</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">Democratic Party;Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">15090</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">15090</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">15090</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20300</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21376</td>
-<td style="text-align: left;">alabama_1_1</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29300</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20900</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Democratic Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20900</td>
-<td style="text-align: left;">alabama_2_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Democratic Party</td>
-<td style="text-align: left;">Democratic Party</td>
-<td style="text-align: left;">FALSE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">113</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">114</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">115</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">21192</td>
-<td style="text-align: left;">alabama_2_1</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29700</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">106</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">29700</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">29700</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">107</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">109</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">20301</td>
-<td style="text-align: left;">alabama_3_0</td>
-<td style="text-align: right;">111</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">Republican Party</td>
-<td style="text-align: left;">TRUE</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.numeric</span>(same_party))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dcounts_per_district |&gt; #filter(chamber == "House") |&gt; </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member)   |&gt; kablebox()</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.numeric</span>(same_party))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
+</section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
-<p>Cross sectional effects get larger when data are subset to district-years after turnover (required to do the same_party variable)</p>
+<p>Cross-sectional effects get larger when data are subset to district years after turnover (required to do the same_party variable)</p>
 <section id="figures-figsm-district-14.png" class="level3">
 <h3 class="anchored" data-anchor-id="figures-figsm-district-14.png">Figures: <code>figs/m-district-[1:4].png</code></h3>
 <ol type="1">
-<li>cross sectional</li>
-<li>cross-sectional with same party variable</li>
+<li>cross-sectional</li>
+<li>cross-sectional with same-party variable</li>
 <li>diff-in-diff</li>
 <li>diff-in-diff with same party variable</li>
 </ol>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modify var names for presentation </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.numeric</span>(same_party),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Legislator =</span> icpsr,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">District =</span> state_dist,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span><span class="dv">2006</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">2021</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>m_district_cross <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> Year,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){<span class="fu">modelsummary</span>(m_district_cross, <span class="at">gof_omit =</span> <span class="st">"R.*"</span>, <span class="at">coef_omit =</span> coef_omit)}</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_cross, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>?coefplot</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>m_district_cross_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> Year,</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){<span class="fu">modelsummary</span>(m_district_cross, <span class="at">gof_omit =</span> <span class="st">"R.*"</span>, <span class="at">coef_omit =</span> coef_omit)}</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_cross_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>m_district_dnd <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_dnd, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>m_district_dnd_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_dnd_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>m_district_dnd_house <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>m_district_dnd_house_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>m_district_dnd_senate <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
-<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>m_district_dnd_senate_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
-<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modify var names for presentation </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.numeric</span>(same_party),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Legislator =</span> icpsr,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">District =</span> state_dist,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span><span class="dv">2006</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">2021</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>m_district_cross <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> Year,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){<span class="fu">modelsummary</span>(m_district_cross, <span class="at">gof_omit =</span> <span class="st">"R.*"</span>, <span class="at">coef_omit =</span> coef_omit)}</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_cross, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>?coefplot</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>m_district_cross_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> Year,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){<span class="fu">modelsummary</span>(m_district_cross, <span class="at">gof_omit =</span> <span class="st">"R.*"</span>, <span class="at">coef_omit =</span> coef_omit)}</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_cross_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>m_district_dnd <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_dnd, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>m_district_dnd_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_dnd_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>m_district_dnd_house <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>m_district_dnd_house_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>m_district_dnd_senate <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>m_district_dnd_senate_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
@@ -2363,55 +1454,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>models_district <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(1)"</span> <span class="ot">=</span> m_district_cross,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(2)"</span> <span class="ot">=</span> m_district_dnd,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(3)"</span> <span class="ot">=</span> m_district_dnd_house,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(4)"</span> <span class="ot">=</span> m_district_dnd_senate</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>rows <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">term =</span> <span class="fu">c</span>(<span class="st">"Dependent Variable"</span>, </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"District Fixed Effects", </span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>           <span class="st">"All Districts"</span>,</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>           <span class="st">"House Only"</span>,</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Senate Only"</span>),</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(1)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            <span class="co">#"", </span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>, </span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(2)</span><span class="st">`</span> <span class="ot">=</span><span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"✓", </span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>           <span class="st">"✓"</span>, </span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">(3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="co">#"✓", </span></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>, </span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(4)</span><span class="st">`</span> <span class="ot">=</span><span class="fu">c</span>(<span class="st">"Per State"</span>, </span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"✓", </span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>           <span class="st">""</span>, </span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>)</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="co"># checkmarks for controls </span></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rows, <span class="st">'position'</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">14</span><span class="sc">:</span><span class="dv">16</span>)</span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district, <span class="at">stars =</span> T, </span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows, </span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm,</span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>models_district <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(1)"</span> <span class="ot">=</span> m_district_cross,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(2)"</span> <span class="ot">=</span> m_district_dnd,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(3)"</span> <span class="ot">=</span> m_district_dnd_house,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(4)"</span> <span class="ot">=</span> m_district_dnd_senate</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>rows <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">term =</span> <span class="fu">c</span>(<span class="st">"Dependent Variable"</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"District Fixed Effects", </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>           <span class="st">"All Districts"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>           <span class="st">"House Only"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Senate Only"</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(1)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="co">#"", </span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>, </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(2)</span><span class="st">`</span> <span class="ot">=</span><span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"✓", </span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>           <span class="st">"✓"</span>, </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">(3)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Per District"</span>, </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            <span class="co">#"✓", </span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>, </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">(4)</span><span class="st">`</span> <span class="ot">=</span><span class="fu">c</span>(<span class="st">"Per State"</span>, </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>           <span class="co">#"✓", </span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>           <span class="st">""</span>, </span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">""</span>, </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"✓"</span>)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Checkmarks for controls </span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rows, <span class="st">'position'</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">14</span><span class="sc">:</span><span class="dv">16</span>)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district, <span class="at">stars =</span> T, </span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows, </span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm,</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -2574,20 +1665,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district, <span class="co"># stars = T, </span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows,               </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm, </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"latex"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">" Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># format to match stata output (sort of)</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_lines</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"docs"</span>, <span class="st">"tables"</span>, <span class="st">"models_district.tex"</span>) )</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> m_district_dnd<span class="sc">$</span>coefficients <span class="sc">%&gt;%</span><span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"beta"</span>) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> beta)</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> m_district_dnd<span class="sc">$</span>se <span class="sc">%&gt;%</span><span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"se"</span>) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district, <span class="co"># stars = T, </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows,               </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"latex"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">" Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># format to match stata output (sort of)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_lines</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"docs"</span>, <span class="st">"tables"</span>, <span class="st">"models_district.tex"</span>) )</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> m_district_dnd<span class="sc">$</span>coefficients <span class="sc">%&gt;%</span><span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"beta"</span>) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> beta)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> m_district_dnd<span class="sc">$</span>se <span class="sc">%&gt;%</span><span class="fu">round</span>(<span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"se"</span>) <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <ul>
@@ -2596,25 +1687,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>models_district_party <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(1)"</span> <span class="ot">=</span> m_district_cross_party,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(2)"</span> <span class="ot">=</span> m_district_dnd_party,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(3)"</span> <span class="ot">=</span> m_district_dnd_house_party,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(4)"</span> <span class="ot">=</span> m_district_dnd_senate_party</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># checkmarks for controls </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rows, <span class="st">'position'</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">28</span><span class="sc">:</span><span class="dv">31</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district_party, <span class="at">stars =</span> T, </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows, </span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>models_district_party <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(1)"</span> <span class="ot">=</span> m_district_cross_party,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(2)"</span> <span class="ot">=</span> m_district_dnd_party,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(3)"</span> <span class="ot">=</span> m_district_dnd_house_party,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"(4)"</span> <span class="ot">=</span> m_district_dnd_senate_party</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Checkmarks for controls </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(rows, <span class="st">'position'</span>) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">28</span><span class="sc">:</span><span class="dv">31</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district_party, <span class="at">stars =</span> T, </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows, </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">"Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> <span class="fu">row_spec</span>(<span class="at">row =</span> <span class="dv">1</span>, <span class="at">bold =</span> T, <span class="at">hline_after =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
@@ -2875,22 +1966,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district_party, <span class="co"># stars = T, </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows,               </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm, </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"latex"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">" Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># format to match stata output (sort of)</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_lines</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"docs"</span>, <span class="st">"tables"</span>, <span class="st">"models_district_party.tex"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(models_district_party, <span class="co"># stars = T, </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">add_rows =</span> rows,               </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_map =</span> cm, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">gof_omit =</span> gof_omit, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">coef_omit =</span> coef_omit,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"latex"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">list</span>(<span class="st">" Robust standard errors in parentheses, clustered by District."</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># format to match stata output (sort of)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_lines</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"docs"</span>, <span class="st">"tables"</span>, <span class="st">"models_district_party.tex"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
 <section id="per-district-narrative" class="level3">
 <h3 class="anchored" data-anchor-id="per-district-narrative">Per District Narrative</h3>
-<p>Column 2 of Table <code>\ref{tab:models_district}</code> provides the estimated effects from the difference-in-differences specification. We estimate that turnover causes a district’s constituency service to to decrease by 25.29 (95-percent confidence interval [-16.27 , -34.3 ]).</p>
+<p>Column 2 of Table <code>\ref{tab:models_district}</code> provides the estimated effects from the difference-in-differences specification. We estimate that turnover causes a district’s constituency service to decrease by 25.29 (95-percent confidence interval [-16.27, -34.3 ]).</p>
 </section>
 <section id="per-district-predictions" class="level3">
 <h3 class="anchored" data-anchor-id="per-district-predictions">Per District Predictions</h3>
@@ -2899,176 +1990,176 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ggdistrict <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">predicted =</span> predicted, <span class="at">party =</span> <span class="cn">FALSE</span>) {</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&lt;&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># drop estimates from impossible values</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(rowid, </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>               <span class="co">#predicted, std.error, </span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>               estimate, conf.low, conf.high,</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>               same_party) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sum =</span> <span class="fu">sum</span>(new_member, second, third, fourth, fifth, sixth),</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">more =</span> <span class="fu">ifelse</span>(sum <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(sum <span class="sc">&lt;</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"new_member"</span>, <span class="st">"second"</span>, <span class="st">"third"</span>, <span class="st">"fourth"</span>, <span class="st">"fifth"</span>, <span class="st">"sixth"</span>, <span class="st">"more"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(name, value) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(value <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up for presentation</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year_in_congress =</span> name <span class="sc">%&gt;%</span> </span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"more"</span>, <span class="st">"7</span><span class="sc">\n</span><span class="st">or more"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"sixth"</span>, <span class="st">"6"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"fifth"</span>, <span class="st">"5"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"fourth"</span>, <span class="st">"4"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"third"</span>, <span class="st">"3"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"second"</span>, <span class="st">"2"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"new_member"</span>, <span class="st">" New</span><span class="sc">\n</span><span class="st">member"</span>) </span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values </span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co"># predicted %&lt;&gt;% full_join(dcounts_tenure2 %&gt;% mutate(predicted = NA))</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> predicted <span class="sc">%&gt;%</span>  </span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> year_in_congress, </span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> estimate, <span class="co"># predicted, </span></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> conf.low,<span class="co"># predicted - 1.96*std.error,</span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> conf.high) <span class="sc">+</span> </span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">position =</span>  <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="sc">-</span>.<span class="dv">3</span>)  )  <span class="sc">+</span> </span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_line() + # requires numberic...look to see how I did this on the other ones</span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border  =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>()) </span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(party){</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> predicted <span class="sc">%&gt;%</span>  </span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.logical</span>(same_party)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> year_in_congress, </span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> estimate, <span class="co"># predicted, </span></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> conf.low,<span class="co"># predicted - 1.96*std.error,</span></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> conf.high, <span class="co">#predicted + 1.96*std.error,</span></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> same_party,</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> same_party) <span class="sc">+</span> </span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">position =</span>  <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="sc">-</span>.<span class="dv">3</span>)  )  <span class="sc">+</span> </span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border  =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(p)</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co"># by year </span></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(dcounts_per_district,</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>                        <span class="at">new_member =</span> new_member,</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>                        <span class="at">second_year =</span> second_year,</span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>                        <span class="at">third_year =</span> third_year,</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fourth_year =</span> fourth_year,</span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fifth_year =</span> fifth_year, </span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sixth_year =</span> sixth_year,</span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Legislator =</span> <span class="st">"20947"</span>,</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Year =</span> <span class="st">"2015"</span>,</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>                        <span class="at">District =</span> <span class="st">"tennessee_1_1"</span>,</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>                        <span class="at">same_party =</span> same_party</span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>                   ) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(same_party)</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_cross,</span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-sectional predictions</span></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdistrict</span>() <span class="sc">+</span></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Leters Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>) </span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions with same party  </span></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_cross_party,</span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdistrict</span>(<span class="at">party =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Contacts Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Contacts"</span>,</span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>) </span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a><span class="co"># diff in diff plot</span></span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_dnd,</span>
-<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdistrict</span>() <span class="sc">+</span></span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Contacts Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
-<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
-<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
-<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>) </span>
-<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions with same party  </span></span>
-<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_dnd_party,</span>
-<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
-<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
-<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
-<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
-<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
-<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a><span class="co"># diff in diff plot</span></span>
-<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
-<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdistrict</span>(<span class="at">party =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Contacts Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
-<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
-<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
-<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
-<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ggdistrict <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">predicted =</span> predicted, <span class="at">party =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># drop estimates from impossible values</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(rowid, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>               <span class="co">#predicted, std.error, </span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>               estimate, conf.low, conf.high,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>               same_party) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sum =</span> <span class="fu">sum</span>(new_member, second, third, fourth, fifth, sixth),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">more =</span> <span class="fu">ifelse</span>(sum <span class="sc">==</span> <span class="dv">0</span>, <span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(sum <span class="sc">&lt;</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"new_member"</span>, <span class="st">"second"</span>, <span class="st">"third"</span>, <span class="st">"fourth"</span>, <span class="st">"fifth"</span>, <span class="st">"sixth"</span>, <span class="st">"more"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(name, value) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(value <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up for presentation</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year_in_congress =</span> name <span class="sc">%&gt;%</span> </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"more"</span>, <span class="st">"7</span><span class="sc">\n</span><span class="st">or more"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"sixth"</span>, <span class="st">"6"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"fifth"</span>, <span class="st">"5"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"fourth"</span>, <span class="st">"4"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"third"</span>, <span class="st">"3"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"second"</span>, <span class="st">"2"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>             <span class="fu">str_replace</span>(<span class="st">"new_member"</span>, <span class="st">" New</span><span class="sc">\n</span><span class="st">member"</span>) </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values </span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co"># predicted %&lt;&gt;% full_join(dcounts_tenure2 %&gt;% mutate(predicted = NA))</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> predicted <span class="sc">%&gt;%</span>  </span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> year_in_congress, </span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> estimate, <span class="co"># predicted, </span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> conf.low,<span class="co"># predicted - 1.96*std.error,</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> conf.high) <span class="sc">+</span> </span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">position =</span>  <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="sc">-</span>.<span class="dv">3</span>)  )  <span class="sc">+</span> </span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_line() + # requires numeric...look to see how I did this on the other ones</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border  =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>()) </span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(party){</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> predicted <span class="sc">%&gt;%</span>  </span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.logical</span>(same_party)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> year_in_congress, </span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> estimate, <span class="co"># predicted, </span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> conf.low,<span class="co"># predicted - 1.96*std.error,</span></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> conf.high, <span class="co">#predicted + 1.96*std.error,</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> same_party,</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> same_party) <span class="sc">+</span> </span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">position =</span>  <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="sc">-</span>.<span class="dv">3</span>)  )  <span class="sc">+</span> </span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> .<span class="dv">6</span>, <span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border  =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(p)</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="co"># by year </span></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">expand</span>(dcounts_per_district,</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>                        <span class="at">new_member =</span> new_member,</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>                        <span class="at">second_year =</span> second_year,</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>                        <span class="at">third_year =</span> third_year,</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fourth_year =</span> fourth_year,</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fifth_year =</span> fifth_year, </span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sixth_year =</span> sixth_year,</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Legislator =</span> <span class="st">"20947"</span>,</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Year =</span> <span class="st">"2015"</span>,</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>                        <span class="at">District =</span> <span class="st">"tennessee_1_1"</span>,</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>                        <span class="at">same_party =</span> same_party</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>                   ) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(same_party)</span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_cross,</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-sectional predictions</span></span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdistrict</span>() <span class="sc">+</span></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>) </span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions with the party of the prior representative</span></span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_cross_party,</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdistrict</span>(<span class="at">party =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Contacts"</span>,</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>) </span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a><span class="co"># diff in diff plot</span></span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_dnd,</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdistrict</span>() <span class="sc">+</span></span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>) </span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions with the same party  </span></span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">predictions</span>(m_district_dnd_party,</span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a>                         <span class="at">newdata =</span> values) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">second =</span> second_year,</span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>         <span class="at">third =</span> third_year,</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a>         <span class="at">fourth =</span> fourth_year,</span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a>         <span class="at">fifth =</span> fifth_year,</span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a>         <span class="at">sixth =</span> sixth_year)</span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a><span class="co"># diff in diff plot</span></span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>predicted <span class="sc">%&gt;%</span></span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdistrict</span>(<span class="at">party =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differences)"</span>,</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Letters Per Year"</span>,</span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">

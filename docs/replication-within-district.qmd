@@ -82,7 +82,7 @@ The same three datasets are used in Replication.do
 load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
 load(here::here("data", "dcounts_per_district.Rdata"))
-load(here::here("data" , "members.Rdata"))
+load(here::here("data", "members.Rdata"))
 
 n_agency <- dcounts_tenure$agency |> unique() |> length()
 
@@ -195,50 +195,54 @@ modelsummary(models_total,  # stars = T,
 
 
 ```{r}
-#TODO deal with chamber switchers ? or maybe we don't need to since everything is calculted grouped at chamber level?
+#TODO deal with chamber switchers ? or maybe we don't need to since everything is calculated grouped at chamber level?
 # count(members, bioname, icpsr, congress, sort = T) |> filter(n >1)
 
 ```
 
-Same party look up table accounting for redistricting (i.e., not counting cases where a district in with the same number elects someone of a different party after redistricting)
+### `Same party` lookup table 
 
-There are many NA's because we only observe "same party" when there is turnover *within* a redistircting cycle. Seats that do not turn over for an entire cycle (e.g. 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
+The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do NOT count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
 
-We go from 7666 to 2822 observations. 
+Many NAs exist for the `same party` variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
+
+- Specifically, we go from 7666 to 2822 observations when including `same_party` in the models below. 
+
+There is also a challenge measuring turnover in the Senate where "districts" have two members. We deal with this by saying that if there is a change in the partisanship of a state's Senate delegation, the `same party` is FALSE. This should generally capture the parallel dynamic. If there are two Democrats and one is replaced by a Republican, the `same party` is FALSE. If there are two Democrats and a Democrat is elected, the `same party` is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, `same_party` is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
 
 ```{r}
 # year congress crosswalk 
 year_congress <- dcounts_tenure %>% distinct(year, congress)
 
 
-# add  congress variable 
+# Add Congress variable 
 dcounts_per_district %<>% 
   ungroup() %>% 
-  # add congress variable 
+  # Add Congress variable 
   left_join(year_congress)
 
 members %<>% left_join(year_congress) %>% arrange(icpsr, year)
 
 duplicates <-distinct(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member)  %>% count(icpsr, chamber, congress, state_dist) %>% filter(n > 1) 
 
-# becasue members of the house are new one year and not the other, we can't do "new" at the congress level 
+# Because members of the house are new one year and not the other, we can't do "new" at the Congress level 
 # inner_join(duplicates, dcounts_per_district)
 
-# make variable for prior seat holder party 
+# make a variable for the prior seatholder party 
 party_crosswalk <- members  %>% 
   ungroup() %>% 
   # add new member and state_dist (accounting for redistricting)
   left_join(distinct(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member, year)) %>% 
   # Begin at 2000 census redistricting 
   filter(year > 2001) %>% 
-  # make additional new member and state_dist to fill in NAs with "0" (i.e. 2002-2012 districting cycle )
+  # Make additional new member and state_dist to fill in NAs with "0" (i.e., 2002-2012 districting cycle )
   mutate(state_dist2 = paste(state, district_code, "0", sep = "_") |> 
            str_replace("0_0", "0"),
          state_dist = coalesce(state_dist, state_dist2)) %>% 
   group_by(state_dist, chamber, congress) %>% 
-  # combine ICPSR IDS for senators to get senate delegation to know if it changed 
-  arrange(icpsr) |> # make sure they are in the same order 
-  mutate(icpsr = unique(icpsr) |> paste(collapse = ";")) %>% # collapse senate icpsrs
+  # combine ICPSR IDS for senators to get the senate delegation to know if it changed 
+  arrange(icpsr) |> # Make sure they are in the same order 
+  mutate(icpsr = unique(icpsr) |> paste(collapse = ";")) %>% # collapse senate spurs
   ungroup() %>% 
   group_by(state_dist, chamber) |> 
   arrange(congress) |> 
@@ -248,12 +252,12 @@ party_crosswalk <- members  %>%
          new_member =  coalesce(new_member, as.numeric(new_member2))) %>% 
   distinct(congress, state_dist, state, district_code, party_name, new_member, year #, new_member2, icpsr, lag_icpsr        
            ) %>% #FIXME DROPPING OBS HERE
-  # # for senate, capture mixed delegations 
+  # # for Senate, capture mixed delegations 
   group_by(state_dist, congress) %>% 
   arrange(party_name) %>% 
   mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
   ungroup() %>% 
-  # state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
+  # state_dist is missing for some obs in members, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
   mutate(state_dist2 = paste(state, district_code, sep = "_")) %>% 
   distinct(congress, state_dist,  state_dist_party, new_member, year #, new_member2, icpsr, lag_icpsr
   ) %>% 
@@ -269,14 +273,17 @@ party_crosswalk <- members  %>%
   tidyr::fill(same_party, .direction = "down")  %>% 
   ungroup()
 
+# LOOK FOR MISSING OBS BY CONGRESS 
+#members |> count(congress)
+#party_crosswalk |> ungroup() |> count(congress, is.na(state_dist))
+#party_crosswalk |> ungroup() |> filter(is.na(state_dist), congress > 109)
+
+
 party_crosswalk  |> #filter(chamber == "House") |> 
   select(state_dist, congress, state_dist_party, lag_p, same_party, new_member, year #, new_member2, icpsr, lag_icpsr
          )  |> kablebox_long()
 
-#members |> count(congress)
 
-#party_crosswalk |> ungroup() |> count(congress, is.na(state_dist))
-#party_crosswalk |> ungroup() |> filter(is.na(state_dist), congress > 109)
 
 ```
 
@@ -284,7 +291,7 @@ party_crosswalk  |> #filter(chamber == "House") |>
 
 ```{r}
 
-# add same_party variable to district counts data 
+# Add same_party variable to district counts data 
 dcounts_per_district %<>% 
   left_join(party_crosswalk ) %>% 
   arrange(state_dist, congress) %>% 
@@ -293,9 +300,9 @@ dcounts_per_district %<>%
 dcounts_per_district |> 
   count(same_party) |> 
   kablebox()
-
-dcounts_per_district |> #filter(chamber == "House") |> 
-  select(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member)   |> kablebox()
+# 
+# dcounts_per_district |> #filter(chamber == "House") |> 
+#   select(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member)   |> kablebox()
 
 
 
@@ -307,13 +314,13 @@ dcounts_per_district %<>% mutate(same_party = as.numeric(same_party))
 
 ## Results
 
-Cross sectional effects get larger when data are subset to district-years after turnover (required to do the same_party variable)
+Cross-sectional effects get larger when data are subset to district years after turnover (required to do the same_party variable)
 
 
 ### Figures: `figs/m-district-[1:4].png`
 
-1. cross sectional 
-2. cross-sectional with same party variable 
+1. cross-sectional 
+2. cross-sectional with same-party variable 
 3. diff-in-diff
 4. diff-in-diff with same party variable
 
@@ -462,7 +469,7 @@ rows <- tibble(
 
 
 
-# checkmarks for controls 
+# Checkmarks for controls 
 attr(rows, 'position') <- c(0, 14:16)
 
 
@@ -503,7 +510,7 @@ models_district_party <- list(
 )
 
 
-# checkmarks for controls 
+# Checkmarks for controls 
 attr(rows, 'position') <- c(0, 28:31)
 
 
@@ -531,7 +538,7 @@ modelsummary(models_district_party, # stars = T,
 ### Per District Narrative 
 
 Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification. 
-We estimate that turnover causes a district's constituency service to to decrease by `r -beta$new_member` (95-percent confidence interval [`r beta$new_member + se$new_member*1.96` , `r beta$new_member - se$new_member*1.96` ]). 
+We estimate that turnover causes a district's constituency service to decrease by `r -beta$new_member` (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
 
 
@@ -593,7 +600,7 @@ p <- predicted %>%
       ymin = conf.low,# predicted - 1.96*std.error,
       ymax = conf.high) + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
-  # geom_line() + # requires numberic...look to see how I did this on the other ones
+  # geom_line() + # requires numeric...look to see how I did this on the other ones
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
       theme_minimal() + 
@@ -651,7 +658,7 @@ predicted <- predictions(m_district_cross,
 # Cross-sectional predictions
 predicted %>%
 ggdistrict() +
-  labs(title = "Leters Per District\n(Cross-Sectional)",
+  labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
        y = "Predicted Letters Per Year",
        fill = "",
@@ -660,7 +667,7 @@ ggdistrict() +
 
 
 
-# Predictions with same party  
+# Predictions with the party of the prior representative
 
 predicted <- predictions(m_district_cross_party,
                          newdata = values) %>% 
@@ -672,7 +679,7 @@ predicted <- predictions(m_district_cross_party,
 
 predicted %>%
   ggdistrict(party = TRUE) + 
-  labs(title = "Contacts Per District\n(Cross-Sectional)",
+  labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
        y = "Predicted Contacts",
        fill = "",
@@ -695,7 +702,7 @@ predicted <- predictions(m_district_dnd,
 
 predicted %>%
 ggdistrict() +
-  labs(title = "Contacts Per District\n(Difference-in-differneces)",
+  labs(title = "Letters Per District\n(Difference-in-differneces)",
        x = "Years in Congress",
        y = "Predicted Letters Per Year",
        fill = "",
@@ -704,7 +711,7 @@ ggdistrict() +
 
 
 
-# Predictions with same party  
+# Predictions with the same party  
 
 predicted <- predictions(m_district_dnd_party,
                          newdata = values) %>% 
@@ -717,7 +724,7 @@ predicted <- predictions(m_district_dnd_party,
 # diff in diff plot
 predicted %>%
   ggdistrict(party = TRUE) + 
-  labs(title = "Contacts Per District\n(Difference-in-differneces)",
+  labs(title = "Letters Per District\n(Difference-in-differences)",
        x = "Years in Congress",
        y = "Predicted Letters Per Year",
        fill = "",

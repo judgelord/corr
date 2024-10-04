@@ -85,6 +85,9 @@ members %<>% mutate(competitive = ifelse(dpres > 45 & dpres < 55,
                     competitive_primary = PRVYEcompetitivereceipts_575
 )
 
+
+members %>% filter(is.na(competitive_primary))
+
 load(here::here("data", "dcounts_tenure.Rdata")) 
 dcounts_tenure %<>% left_join(members)
 load(here::here("data", "dcounts_ratio.Rdata"))
@@ -245,6 +248,7 @@ values <- tidyr::expand(dcounts_tenure,
                         agency = "Treasury_IRS",
                         competitive = competitive, 
                         competitive_primary = competitive_primary,
+                        chair = FALSE,
                         ranking_minority	= FALSE, 
                         prestige = TRUE, 
                         first = FALSE,
@@ -267,6 +271,7 @@ values_tenure <- tidyr::expand(dcounts_tenure,
                         agency = "Treasury_IRS",
                         competitive = competitive, 
                         competitive_primary = competitive_primary,
+                        chair = FALSE,
                         ranking_minority	= FALSE, 
                         prestige = TRUE, 
                         first = first,

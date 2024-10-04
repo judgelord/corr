@@ -321,6 +321,76 @@ predicted %>%
   
 }
 
+
+ggdistrict <- function(predicted = predicted, party = FALSE) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, 
+               #predicted, std.error, 
+               estimate, conf.low, conf.high,
+               same_party) %>% 
+  mutate(sum = sum(new_member, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("new_member", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("new_member", " New\nmember") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+
+
+
+p <- predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+
+if(party){
+p <- predicted %>%  
+  mutate(same_party = as.logical(same_party)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      shape = same_party,
+      color = same_party) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank())
+}
+
+return(p)
+  
+}
+
 ```
 
 ---
@@ -1147,9 +1217,303 @@ ggtenure() +
        shape = "")
 ```
 
+
+
 # Per District
 
 ```{r m-district,  fig.show="hold", out.width="50%"}
+#TODO deal with chamber switchers 
+count(members, bioname, icpsr, congress, sort = T) |> filter(n >1)
 
 
+# year congress crosswalk 
+year_congress <- dcounts_tenure %>% distinct(year, congress)
+
+
+# add  congress variable 
+dcounts_per_district %<>% 
+  ungroup() %>% 
+  # add congress variable 
+  left_join(year_congress)
+
+
+
+# make variable for prior seat holder party 
+party_crosswalk <- members  %>% 
+  ungroup() %>% 
+  # add new member and state_dist (accounting for redistricting)
+  left_join(distinct(dcounts_per_district, icpsr, chamber, congress, state_dist, new_member)) %>%
+  # # for senate, capture mixed delegations 
+  group_by(state_dist, congress) %>% 
+  arrange(party_name) %>% 
+  mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
+  ungroup() %>% 
+  # state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
+  mutate(state_dist2 = paste(state, district_code, sep = "_")) %>% 
+  distinct(congress, state_dist,  state_dist_party, new_member) %>% 
+  arrange(state_dist, congress) %>% 
+  # group by icpsr 
+  group_by(state_dist) %>% 
+  # create lag party var and fill it in for that member's tenure 
+  mutate(lag_p = dplyr::lag(state_dist_party), 
+         #lag_icpsr = dplyr::lag(icpsr),
+         #new_member2 = icpsr != lag_icpsr,
+         same_party = state_dist_party == lag_p,
+         same_party = ifelse(new_member, 
+                same_party,
+                             NA )) %>% 
+  tidyr::fill(same_party, .direction = "down")  %>% 
+  ungroup()
+
+party_crosswalk  |> #filter(chamber == "House") |> 
+  select(state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> # view()
+
+# make variable for prior seat holder party WITHIOUT REDISTRICTING 
+party_crosswalk2 <- members  %>% 
+  mutate(state_dist = paste(state, district_code, sep = "_")) %>% # NOTICE THIS IS DIFFERENT 
+  ungroup() %>% 
+  # add new_member #FIXME WHY IS THIS INTRODUCING NAs?
+  left_join(distinct(dcounts_per_district, icpsr, chamber, congress, new_member)) %>%
+  # # for senate, capture mixed delegations 
+  group_by(state_dist, congress) %>% 
+  arrange(party_name) %>% 
+  mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
+  ungroup() %>% 
+  # state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
+  distinct(congress, state_dist, state_dist_party, new_member) %>% 
+  arrange(state_dist, congress) %>% 
+  # group by icpsr 
+  group_by(state_dist) %>% 
+  # create lag party var and fill it in for that member's tenure 
+  mutate(lag_p = dplyr::lag(state_dist_party), 
+         #lag_icpsr = dplyr::lag(icpsr),
+         #new_member2 = icpsr != lag_icpsr,
+         same_party = state_dist_party == lag_p,
+         same_party = ifelse(new_member, 
+                same_party,
+                             NA )) %>% 
+  tidyr::fill(same_party, .direction = "down")  %>% 
+  ungroup()
+
+#FIXME WHY NAs?
+party_crosswalk2  |> #filter(chamber == "House") |> 
+  select(state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> # view()
+
+
+#FIXME WHAT ABOUT SENATE? 
+
+members |> count(is.na(new_member))
+members |> count(is.na(same_party))
+
+
+
+# add same_party variable to district counts data 
+dcounts_per_district %<>% 
+  left_join(party_crosswalk ) %>% 
+  arrange(state_dist, congress) %>% 
+  ungroup()
+  
+dcounts_per_district  %>% count(is.na(same_party))
+
+dcounts_per_district |> #filter(chamber == "House") |> 
+  select(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> view()
+
+
+
+
+dcounts_per_district |> count(same_party)
 ```
+
+
+
+Cross sectional effects get larger when data are subset to district-years after turnover (required to do the same_party variable)
+
+
+- Figures: `figs/m-district-[1:4].png`
+
+```{r m-district,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "district", fig.subcap= "c(1,2)"}
+dcounts_per_district %<>% 
+  mutate(Legislator = icpsr,
+         Year = year) %>% 
+  filter(year >2006 & year < 2019)
+
+m_district_cross <- feglm(perYear ~
+  new_member + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
+cluster = "Legislator",
+data = dcounts_per_district)
+
+if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_district_cross, horiz = T, drop = "(Intercept)") 
+
+m_district_cross_party <- feglm(perYear ~
+  new_member + same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
+cluster = "Legislator",
+data = dcounts_per_district)
+
+if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_district_cross_party, horiz = T, drop = "(Intercept)") 
+
+
+
+
+
+# Diff in diff
+m_district_dnd <- feglm(perYear ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    Legislator + Year,
+cluster = "Legislator",
+data = dcounts_per_district)
+
+if(testing){modelsummary(m_district_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_district_dnd, horiz = T) 
+
+# Diff in diff + party change var 
+m_district_dnd_party <- feglm(perYear ~
+  new_member + same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    Legislator + Year,
+cluster = "Legislator",
+data = dcounts_per_district)
+
+if(testing){modelsummary(m_district_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_district_dnd_party, horiz = T) 
+```
+
+### district Table
+
+- Table: `tables/models_district.tex` (sans stars)
+
+```{r models_district}
+models_district <- list(
+  "(1)" = m_district_cross,
+  "(2)" = m_district_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", 
+           "Majoirty", 
+           "President's Party"),
+  `(1)` = c("District", 
+            "✓", 
+            "✓"),
+  `(2)` =c("District", 
+           "✓", 
+           "✓")
+)
+
+# all coef
+rows <- tibble(
+  term = c("Dependent Variable"),
+  `(1)` = c("District"),
+  `(2)` =c("District")
+)
+
+# checkmarks for controls 
+attr(rows, 'position') <- c(0, 20,21)
+
+# all coef
+attr(rows, 'position') <- c(0)
+
+
+modelsummary(models_district, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_district, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+
+beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+```
+
+### District Narrative 
+
+Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification. 
+We estimate that becoming a committee chair causes the district of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the district.
+
+
+
+### Predictions 
+
+- Figures: `figs/m-district-predicted-[1:4].png`
+
+```{r m-district-predicted, fig.show="hold", out.width="50%", fig.cap= "district", fig.subcap= c("1","2","3","4")}
+predicted <- predictions(m_district_cross,
+                         newdata = values)
+
+
+
+# Cross-sectional predictions
+predicted %>%
+ggchair() +
+  labs(title = "Predicted district of Constituent to Policy Work\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted district of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+# by tenure
+predicted <- predictions(m_district_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+  labs(title = "Predicted district of Constituent to Policy Work\n(Cross-Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted district of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+# Predictions for diff in diff plot 
+predicted <- predictions(m_district_dnd,
+                         newdata = values)
+
+
+# diff in diff plot
+predicted %>%
+  ggchair() + 
+  labs(title = "Predicted district of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted district of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+# by tenure
+predicted <- predictions(m_district_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted district of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted district of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+```
+
+
