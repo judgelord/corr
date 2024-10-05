@@ -1,8 +1,9 @@
 ---
-title: "Replication Code"
+title: "Replication Code and Robustness Checks"
 subtitle: "The Effects of Shifting Priorities and Capacity on Elected Officials' Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
 format:
     html: 
+      toc: true
       code-fold: true
 editor_options: 
   chunk_output_type: console
@@ -67,30 +68,163 @@ kablebox_long <- . %>%
 
 # Replication data
 
-From `code/replication.R`, which starts with the main data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
+From `code/replication.R`, which starts with the main replication data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
 
 1. counts per member-year (dcounts_tenure.Rdata/AgencyComm.dta)
 2. ratio per member-year (dcounts_ratio.Rdata/ProportionContact.dta)
 3. counts per district-year (dcounts_per_district.Rdata, DistrictLevel.dta)
 
 The same three datasets are used in Replication.do
-
 ```{r data}
 load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
 load(here::here("data", "dcounts_per_district.Rdata"))
-load(here::here("data" , "members.Rdata"))
+load(here::here("data", "members.Rdata"))
+```
+
+
+## Defining Prestige Committees
+
+```{r prestige}
+prestige_houseOLD <- c(
+  "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  "BUDGET", # 
+  # "COMMERCE", #
+  # "ENERGY", #
+  # "FINANCIAL SERVICES", # 
+    # "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  # "JUDICIARY", # 
+    # "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senateOLD <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  "BUDGET", # 
+  "COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+  #  "FINANCE", #
+  "FOREIGN RELATIONS", # 
+  #"HOMELAND SECURITY", #
+  #"JUDICIARY", # 
+  # "INTELLIGENCE",
+  "RULES") %>% paste(collapse  = "|")#
+
+prestige_houseR2 <- c(
+  "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #"BUDGET", # 
+  # "COMMERCE", #
+  # "ENERGY", #
+  "FINANCIAL SERVICES", # 
+  "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  "JUDICIARY", # 
+    # "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senateR2 <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  # "BUDGET", # 
+  "COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+  #  "FINANCE", #
+  "FOREIGN RELATIONS", # 
+  #"HOMELAND SECURITY", #
+  "JUDICIARY") %>% paste(collapse  = "|")# 
+  # "INTELLIGENCE",
+  #"RULES") #
+
+prestige_house <- c(
+  "APPROPRIATIONS", #
+  # "ARMED SERVICES", #
+  #"BUDGET", # 
+  "COMMERCE", #
+  "ENERGY", #
+  "FINANCIAL SERVICES", # 
+  "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  # "JUDICIARY", # 
+    "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senate <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  #"BUDGET", # 
+  #"COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+   "FINANCE", #
+  "FOREIGN RELATIONS") %>% paste(collapse  = "|")
+  #"HOMELAND SECURITY", #
+  #"JUDICIARY", # 
+  # "INTELLIGENCE",
+  #"RULES") #
+
+prestige_house |> str_split("\\|") |> kable(col.names = "House `Exclusive` Prestige Committees (CRS 2022, pg 3)")
+prestige_senate |> str_split("\\|") |> kable(col.names = "Senate `Super A` Prestige Committees  (CRS 2022, pg 3)")
+
+
+
+members %<>% ungroup() %>% 
+  mutate(prestigeOLD = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_houseOLD) ) | (chamber == "Senate" & str_detect(committees, prestige_senateOLD)), 1, 0),
+                    prestigeR2 = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_houseR2) ) | (chamber == "Senate" & str_detect(committees, prestige_senateR2)), 1, 0),
+                    prestige = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_house) ) | (chamber == "Senate" & str_detect(committees, prestige_senate)), 1, 0)
+                    )
+
+# inspect 
+# members |> distinct(chamber, committees, prestigeOLD, prestigeR2, prestige) %>% kablebox_long()
+
+#members |> drop_na(prestigeOLD) |> count(prestigeOLD) |> kable()
+#members |> drop_na(prestigeR2) |> count(prestigeR2) |> kable()
+members |> drop_na(prestige) |> count(prestige) |> kable()
+
+
+dcounts_tenure %<>% left_join(members %>% distinct(icpsr, congress, prestigeR2))
+
+dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige,  prestigeR2))
+
 
 n_agency <- dcounts_tenure$agency |> unique() |> length()
+```
 
+## Descriptives
+```{r}
 # check N
-dcounts_tenure %>% tally(perYear)
-dcounts_ratio %>% tally(perCon)
-dcounts_ratio %>% tally(perPol)
-dcounts_per_district %>% ungroup %>%  tally(perYear)
+dcounts_tenure %>% tally(perYear, name = "Member-Level Observations") |> kable()
+# dcounts_ratio %>% tally(perCon) |> kable()
+# dcounts_ratio %>% tally(perPol) |> kable()
+dcounts_per_district %>% ungroup %>%  tally(perYear, name = "District-Level Observations") |> kable()
 
 # check n per year 
-dcounts_tenure %>% group_by(year) %>% tally(perYear) |> kablebox_long()
+dcounts_tenure %>% filter(year > 2006) %>%  group_by(year) %>% tally(perYear) |> kablebox_long()
 
 # average per member
 dcounts_tenure %>% left_join(members %>% distinct(bioname, icpsr)) %>%
@@ -111,7 +245,7 @@ dcounts_tenure %>% left_join(members %>% select(bioname, icpsr)) %>%
 # per member per agency 
 dcounts_tenure %>% left_join(members %>% distinct(bioname, icpsr)) %>%
   group_by(bioname, agency) %>% 
-  summarise(per_agency = perYear) |> arrange(-per_year_per_agency) |> 
+  summarise(per_year_per_agency = perYear) |> arrange(-per_year_per_agency) |> 
   kablebox()
 
 
@@ -138,15 +272,15 @@ dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arr
 # total per legislator-agency pair 
 dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
 ```
-1
 
-### Values to predict at
+
+## Values for Predictions
 
 The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
 The average is  `r perYear_mean2` letters per legislator per year, `r perYear_mean1` letters per agency per year.
 
-For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally, at some point in our data, become a chair. Of the modal legislators, John Barrasso meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which John Barrasso submitted one letter in 2007, so predictions are at John Barrasso X IRS X 2007. Other legislators, years, and agencies are simply intercept shifts. 
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally become a chair at some point in our data. Of the modal legislators, John Barrasso meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which John Barrasso submitted one letter in 2007, so predictions are at John Barrasso X IRS X 2007. Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -198,7 +332,7 @@ modal %>%
 ## other variable means
 # dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
 
-# by chair and presidents' party
+# by chair and president's party
 values <- tidyr::expand(dcounts_tenure,
                         agency = "Treasury_IRS",
                         chair = chair, 
@@ -321,76 +455,6 @@ predicted %>%
   
 }
 
-
-ggdistrict <- function(predicted = predicted, party = FALSE) {
-  
-predicted %<>%
-  # drop estimates from impossible values
-      group_by(rowid, 
-               #predicted, std.error, 
-               estimate, conf.low, conf.high,
-               same_party) %>% 
-  mutate(sum = sum(new_member, second, third, fourth, fifth, sixth),
-         more = ifelse(sum == 0, 1,0)) %>% 
-    filter(sum < 2) %>% 
-    pivot_longer(cols = c("new_member", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
-    select(name, value) %>% 
-    filter(value == 1) %>% 
-    # clean up for presentation
-    mutate(year_in_congress = name %>% 
-             str_replace("more", "7\nor more") %>% 
-             str_replace("sixth", "6") %>% 
-             str_replace("fifth", "5") %>% 
-             str_replace("fourth", "4") %>% 
-             str_replace("third", "3") %>% 
-             str_replace("second", "2") %>% 
-             str_replace("new_member", " New\nmember") 
-             ) %>% 
-    ungroup()
-  
-# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
-# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
-  
-
-
-
-p <- predicted %>%  
-  ungroup() %>% 
-  ggplot() + 
-  aes(x = year_in_congress, 
-            y = estimate, # predicted, 
-      ymin = conf.low,# predicted - 1.96*std.error,
-      ymax = conf.high) + 
-  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) 
-
-if(party){
-p <- predicted %>%  
-  mutate(same_party = as.logical(same_party)) %>% 
-  ungroup() %>% 
-  ggplot() + 
-  aes(x = year_in_congress, 
-            y = estimate, # predicted, 
-      ymin = conf.low,# predicted - 1.96*std.error,
-      ymax = conf.high, #predicted + 1.96*std.error,
-      shape = same_party,
-      color = same_party) + 
-  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
-  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank())
-}
-
-return(p)
-  
-}
-
 ```
 
 ---
@@ -408,6 +472,8 @@ See more about robust (clustered) standard errors with fixed effects are calcula
 # Coef Map
 cm = c("chair" = "Committee Chair",
        "ranking_minority" = "Ranking Member",
+              "prestigeR2" = "Prestige Committee (R2)",
+                     "prestigeOLD" = "Prestige Committee (Old)",
        "prestige" = "Prestige Committee",
        "first" = "First Year",
        "second" = "Second Year",
@@ -415,12 +481,27 @@ cm = c("chair" = "Committee Chair",
        "fourth" = "Fourth Year",
        "fifth" = "Fifth Year",
        "sixth" = "Sixth Year",
+               "same_party:second_year" = "Second Year x Same Party",
+       "same_party:third_year" = "Third Year x Same Party",
+       "same_party:fourth_year" = "Fourth Year x Same Party",
+       "same_party:fifth_year" = "Fifth Year x Same Party",
+       "same_party:sixth_year" = "Sixth Year x Same Party",
+        "second_year" = "Second Year",
+       "third_year" = "Third Year",
+        "fourth_year" = "Fourth Year",
+        "fifth_year" = "Fifth Year",
+        "sixth_year" = "Sixth Year",
+       "new_member" = " New Member", 
+       "new_member:same_party" = " New Member x Same Party", 
+       "same_party" = "Same Party",
        "majority" = "Majority",
        "presidents_party" = "President's Party",
        "Legislator" = "Legislator", 
        "Agency" = "Agency",
        "FE: icpsr_agency" = "Legislator × Agency Fixed Effects",
-       "icpsr_agency" = "Legislator × Agency Fixed Effects")
+       "icpsr_agency" = "Legislator × Agency Fixed Effects",
+       "FE: District" = "District Fixed Effects",
+       "FE: Year" = "Year Fixed Effects")
 
 coef_omit = "(Intercept)|majority|presidents_party"
 coef_omit = "none"
@@ -477,9 +558,25 @@ modelsummary(models_total,  # stars = T,
 
 ## Total Letters 
 
+### Member-level Coefficient Plots
+
+
 - Figures: `figs/m-total-[1:4].png`
 
-```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("1","2","3","4")}
+```{r}
+#| label: "m-total"
+#| fig-cap: "m-total-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
 testing = F
 
 # paper table 
@@ -576,10 +673,8 @@ rows <- tibble(
   `(4)` = c("Log(Count+1)", "✓", "") 
 )
 
-# subset
 attr(rows, 'position') <- c(0, 20,21,22,23)
 
-# call coefs
 attr(rows, 'position') <- c(0, 24,25)
 
 options(modelsummary_factory_default = 'kableExtra')
@@ -623,7 +718,7 @@ se <- m_total_dnd$se %>%
 
 ### Total Letters Narrative
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes an `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
 
 We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all n_agency agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
 
@@ -632,7 +727,20 @@ We estimate that the experience gained between the first and second year in Cong
 - Figures: `figs/m-total-predicted-[1:4].png`
 
 
-```{r m-total-predicted,  fig.show="hold", out.width="50%", fig.cap= "Total", fig.subcap= c("1","2","3","4")}
+```{r}
+#| label: "m-total-predicted"
+#| fig-cap: "m-total-predicted"
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
 predicted <- predictions(m_total_cross,
                          newdata = values)
 
@@ -669,7 +777,7 @@ predicted <- predictions(m_total_dnd,
                          newdata = values)
 
 
-# predictions by chair and presidents' party
+# Predictions by chair and president's party
 predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
@@ -701,12 +809,26 @@ ggtenure() +
 
 ## Constituency Service
 
+### Member-level Constituency Service Coefficient Plots
+
+
 DV: Only letters coded as constituency service letters
 
 - Figures: `figs/m-con-[1:4].png`
 
-```{r m-con,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap="Constituency Service Letters Per Year", fig.subcap= c("1","2","3","4")}
-testing = F
+```{r}
+#| label: "m-con"
+#| fig-cap: "figs/m-con-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
 
 m_con_cross <-feglm (perYear_con ~ 
                        chair + ranking_minority + prestige + 
@@ -796,7 +918,7 @@ se <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(na
 
 ### Constituency Service Narrative 
 
-Table \ref{tab:models_con} is identical to Table \ref{tab:models_total} except that we subset the data to only legislator requests hand-coded as constituency service. 
+Table `\ref{tab:models_con}` is identical to Table` \ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as constituency service. 
 Column 2 of Table `\ref{tab:models_con}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. 
 We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
 
@@ -805,7 +927,20 @@ We estimate that the experience gained between the first and second year in Cong
 
 - Figures: `figs/m-con-predicted-[1:4].png`
 
-```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "Constituency Service", fig.subcap= c("1","2","3","4")}
+```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "Constituency Service", fig.subcap= c("1", "2", "3", "4")}
+#| label: "m-con-predicted"
+#| fig-cap: "m-con-predicted"
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
 # Cross-sectional predictions:
 predicted <- predictions(m_con_cross,
                          newdata = values)
@@ -879,12 +1014,24 @@ ggtenure() +
 
 ## Policy Work
 
+### Member-level Policy Work Coefficient Plots
+
 Only using letters coded as constituent letters 
 
 - Figures: `figs/m-policy-[1:4].png`
 
-```{r m-policy,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap="Policy Letters Per Year", fig.subcap= c("1","2","3","4")}
-testing = F
+```{r m-policy}
+#| label: "m-policy"
+#| fig-cap: "figs/m-policy-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
 
 m_policy_cross <-feglm (perYear_policy ~ 
                           chair + ranking_minority + prestige + 
@@ -972,7 +1119,19 @@ modelsummary(models_policy, # stars = T,
 
 - Figures: `figs/m-policy-predicted-[1:4].png`
 
-```{r m-policy-predicted,  fig.show="hold", out.width="50%", fig.cap= "Policy", fig.subcap= c("1","2","3","4")}
+```{r}
+#| label: "m-policy-predicted"
+#| fig-cap: "m-policy-predicted"
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
 predicted <- predictions(m_policy_cross,
                          newdata = values)
 
@@ -1046,17 +1205,29 @@ se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider
 
 ### Policy Work Narrative
 
-Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total} except that we subset the data to only legislator requests hand-coded as policy work. 
-Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
+Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as policy work. 
+Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
 
 # Ratio 
 
-
+### Member-level Ratio Coefficient Plots
 
 
 - Figures: `figs/m-ratio-[1:2].png`
 
-```{r m-ratio,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Ratio", fig.subcap= "c(1,2)"}
+```{r}
+#| label: "m-ratio"
+#| fig-cap: "figs/m-ratio-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
 dcounts_ratio %<>% 
   mutate(Legislator = icpsr,
          Year = year) %>% 
@@ -1099,7 +1270,7 @@ models_ratio <- list(
 
 rows <- tibble(
   term = c("Dependent Variable", 
-           "Majoirty", 
+           "Majority", 
            "President's Party"),
   `(1)` = c("Ratio", 
             "✓", 
@@ -1116,7 +1287,7 @@ rows <- tibble(
   `(2)` =c("Ratio")
 )
 
-# checkmarks for controls 
+# Checkmarks for controls 
 attr(rows, 'position') <- c(0, 20,21)
 
 # all coef
@@ -1149,7 +1320,7 @@ se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(
 ### Ratio Narrative 
 
 Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. 
-We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
+We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96`, `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
 
 
 
@@ -1157,7 +1328,19 @@ We estimate that becoming a committee chair causes the ratio of constituency ser
 
 - Figures: `figs/m-ratio-predicted-[1:4].png`
 
-```{r m-ratio-predicted, fig.show="hold", out.width="50%", fig.cap= "Ratio", fig.subcap= c("1","2","3","4")}
+```{r}
+#| label: "m-ratio-predicted"
+#| fig-cap: "m-ratio-predicted"
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
 predicted <- predictions(m_ratio_cross,
                          newdata = values)
 
@@ -1219,45 +1402,92 @@ ggtenure() +
 
 
 
+
+
+---
+
+
 # Per District
 
-```{r m-district,  fig.show="hold", out.width="50%"}
-#TODO deal with chamber switchers 
-count(members, bioname, icpsr, congress, sort = T) |> filter(n >1)
+## Data
 
 
+```{r}
+#TODO deal with chamber switchers ? or maybe we don't need to since everything is calculated grouped at chamber level?
+# count(members, bioname, icpsr, congress, sort = T) |> filter(n >1)
+
+```
+
+The main district-level models in the paper focus on estimating the effect of legislator experience by leveraging turnover within districts. We compare the service that a district receives before and after electing a new legislator and in the following years as legislators gain experience in office.
+
+### `Same party` lookup table 
+
+As a robustness check, we replicate our within-district results using a subset of district-year-count observations where turnover in a district allows us to assess the partisanship of the prior member holding that seat. We interact an indicator of whether the prior member was of the `same party` with all other indicators (i.e., whether the member is new, serving in years 1-6, or serving longer than 6 years). We compare the service that a district receives before and after electing a new legislator and in the following years, accounting for whether that member is of the same party. However, a structural constraint of the data means that this robustness check is limited to observations where turnover *within* a redistricting cycle gives us a measure of whether the legislator replaced a member of the same party or of another party. 
+
+The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do NOT count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
+
+Many NAs exist for the `same party` variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
+
+- Specifically, we go from 7666 to 2822 observations when including `same_party` in the models below. 
+
+To measure turnover in the Senate where "districts" have two members, we code `same party` as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the `same party` is FALSE. If there are two Democrats and a Democrat is elected, the `same party` is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, `same_party` is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
+
+```{r}
 # year congress crosswalk 
 year_congress <- dcounts_tenure %>% distinct(year, congress)
 
 
-# add  congress variable 
+# Add Congress variable 
 dcounts_per_district %<>% 
   ungroup() %>% 
-  # add congress variable 
+  # Add Congress variable 
   left_join(year_congress)
 
+members %<>% left_join(year_congress) %>% arrange(icpsr, year)
 
+duplicates <-distinct(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member)  %>% count(icpsr, chamber, congress, state_dist) %>% filter(n > 1) 
 
-# make variable for prior seat holder party 
+# Because members of the house are new one year and not the other, we can't do "new" at the Congress level 
+# inner_join(duplicates, dcounts_per_district)
+
+# make a variable for the prior seatholder party 
 party_crosswalk <- members  %>% 
   ungroup() %>% 
   # add new member and state_dist (accounting for redistricting)
-  left_join(distinct(dcounts_per_district, icpsr, chamber, congress, state_dist, new_member)) %>%
-  # # for senate, capture mixed delegations 
-  group_by(state_dist, congress) %>% 
+  left_join(distinct(dcounts_per_district, icpsr, chamber, congress, state, state_dist, new_member, year)) %>% 
+  # Begin at 2000 census redistricting 
+  filter(year > 2001) %>% 
+  # Make additional new member and state_dist to fill in NAs with "0" (i.e., 2002-2012 districting cycle )
+  mutate(state_dist2 = paste(state, district_code, "0", sep = "_") |> 
+           str_replace("0_0", "0"),
+         state_dist = coalesce(state_dist, state_dist2)) %>% 
+  group_by(state_dist, chamber, year) %>% 
+  # combine ICPSR IDS for senators to get the senate delegation to know if it changed 
+  arrange(icpsr) |> # Make sure they are in the same order 
+  mutate(icpsr = unique(icpsr) |> paste(collapse = ";")) %>% # collapse senate ICPSR
+  ungroup() %>% 
+  group_by(state_dist, chamber) |> 
+  arrange(year) |> 
+  mutate(
+         lag_icpsr = dplyr::lag(icpsr),
+         new_member2 = icpsr != lag_icpsr,
+         new_member =  coalesce(new_member, as.numeric(new_member2))) %>% 
+  distinct(year, congress, state_dist, state, district_code, party_name, new_member #, new_member2, icpsr, lag_icpsr        
+           ) %>% #FIXME DROPPING OBS HERE
+  # # for Senate, capture mixed delegations 
+  group_by(state_dist, year) %>% 
   arrange(party_name) %>% 
   mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
   ungroup() %>% 
-  # state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
+  # state_dist is missing for some obs in members, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
   mutate(state_dist2 = paste(state, district_code, sep = "_")) %>% 
-  distinct(congress, state_dist,  state_dist_party, new_member) %>% 
-  arrange(state_dist, congress) %>% 
+  distinct(congress, state_dist,  state_dist_party, new_member, year #, new_member2, icpsr, lag_icpsr
+  ) %>% 
+  arrange(state_dist, year) %>% 
   # group by icpsr 
   group_by(state_dist) %>% 
   # create lag party var and fill it in for that member's tenure 
   mutate(lag_p = dplyr::lag(state_dist_party), 
-         #lag_icpsr = dplyr::lag(icpsr),
-         #new_member2 = icpsr != lag_icpsr,
          same_party = state_dist_party == lag_p,
          same_party = ifelse(new_member, 
                 same_party,
@@ -1265,161 +1495,204 @@ party_crosswalk <- members  %>%
   tidyr::fill(same_party, .direction = "down")  %>% 
   ungroup()
 
-party_crosswalk  |> #filter(chamber == "House") |> 
-  select(state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> # view()
-
-# make variable for prior seat holder party WITHIOUT REDISTRICTING 
-party_crosswalk2 <- members  %>% 
-  mutate(state_dist = paste(state, district_code, sep = "_")) %>% # NOTICE THIS IS DIFFERENT 
-  ungroup() %>% 
-  # add new_member #FIXME WHY IS THIS INTRODUCING NAs?
-  left_join(distinct(dcounts_per_district, icpsr, chamber, congress, new_member)) %>%
-  # # for senate, capture mixed delegations 
-  group_by(state_dist, congress) %>% 
-  arrange(party_name) %>% 
-  mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
-  ungroup() %>% 
-  # state_dist is missing for some obs in memebers, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
-  distinct(congress, state_dist, state_dist_party, new_member) %>% 
-  arrange(state_dist, congress) %>% 
-  # group by icpsr 
-  group_by(state_dist) %>% 
-  # create lag party var and fill it in for that member's tenure 
-  mutate(lag_p = dplyr::lag(state_dist_party), 
-         #lag_icpsr = dplyr::lag(icpsr),
-         #new_member2 = icpsr != lag_icpsr,
-         same_party = state_dist_party == lag_p,
-         same_party = ifelse(new_member, 
-                same_party,
-                             NA )) %>% 
-  tidyr::fill(same_party, .direction = "down")  %>% 
-  ungroup()
-
-#FIXME WHY NAs?
-party_crosswalk2  |> #filter(chamber == "House") |> 
-  select(state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> # view()
+# LOOK FOR MISSING OBS BY CONGRESS 
+#members |> count(congress)
+#party_crosswalk |> ungroup() |> count(congress, is.na(state_dist))
+#party_crosswalk |> ungroup() |> filter(is.na(state_dist), congress > 109)
 
 
-#FIXME WHAT ABOUT SENATE? 
-
-members |> count(is.na(new_member))
-members |> count(is.na(same_party))
+party_crosswalk  |>  #filter(chamber == "House") |> 
+  select(year, state_dist, state_dist_party, lag_p, same_party, new_member#, new_member2, icpsr, lag_icpsr
+         )  |> kablebox_long()
 
 
 
-# add same_party variable to district counts data 
+```
+
+
+
+```{r}
+
+# Add same_party variable to district counts data 
 dcounts_per_district %<>% 
   left_join(party_crosswalk ) %>% 
   arrange(state_dist, congress) %>% 
   ungroup()
   
-dcounts_per_district  %>% count(is.na(same_party))
-
-dcounts_per_district |> #filter(chamber == "House") |> 
-  select(icpsr, state_dist, congress, state_dist_party, lag_p, same_party, new_member) # |> view()
-
-
+dcounts_per_district |> 
+  count(same_party) |> 
+  kablebox()
+# 
 
 
-dcounts_per_district |> count(same_party)
+# dcounts_per_district |> filter(chamber == "House") |>   select(icpsr, state_dist, year, state_dist_party, lag_p, same_party, new_member)   |> kablebox()
+
+dcounts_per_district %<>% mutate(same_party = as.numeric(same_party))
 ```
 
 
+## Results
 
-Cross sectional effects get larger when data are subset to district-years after turnover (required to do the same_party variable)
+The main results showing that replacing a more experienced legislator with a new legislator yields a substantial decrease in service to the district are robust to interacting all variables with the `same_party` variable. 
+Cross-sectional effects get larger but more uncertain when data are subset to district years after turnover (as required for the `same_party` variable). Within-district effects become more uncertain, likely due to the much smaller number of observations where `same_party` can be observed. 
 
 
-- Figures: `figs/m-district-[1:4].png`
+### District-level Coefficient Plots
 
-```{r m-district,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "district", fig.subcap= "c(1,2)"}
+Figures: `figs/m-district-[1:4].png`
+
+1. cross-sectional 
+2. cross-sectional with same-party variable 
+3. diff-in-diff
+4. diff-in-diff with same party variable
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-cap: "figs/m-district-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district"
+#| fig-show: "hold"
+
+# modify var names for presentation 
 dcounts_per_district %<>% 
-  mutate(Legislator = icpsr,
+  mutate(same_party = as.numeric(same_party),
+         Legislator = icpsr,
+         District = state_dist,
          Year = year) %>% 
-  filter(year >2006 & year < 2019)
+  filter(year >2006 & year < 2021)
 
 m_district_cross <- feglm(perYear ~
   new_member + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
-cluster = "Legislator",
+cluster = "District",
 data = dcounts_per_district)
 
 if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
 
-coefplot(m_district_cross, horiz = T, drop = "(Intercept)") 
+coefplot(m_district_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
 
 m_district_cross_party <- feglm(perYear ~
-  new_member + same_party + 
-  second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
-cluster = "Legislator",
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | Year,
+cluster = "District",
 data = dcounts_per_district)
 
 if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
 
-coefplot(m_district_cross_party, horiz = T, drop = "(Intercept)") 
-
-
-
+coefplot(m_district_cross_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
 
 # Diff in diff
 m_district_dnd <- feglm(perYear ~
   new_member + #same_party + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | 
-    Legislator + Year,
-cluster = "Legislator",
-data = dcounts_per_district)
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
 
-if(testing){modelsummary(m_district_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_district_dnd, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
-coefplot(m_district_dnd, horiz = T) 
+# Diff in diff
+m_district_dnd_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
+
+coefplot(m_district_dnd_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+
+# Diff in diff
+m_district_dnd_house <- feglm(perYear ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
 
 # Diff in diff + party change var 
-m_district_dnd_party <- feglm(perYear ~
-  new_member + same_party + 
+m_district_dnd_house_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
+# Diff in diff
+m_district_dnd_senate <- feglm(perYear ~
+  new_member + #same_party + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | 
-    Legislator + Year,
-cluster = "Legislator",
-data = dcounts_per_district)
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
 
-if(testing){modelsummary(m_district_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
 
-coefplot(m_district_dnd_party, horiz = T) 
+# Diff in diff + party change var 
+m_district_dnd_senate_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
+
 ```
 
-### district Table
+### Per District Tables
 
 - Table: `tables/models_district.tex` (sans stars)
 
 ```{r models_district}
 models_district <- list(
   "(1)" = m_district_cross,
-  "(2)" = m_district_dnd
+  "(2)" = m_district_dnd,
+  "(3)" = m_district_dnd_house,
+  "(4)" = m_district_dnd_senate
 )
+
 
 rows <- tibble(
   term = c("Dependent Variable", 
-           "Majoirty", 
-           "President's Party"),
-  `(1)` = c("District", 
+           #"District Fixed Effects", 
+           "All Districts",
+           "House Only",
+           "Senate Only"),
+  `(1)` = c("Per District", 
+            #"", 
             "✓", 
-            "✓"),
-  `(2)` =c("District", 
+            "", 
+            ""),
+  `(2)` =c("Per District", 
+           #"✓", 
            "✓", 
-           "✓")
+            "", 
+            ""),
+    `(3)` = c("Per District", 
+            #"✓", 
+            "", 
+            "✓", 
+            ""),
+  `(4)` =c("Per State", 
+           #"✓", 
+           "", 
+            "", 
+            "✓")
 )
 
-# all coef
-rows <- tibble(
-  term = c("Dependent Variable"),
-  `(1)` = c("District"),
-  `(2)` =c("District")
-)
 
-# checkmarks for controls 
-attr(rows, 'position') <- c(0, 20,21)
 
-# all coef
-attr(rows, 'position') <- c(0)
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 14:16)
+
 
 
 modelsummary(models_district, stars = T, 
@@ -1427,7 +1700,7 @@ modelsummary(models_district, stars = T,
              coef_map = cm,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
 
 modelsummary(models_district, # stars = T, 
              add_rows = rows,               
@@ -1435,7 +1708,7 @@ modelsummary(models_district, # stars = T,
              gof_omit = gof_omit, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
+             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_district.tex") )
@@ -1445,75 +1718,244 @@ beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta")
 se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 ```
 
-### District Narrative 
+
+- Table: `tables/models_district_party.tex` (sans stars)
+
+```{r models_district_party}
+
+models_district_party <- list(
+  "(1)" = m_district_cross_party,
+  "(2)" = m_district_dnd_party,
+  "(3)" = m_district_dnd_house_party,
+  "(4)" = m_district_dnd_senate_party
+)
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 28:31)
+
+
+
+modelsummary(models_district_party, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_district_party, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+
+```
+
+### Per District Narrative 
 
 Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification. 
-We estimate that becoming a committee chair causes the district of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96` , `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the district.
+We estimate that turnover causes a district's constituency service to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
 
 
-### Predictions 
+### Per District Predictions 
 
 - Figures: `figs/m-district-predicted-[1:4].png`
 
-```{r m-district-predicted, fig.show="hold", out.width="50%", fig.cap= "district", fig.subcap= c("1","2","3","4")}
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-predicted-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-predicted"
+#| fig-show: "hold"
+
+
+ggdistrict <- function(predicted = predicted, party = FALSE) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, 
+               #predicted, std.error, 
+               estimate, conf.low, conf.high,
+               same_party) %>% 
+  mutate(sum = sum(new_member, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("new_member", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("new_member", " New\nmember") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+
+
+
+p <- predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  # geom_line() + # requires numeric...look to see how I did this on the other ones
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+
+if(party){
+p <- predicted %>%  
+  mutate(same_party = as.logical(same_party)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      shape = same_party,
+      color = same_party) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank())
+}
+
+return(p)
+  
+}
+
+
+# dcounts_per_district %>% filter(District == "tennessee_1_1") |> View()
+# dcounts_per_district %>% filter(District == "alabama_1_1") |> View()
+
+
+# by year 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "21376",
+                        Year = "2016",
+                        District = "alabama_1_1",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
 predicted <- predictions(m_district_cross,
-                         newdata = values)
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
 
 
 
 # Cross-sectional predictions
 predicted %>%
-ggchair() +
-  labs(title = "Predicted district of Constituent to Policy Work\n(Cross-Sectional)",
-       x = "",
-       y = "Predicted district of\nConstituent to Policy Work",
+ggdistrict() +
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
        fill = "",
        color = "",
-       shape = "")
+       shape = "") 
 
-# by tenure
-predicted <- predictions(m_district_cross,
-                         newdata = values_tenure)
+
+
+# Predictions with the party of the prior representative
+
+predicted <- predictions(m_district_cross_party,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
 
 predicted %>%
-ggtenure() +
-  labs(title = "Predicted district of Constituent to Policy Work\n(Cross-Sectional)",
-       x = "Years Serving in Congress",
-       y = "Predicted district of\nConstituent to Policy Work",
+  ggdistrict(party = TRUE) + 
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
        fill = "",
-       color = "",
-       shape = "")
+       color = "Same Party",
+       shape = "Same Party") 
 
 
-# Predictions for diff in diff plot 
-predicted <- predictions(m_district_dnd,
-                         newdata = values)
 
 
 # diff in diff plot
-predicted %>%
-  ggchair() + 
-  labs(title = "Predicted district of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
-       x = "",
-       y = "Predicted district of\nConstituent to Policy Work",
-       fill = "",
-       color = "",
-       shape = "")
 
-# by tenure
 predicted <- predictions(m_district_dnd,
-                         newdata = values_tenure)
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
 
 predicted %>%
-ggtenure() +
-    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted district of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
-       x = "Years Serving in Congress",
-       y = "Predicted district of\nConstituent to Policy Work",
+ggdistrict() +
+  labs(title = "Letters Per District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
        fill = "",
        color = "",
        shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_dnd_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+  labs(title = "Letters Per District\n(Difference-in-differences)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
 ```
 
 
