@@ -1,0 +1,1372 @@
+---
+title: "Replication Using R2's Suggested Prestige Committees"
+subtitle: "The Effects of Shifting Priorities and Capacity on Elected Officials' Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
+format:
+    html: 
+      toc: true
+      code-fold: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r global.options, include=FALSE}
+library(modelsummary)
+library(marginaleffects)
+library(fixest)
+library(tidyverse)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(here)
+library(ggrepel)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      cache = FALSE, 
+                      fig.width=4.5, 
+                      fig.height = 3.5,
+                      split = T,
+                      fig.align = 'center', 
+                      fig.path='figs/',
+                      fig.retina = 6,
+                      warning=FALSE, 
+                      message=FALSE)
+
+# inline numbers round to 2
+knit_hooks$set(inline = function(x) {
+  if (is.na(as.numeric(x))) {
+    return(x)
+    } else 
+        return(round(x,2))
+})
+
+
+# plot color defaults 
+library(ggplot2); theme_set(theme_bw())
+  options(
+    ggplot2.continuous.color = "cividis",
+    ggplot2.continuous.fill = "cividis"
+  )
+  scale_color_discrete <- function(...)
+    scale_color_viridis_d(..., direction = -1)
+  scale_fill_discrete <- function(...)
+    scale_fill_viridis_d(..., direction = -1)
+  
+# html table formatting
+kablebox <- . %>%  
+  head(100) %>%
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "200px")
+
+kablebox_long <- . %>% 
+  head(100) %>% 
+  knitr::kable() %>% 
+  kable_styling() %>% 
+  scroll_box(height = "500px")
+```
+
+# Replication data
+
+From `code/replication.R`, which starts with the main replication data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
+
+1. counts per member-year (dcounts_tenure.Rdata/AgencyComm.dta)
+2. ratio per member-year (dcounts_ratio.Rdata/ProportionContact.dta)
+3. counts per district-year (dcounts_per_district.Rdata, DistrictLevel.dta)
+
+The same three datasets are used in Replication.do
+
+## Defining Prestige Committees
+
+```{r data}
+load(here::here("data", "dcounts_tenure.Rdata"))
+load(here::here("data", "dcounts_ratio.Rdata"))
+load(here::here("data", "dcounts_per_district.Rdata"))
+load(here::here("data", "members.Rdata"))
+
+prestige_houseOLD <- c(
+  "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  "BUDGET", # 
+  # "COMMERCE", #
+  # "ENERGY", #
+  # "FINANCIAL SERVICES", # 
+    # "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  # "JUDICIARY", # 
+    # "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senateOLD <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  "BUDGET", # 
+  "COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+  #  "FINANCE", #
+  "FOREIGN RELATIONS", # 
+  #"HOMELAND SECURITY", #
+  #"JUDICIARY", # 
+  # "INTELLIGENCE",
+  "RULES") %>% paste(collapse  = "|")#
+
+prestige_houseR2 <- c(
+  "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #"BUDGET", # 
+  # "COMMERCE", #
+  # "ENERGY", #
+  "FINANCIAL SERVICES", # 
+  "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  "JUDICIARY", # 
+    # "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senateR2 <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  # "BUDGET", # 
+  "COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+  #  "FINANCE", #
+  "FOREIGN RELATIONS", # 
+  #"HOMELAND SECURITY", #
+  "JUDICIARY") %>% paste(collapse  = "|")# 
+  # "INTELLIGENCE",
+  #"RULES") #
+
+prestige_house <- c(
+  "APPROPRIATIONS", #
+  # "ARMED SERVICES", #
+  #"BUDGET", # 
+  "COMMERCE", #
+  "ENERGY", #
+  "FINANCIAL SERVICES", # 
+  "BANKING", # 
+  #"FOREIGN"
+    #"INTERNATIONAL RELATIONS", # 
+  # "JUDICIARY", # 
+    "FINANCIAL SERVICES", # 
+    "RULES", #
+  "WAYS"
+  ) %>% paste(collapse  = "|")# 
+
+prestige_senate <- c(
+   #"AGRICULTURE", 
+   "APPROPRIATIONS", #
+  "ARMED SERVICES", #
+  #  "BANKING", # 
+  #"BUDGET", # 
+  #"COMMERCE", #
+  #"ENERGY", #
+  #  "NATURAL RESOURCES", # 
+  #  "ENVIRONMENT", # 
+   "FINANCE", #
+  "FOREIGN RELATIONS") %>% paste(collapse  = "|")
+  #"HOMELAND SECURITY", #
+  #"JUDICIARY", # 
+  # "INTELLIGENCE",
+  #"RULES") #
+
+
+members %<>% ungroup() %>% 
+  mutate(prestigeOLD = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_houseOLD) ) | (chamber == "Senate" & str_detect(committees, prestige_senateOLD)), 1, 0),
+                    prestigeR2 = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_houseR2) ) | (chamber == "Senate" & str_detect(committees, prestige_senateR2)), 1, 0),
+                    prestige = ifelse(
+                      (chamber == "House" & str_detect(committees, prestige_house) ) | (chamber == "Senate" & str_detect(committees, prestige_senate)), 1, 0)
+                    )
+
+# inspect 
+# members |> distinct(chamber, committees, prestigeOLD, prestigeR2, prestige) %>% kablebox_long()
+
+members |> drop_na(prestigeOLD) |> count(prestigeOLD) |> kable()
+members |> drop_na(prestigeR2) |> count(prestigeR2) |> kable()
+members |> drop_na(prestige) |> count(prestige) |> kable()
+
+
+dcounts_tenure %<>% left_join(members %>% distinct(icpsr, congress,prestigeR2))
+
+dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige,  prestigeR2))
+
+
+n_agency <- dcounts_tenure$agency |> unique() |> length()
+```
+
+## Descriptives
+```{r}
+# check N
+dcounts_tenure %>% tally(perYear, name = "Member-Level Observations") |> kable()
+# dcounts_ratio %>% tally(perCon) |> kable()
+# dcounts_ratio %>% tally(perPol) |> kable()
+dcounts_per_district %>% ungroup %>%  tally(perYear, name = "District-Level Observations") |> kable()
+
+# check n per year 
+dcounts_tenure %>% filter(year > 2006) %>%  group_by(year) %>% tally(perYear) |> kablebox_long()
+
+# average per member
+dcounts_tenure %>% left_join(members %>% distinct(bioname, icpsr)) %>%
+  group_by(bioname, year) %>% 
+  summarise(perYear = sum(perYear)) %>% 
+  group_by(bioname) %>% 
+  summarise(average_per_year = mean(perYear), average_per_year) |> 
+  arrange(-average_per_year) |> 
+  kablebox()
+
+# average per member per agency 
+dcounts_tenure %>% left_join(members %>% select(bioname, icpsr)) %>%
+  group_by(bioname) %>% 
+  summarise(average_per_year_per_agency = mean(perYear)) |> arrange(-average_per_year_per_agency) |> 
+  kablebox()
+
+
+# per member per agency 
+dcounts_tenure %>% left_join(members %>% distinct(bioname, icpsr)) %>%
+  group_by(bioname, agency) %>% 
+  summarise(per_year_per_agency = perYear) |> arrange(-per_year_per_agency) |> 
+  kablebox()
+
+
+
+# mean 
+perYear_mean1 <- dcounts_tenure$perYear |> mean()
+perYear_mean1
+perYear_mean2 <- dcounts_tenure |> 
+  group_by(icpsr, year) |> 
+  transmute(perYearTotal = sum(perYear))
+perYear_mean2 <- mean(perYear_mean2$perYearTotal) |> round()
+
+
+
+# var names for tables
+dcounts_tenure %<>% 
+  mutate(Legislator = icpsr,
+         Legislator_x_Agency = icpsr_agency,
+         Year_x_Agency = agency_year)
+
+# total per agency
+dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+
+# total per legislator-agency pair 
+dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
+```
+
+
+## Values for Predictions
+
+The most frequent legislator agency pair: McCain x VA with 2159 letters!
+
+The average is  `r perYear_mean2` letters per legislator per year, `r perYear_mean1` letters per agency per year.
+
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally become a chair at some point in our data. Of the modal legislators, John Barrasso meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which John Barrasso submitted one letter in 2007, so predictions are at John Barrasso X IRS X 2007. Other legislators, years, and agencies are simply intercept shifts. 
+
+
+```{r values, fig.width=5, fig.height=3}
+modal <- dcounts_tenure %>% 
+  group_by(icpsr) %>% 
+  filter(first_year > 2006, first_year < 2013, max_year > 6) %>% 
+  mutate(Chair = sum(chair, na.rm = T) >1) %>% 
+  group_by(icpsr, year) %>%
+  mutate(perLeg = sum(perYear)) %>% 
+  filter(perYear == 1, perLeg == perYear_mean2  ) %>% #FIXME MAKE THIS VARIABLE 
+  select(perAgency = perYear, perLeg, icpsr, icpsr_agency, agency_year, first_year, max_year, Chair) %>% 
+  distinct() %>% 
+  ungroup() %>% left_join(members %>% select(bioname, icpsr))
+
+modal %>%
+  mutate(average = perLeg) %>% 
+  count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
+  distinct() %>%
+  kablebox()
+
+modal %<>% filter(Chair) %>% distinct()
+
+modal %>%
+  kablebox()
+
+dcounts_tenure %>% 
+  group_by(icpsr, year) %>% 
+  mutate(perYearTotal = sum(perYear)) %>%
+  #mutate (perLegislator = sum(perYear)) %>% 
+  ungroup() %>% 
+  mutate(meanLeg = mean(perYearTotal),
+         meanYear = mean(perYear)) %>%
+  filter( abs(perYearTotal - perYear_mean2) < 10,   
+          perYear < 10 )  %>% 
+  ggplot() +
+  aes(x = perYear, y = perYearTotal) + 
+    geom_jitter() + 
+  geom_vline(aes(xintercept = meanYear), color = "blue") + 
+  geom_hline(aes(yintercept = meanLeg), color = "blue") + 
+  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year , icpsr_agency, NA) ),
+                  color = "red", box.padding = 0.5, max.overlaps = Inf) + 
+  labs(x = "Contacts per Legislator per Agency per Year",
+       y = "Contacts per Legislator per Year")
+
+modal %>%
+  distinct(perAgency, bioname, icpsr_agency, agency_year) %>% 
+  kablebox()
+
+## other variable means
+# dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
+
+# by chair and president's party
+values <- tidyr::expand(dcounts_tenure,
+                        agency = "Treasury_IRS",
+                        chair = chair, 
+                        ranking_minority	= FALSE, 
+                        prestigeR2 = TRUE, 
+                        first = FALSE,
+                        second = FALSE,
+                        third = FALSE,
+                        fourth = FALSE,
+                        fifth = FALSE, 
+                        sixth = FALSE,
+                        Legislator_x_Agency = "Treasury_IRS_20947",
+                        Year_x_Agency = "Treasury_IRS_2015",
+                        Legislator = "20947",
+                        Year = "2015",
+                        majority = TRUE,
+                        presidents_party = presidents_party
+                   ) %>% 
+  drop_na(majority, chair)
+
+# by year 
+values_tenure <- tidyr::expand(dcounts_tenure,
+                        agency = "Treasury_IRS",
+                        chair = chair, 
+                        ranking_minority	= FALSE, 
+                        prestigeR2 = TRUE, 
+                        first = first,
+                        second = second,
+                        third = third,
+                        fourth = fourth,
+                        fifth = fifth, 
+                        sixth = sixth,
+                        Legislator_x_Agency = "Treasury_IRS_20947",
+                        Year_x_Agency = "Treasury_IRS_2015",
+                        Legislator = "20947",
+                        Year = "2015",
+                        majority = TRUE,
+                        presidents_party = TRUE
+                   ) %>% 
+  drop_na(chair)
+```
+
+
+```{r}
+# helper functions to plot predicted values
+ggchair <- function(predicted = predicted) {
+  
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+
+predicted %>%  
+  ggplot() + 
+  aes(x = "", 
+      y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      fill = chair,
+      shape = chair,
+      color = chair
+      ) + 
+  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
+}
+
+
+ggtenure <- function(predicted = predicted) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, 
+               #predicted, std.error, 
+               estimate, conf.low, conf.high,
+               chair) %>% 
+  mutate(sum = sum(first, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("first", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("first", "1") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+predicted %<>% filter(chair == 0 | name %in% c("sixth", "more"))
+
+  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  
+
+predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      shape = chair,
+      color = chair) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+      theme_minimal() + 
+  theme(panel.border  = element_blank(),
+        panel.grid.major.x = element_blank()) 
+  
+}
+
+```
+
+---
+
+# Counts per member per year
+
+Clustering standard errors at the legislator level:
+
+["Clustering on the panel variable produces an estimator of the VCE that is robust to cross-sectional heteroskedasticity and within-panel (serial) correlation that is asymptotically equivalent to that proposed by Arellano (1987)"](https://www.stata.com/manuals13/xtxtreg.pdf)
+
+Replicated using `fixest::feglm` here and `xtreg` in Replication.do.
+See more about robust (clustered) standard errors with fixed effects are calculated by `fixest` [here](https://lrberge.github.io/fixest/articles/standard_errors.html) and by  `xtreg` [here](https://www.stata.com/manuals13/xtxtreg.pdf).
+
+```{r cm}
+# Coef Map
+cm = c("chair" = "Committee Chair",
+       "ranking_minority" = "Ranking Member",
+              "prestigeR2" = "Prestige Committee (R2)",
+                     "prestigeOLD" = "Prestige Committee (Old)",
+       "prestige" = "Prestige Committee",
+       "first" = "First Year",
+       "second" = "Second Year",
+       "third" = "Third Year",
+       "fourth" = "Fourth Year",
+       "fifth" = "Fifth Year",
+       "sixth" = "Sixth Year",
+       "majority" = "Majority",
+       "presidents_party" = "President's Party",
+       "Legislator" = "Legislator", 
+       "Agency" = "Agency",
+       "FE: icpsr_agency" = "Legislator × Agency Fixed Effects",
+       "icpsr_agency" = "Legislator × Agency Fixed Effects")
+
+coef_omit = "(Intercept)|majority|presidents_party"
+coef_omit = "none"
+
+setFixest_dict(cm)
+
+gof_omit = "R.*|AIC|BIC|Log.*|Std.*"
+
+options(modelsummary_factory_default = 'kableExtra')
+config_modelsummary(factory_default = 'kableExtra')
+
+
+# table formatting to match stata (sort of)
+format_table <- . %>% 
+  # OLD modelsummary based on kableExtra package (broken): https://stackoverflow.com/questions/78422275/argument-is-of-length-zero-from-kableextra-after-updating-rstudio
+  #kableExtra::row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
+  #kableExtra::kable_styling(font_size = 11) %>% 
+                    #full_width = TRUE, 
+                    #latex_options = c("repeat_header")) %>%
+  # NEW modelsummary based on tinytable package: https://vincentarelbundock.github.io/tinytable/vignettes/format.html
+    as.character() %>% 
+  str_replace("Num.Obs.", "Observations") %>% 
+  str_replace("Std.Errors", "\footnotesize Robust/Clustered Std. Errors") %>% 
+  str_replace("FE: Legislator.*x.*Agency", "Legislator x Agency FE") %>%
+  str_replace("FE: Year.*x.*Agency", "Year x Agency FE") %>% 
+  str_replace("FE: Year", "Year Fixed Effects") %>% 
+  str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
+    str_replace_all("X|✓", "\\\\\\checkmark") %>% 
+  # a random midrule appeared in the wrong place 
+  #str_remove("\\midrule") %>% 
+  #  extract just the table, no caption etc
+  str_remove_all("\\\\begin\\{table\\}|\\\\centering|\\\\end\\{table\\}")
+
+# for testing table formatting
+if(F){
+# TeX 
+modelsummary(models_total,  # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+    tinytable::format_tt(
+    digits = 2,
+    fontsize = 11,
+    num_mark_big = ",") |>
+  format_table()  
+}
+```
+
+
+---
+
+## Total Letters 
+
+- Figures: `figs/m-total-[1:4].png`
+
+```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("1", "2", "3", "4")}
+#| label: "m-total"
+#| fig-cap: "m-total-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
+testing = F
+
+# paper table 
+# 1 
+# cross-sectional 
+m_total_cross <-feglm (perYear ~ 
+                         chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_total_cross, horiz = T, drop = "(Intercept)") 
+
+
+
+# 2
+m_total_dnd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator",
+                    # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_total_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_total_dnd, horiz = T) 
+
+
+# 3
+m_total_2nd <-feglm (perYear ~ 
+                       chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_total_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_total_2nd, horiz = T) 
+
+
+# 4
+m_logtotal_dnd <-feglm (log(perYear + 1) ~ 
+                          chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logtotal_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_logtotal_dnd, horiz = T) 
+
+
+```
+
+### Total Letters Table 
+
+- Table: `tables/models_total.tex` (sans stars)
+
+
+```{r models_total}
+models_total <- list(
+  "(1)" = m_total_cross,
+  "(2)" = m_total_dnd,
+  "(3)" =  m_total_2nd,
+  "(4)" = m_logtotal_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", 
+           "Majority",
+           "President's Party",
+           "All Legislators", 
+           "Served At Least 2nd Term"),
+  `(1)` = c("Count", "✓", "✓", "✓", ""),
+  `(2)` =c("Count", "✓", "✓", "✓", ""),
+  `(3)` = c("Count", "✓","✓","", "✓"),
+  `(4)` = c("Log(Count+1)","✓","✓", "✓", "") 
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", 
+           #"Majority",
+           #"President's Party",
+           "All Legislators", 
+           "Served At Least 2nd Term"),
+  `(1)` = c("Count", "✓", ""),
+  `(2)` =c("Count", "✓", ""),
+  `(3)` = c("Count","", "✓"),
+  `(4)` = c("Log(Count+1)", "✓", "") 
+)
+
+attr(rows, 'position') <- c(0, 20,21,22,23)
+
+attr(rows, 'position') <- c(0, 24,25)
+
+options(modelsummary_factory_default = 'kableExtra')
+
+
+# HTML
+modelsummary(models_total, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit,
+             coef_omit = coef_omit,
+             title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+
+options(modelsummary_factory_default = 'kableExtra')
+options(config_modelsummary(factory_default = 'kableExtra'))
+
+# TeX 
+modelsummary(models_total,  # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+  format_table()  %>% 
+  write_lines(file = here::here("docs", "tables", "models_total.tex") )
+
+
+beta <- m_total_dnd$coefficients %>%
+  round(3) %>% 
+  as_tibble(rownames = "beta") %>% 
+  pivot_wider(names_from = beta)
+
+se <- m_total_dnd$se %>%
+  round(3) %>% as_tibble(rownames = "se") %>%
+  pivot_wider(names_from = se)
+```
+
+
+### Total Letters Narrative
+
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes an `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all n_agency agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
+
+### Total Letters Predictions 
+
+- Figures: `figs/m-total-predicted-[1:4].png`
+
+
+```{r}
+#| label: "m-total-predicted"
+#| fig-cap: "m-total-predicted"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
+predicted <- predictions(m_total_cross,
+                         newdata = values)
+
+# Cross-sectional predictions
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+  ggchair() + 
+  labs(title = "Predicted Total Letters per Year\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted Total Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_total_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+  labs(title = "Predicted Total Letters Per Year\n(Cross-Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+# diff in diff 
+predicted <- predictions(m_total_dnd,
+                         newdata = values)
+
+
+# Predictions by chair and president's party
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
+  ggchair() + 
+  labs(title = "Predicted Total Letters per Year\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_total_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Total Letters Per Year\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+```
+
+
+## Constituency Service
+
+DV: Only letters coded as constituency service letters
+
+- Figures: `figs/m-con-[1:4].png`
+
+```{r}
+#| label: "m-con"
+#| fig-cap: "figs/m-con-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
+m_con_cross <-feglm (perYear_con ~ 
+                       chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_con_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_con_cross, horiz = T, drop = "(Intercept)") 
+
+
+
+# 2
+m_con_dnd <-feglm (perYear_con ~ 
+                     chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator",
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_con_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_con_dnd, horiz = T) 
+
+
+# 3
+m_con_2nd <-feglm (perYear_con ~ 
+                     chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_con_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_con_2nd, horiz = T) 
+
+
+# 4
+m_logcon_dnd <-feglm (log(perYear_con + 1) ~ 
+                        chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_logcon_dnd, horiz = T) 
+```
+
+### Constituency Service Table
+
+- Table: `tables/models_con.tex` (sans stars)
+
+```{r models_con}
+models_con <- list(
+  "(1)" = m_con_cross,
+  "(2)" = m_con_dnd,
+  "(3)" =  m_con_2nd,
+  "(4)" = m_logcon_dnd
+)
+
+
+modelsummary(models_con, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit) %>% 
+  row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_con, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
+  format_table() %>%
+  write_lines(file = here::here("docs", "tables", "models_con.tex") )
+
+beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+```
+
+
+### Constituency Service Narrative 
+
+Table `\ref{tab:models_con}` is identical to Table` \ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as constituency service. 
+Column 2 of Table `\ref{tab:models_con}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. 
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
+
+
+### Constituency Service Predictions 
+
+- Figures: `figs/m-con-predicted-[1:4].png`
+
+```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "Constituency Service", fig.subcap= c("1", "2", "3", "4")}
+#| label: "m-con-predicted"
+#| fig-cap: "m-con-predicted"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+
+# Cross-sectional predictions:
+predicted <- predictions(m_con_cross,
+                         newdata = values)
+
+
+# A plot by chair & presidents' party
+predicted %>%
+  mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
+  ggchair() + 
+  labs(title = "Predicted Constituency Service Letters per Year\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_con_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Constituency Service Letters Per Year\n(Cross Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+
+# Diff in diff predictions 
+predicted <- predictions(m_con_dnd,
+                         newdata = values)
+
+
+# diff in diff plot
+predicted %>%
+  mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
+  ggchair() + 
+  labs(title = "Predicted Constituency Service Letters per Year\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_con_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Constituency Service Letters Per Year\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+```
+
+
+
+## Policy Work
+
+Only using letters coded as constituent letters 
+
+- Figures: `figs/m-policy-[1:4].png`
+
+```{r m-policy}
+#| label: "m-policy"
+#| fig-cap: "figs/m-policy-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+m_policy_cross <-feglm (perYear_policy ~ 
+                          chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority +  presidents_party | Year_x_Agency,
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_policy_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_policy_cross, horiz = T, drop = "(Intercept)") 
+
+
+
+# 2
+m_policy_dnd <-feglm (perYear_policy ~ 
+                        chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator",
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_policy_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_policy_dnd, horiz = T) 
+
+
+# 3
+m_policy_2nd <-feglm (perYear_policy ~ 
+                        chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure %>% filter(survive == 1))
+
+if(testing){modelsummary(m_tenure_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+coefplot(m_policy_2nd, horiz = T) 
+
+
+# 4
+m_logcon_dnd <-feglm (log(perYear_policy + 1) ~ 
+                        chair + ranking_minority + prestigeR2 + 
+                    first + second + third + fourth + fifth + sixth + 
+                    majority + presidents_party | Year_x_Agency + Legislator_x_Agency, 
+                    cluster = "Legislator", 
+           data = dcounts_tenure)
+
+if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_logcon_dnd, horiz = T) 
+```
+
+### Policy Work Table
+
+- Table: `tables/models_policy.tex` (sans stars)
+
+```{r models_policy}
+models_policy <- list(
+  "(1)" = m_policy_cross,
+  "(2)" = m_policy_dnd,
+  "(3)" =  m_policy_2nd,
+  "(4)" = m_logcon_dnd
+)
+
+
+modelsummary(models_policy, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by legislator." )) %>% 
+  row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_policy, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_policy.tex") )
+```
+
+### Policy Work Predictions 
+
+- Figures: `figs/m-policy-predicted-[1:4].png`
+
+```{r}
+#| label: "m-policy-predicted"
+#| fig-cap: "m-policy-predicted"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+predicted <- predictions(m_policy_cross,
+                         newdata = values)
+
+# Cross-sectional predictions
+predicted %>%
+  mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
+  ggchair() +
+  labs(title = "Predicted Policy Letters per Year\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+# by tenure
+predicted <- predictions(m_policy_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Policy Letters Per Year\n(Cross Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+# Predictions for diff in diff plot 
+predicted <- predictions(m_policy_dnd,
+                         newdata = values)
+
+
+# diff in diff plot
+predicted %>%
+  mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
+  ggchair() +
+  labs(title = "Predicted Policy Letters per Year\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "")  
+
+# by tenure
+predicted <- predictions(m_policy_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+    mutate(estimate = estimate*n_agency, #predicted*n_agency,
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Policy Letters Per Year\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+```
+
+
+### Policy Work Narrative
+
+Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as policy work. 
+Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
+
+# Ratio 
+
+
+
+
+- Figures: `figs/m-ratio-[1:2].png`
+
+```{r}
+#| label: "m-ratio"
+#| fig-cap: "figs/m-ratio-[1:4].png"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+dcounts_ratio %<>% 
+  mutate(Legislator = icpsr,
+         Year = year) %>% 
+  filter(year >2006 & year < 2019)
+
+m_ratio_cross <- feglm(ratio ~
+  chair + ranking_minority + prestigeR2 + majority +  presidents_party + 
+  first + second + third + fourth + fifth + sixth | Year,
+cluster = "Legislator",
+data = dcounts_ratio)
+
+if(testing){modelsummary(m_ratio_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_ratio_cross, horiz = T, drop = "(Intercept)") 
+
+
+
+# Diff in diff
+m_ratio_dnd <- feglm(ratio ~
+  chair + ranking_minority + prestigeR2 + majority + presidents_party + 
+  first + second + third + fourth + fifth + sixth | 
+    Legislator + Year,
+cluster = "Legislator",
+data = dcounts_ratio)
+
+if(testing){modelsummary(m_ratio_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+
+coefplot(m_ratio_dnd, horiz = T) 
+```
+
+### Ratio Table
+
+- Table: `tables/models_ratio.tex` (sans stars)
+
+```{r models_ratio}
+models_ratio <- list(
+  "(1)" = m_ratio_cross,
+  "(2)" = m_ratio_dnd
+)
+
+rows <- tibble(
+  term = c("Dependent Variable", 
+           "Majority", 
+           "President's Party"),
+  `(1)` = c("Ratio", 
+            "✓", 
+            "✓"),
+  `(2)` =c("Ratio", 
+           "✓", 
+           "✓")
+)
+
+# all coef
+rows <- tibble(
+  term = c("Dependent Variable"),
+  `(1)` = c("Ratio"),
+  `(2)` =c("Ratio")
+)
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 20,21)
+
+# all coef
+attr(rows, 'position') <- c(0)
+
+
+modelsummary(models_ratio, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_ratio, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_ratio.tex") )
+
+beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+```
+
+### Ratio Narrative 
+
+Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. 
+We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96`, `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
+
+
+
+### Predictions 
+
+- Figures: `figs/m-ratio-predicted-[1:4].png`
+
+```{r}
+#| label: "m-ratio-predicted"
+#| fig-cap: "m-ratio-predicted"
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| fig-show: "hold"
+
+predicted <- predictions(m_ratio_cross,
+                         newdata = values)
+
+
+
+# Cross-sectional predictions
+predicted %>%
+ggchair() +
+  labs(title = "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
+       x = "",
+       y = "Predicted Ratio of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+# by tenure
+predicted <- predictions(m_ratio_cross,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+  labs(title = "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
+       x = "Years Serving in Congress",
+       y = "Predicted Ratio of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+# Predictions for diff in diff plot 
+predicted <- predictions(m_ratio_dnd,
+                         newdata = values)
+
+
+# diff in diff plot
+predicted %>%
+  ggchair() + 
+  labs(title = "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+       x = "",
+       y = "Predicted Ratio of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+
+# by tenure
+predicted <- predictions(m_ratio_dnd,
+                         newdata = values_tenure)
+
+predicted %>%
+ggtenure() +
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+  labs(title = "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+       x = "Years Serving in Congress",
+       y = "Predicted Ratio of\nConstituent to Policy Work",
+       fill = "",
+       color = "",
+       shape = "")
+```
