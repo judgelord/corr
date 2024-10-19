@@ -492,6 +492,9 @@ cm = c("chair" = "Committee Chair",
         "fifth_year" = "Fifth Year",
         "sixth_year" = "Sixth Year",
        "new_member" = " New Member", 
+       "new_senator" = " New Senator in Delegation",
+       "new_one" = " New Member in Delegation",
+              "new_proportion" = " New Proportion in Delegation",
        "new_member:same_party" = " New Member x Same Party", 
        "same_party" = "Same Party",
        "majority" = "Majority",
@@ -528,6 +531,7 @@ format_table <- . %>%
   str_replace("FE: Legislator.*x.*Agency", "Legislator x Agency FE") %>%
   str_replace("FE: Year.*x.*Agency", "Year x Agency FE") %>% 
   str_replace("FE: Year", "Year Fixed Effects") %>% 
+  str_replace("FE: District", "District Fixed Effects") %>% 
   str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
     str_replace_all("X|✓", "\\\\\\checkmark") %>% 
   # a random midrule appeared in the wrong place 
@@ -1662,26 +1666,22 @@ models_district <- list(
 
 rows <- tibble(
   term = c("Dependent Variable", 
-           #"District Fixed Effects", 
            "All Districts",
            "House Only",
            "Senate Only"),
-  `(1)` = c("Per District", 
-            #"", 
+  `(1)` = c("Per Year", 
             "✓", 
             "", 
             ""),
-  `(2)` =c("Per District", 
-           #"✓", 
+  `(2)` =c("Per Year", 
            "✓", 
             "", 
             ""),
-    `(3)` = c("Per District", 
-            #"✓", 
+    `(3)` = c("Per Year", 
             "", 
             "✓", 
             ""),
-  `(4)` =c("Per State", 
+  `(4)` =c("Per Year", 
            #"✓", 
            "", 
             "", 
@@ -1758,8 +1758,11 @@ modelsummary(models_district_party, # stars = T,
 
 ### Per District Narrative 
 
-Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification. 
-We estimate that turnover causes a district's constituency service to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification  from Equation `\ref{e:district1}`.
+In this specification, we see a large causal effect of a new member taking over: 
+electing a new member  causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+
+The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.  
 
 
 
@@ -1956,6 +1959,300 @@ predicted %>%
        fill = "",
        color = "Same Party",
        shape = "Same Party")
+```
+
+
+
+
+### Per District Predictions (House Only)
+
+- Figures: `figs/m-district-predicted-house-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-predicted-house-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-predicted-house"
+#| fig-show: "hold"
+
+
+
+
+# diff in diff plot
+
+predicted <- predictions(m_district_dnd_house,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+  labs(title = "Letters Per House District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_dnd_house_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+  labs(title = "Letters Per House District\n(Difference-in-differences)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+
+
+### Per District Predictions (Senate Only)
+
+- Figures: `figs/m-district-predicted-senate-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-predicted-senate-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-predicted-senate"
+#| fig-show: "hold"
+
+
+#  values for senate seats 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "49700",
+                        Year = "2017",
+                        District = "alabama_0",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
+# diff in diff plot
+
+predicted <- predictions(m_district_dnd_senate,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+  labs(title = "Letters Per Senator\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_dnd_senate_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+  labs(title = "Letters Per Senator\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted Letters Per Year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+# Spillover 
+
+This is a robustness check for an observable implication of demand-driven behavior. If variation in constituent demand drives variation in legislator behavior (specifically a preference for more senior members), then we should observe spillover effects on the rest of a delegation when an experience member is replaced with a new member. That is, if people demand more from expiernced members, people should redirect demand to the next most experienced member who represents them.
+
+
+
+
+```{r}
+
+# new IVs: new_senator, new_proportion, new_one
+
+dcounts_spillover <- dcounts_per_district %>% 
+  # FIRST, identify districts with new members 
+  group_by(state, Year) %>% 
+  # size of delegation 
+  add_count(name = "n_delegation") %>% 
+  mutate(
+    # new IVs:
+    new_senator = ifelse(chamber == "Senate" & new_member == 1, 1, NA), 
+    new_proportion = sum(new_member)/n_delegation, 
+    new_one = ifelse(new_member == 1, 1, NA)
+  ) %>% 
+  fill(new_senator, .direction = "updown") %>% 
+  fill(new_one, .direction = "updown") %>% 
+  mutate(new_senator =   replace_na(new_senator, 0),
+         new_one = replace_na(new_one, 0) 
+  ) %>% 
+  group_by(state, Year, chamber) %>% 
+  arrange(year, state) 
+
+  # THEN WE DROP ALL OF THE NEW MEMBERS 
+dcounts_spillover %<>%   filter(new_member == 0)  
+
+
+# # inspect 
+# dcounts_spillover |> select(Year, state, chamber, new_member, new_one, new_senator, new_proportion, perYear) |> ungroup() |>
+#   #filter(new_senator ==1) |>  
+#   #count(new_senator, new_member) |> 
+#   kablebox_long()
+#     
+
+```
+
+## Results
+
+<!-- NOT WORTH PLOTTING 
+### Spillover Coefficient Plots
+
+Figures: `figs/m-spillover-[1:3].png`
+
+1. diff-in-diff, at least one **new Senator** in the delegation effect
+2. diff-in-diff, **proportion** of new legislators in the delegation effect **on Senators**
+3. diff-in-diff, at least one **new legislator** in the delegation effect **on Senators**
+--> 
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-cap: "figs/m-spillover-[1:3].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#| out-width: "100%"
+#| label: "m-spillover"
+#| fig-show: "hold"
+
+
+
+
+m_spillover <- feglm(perYear ~
+  new_senator  | Year + District,
+cluster = "District",
+data = dcounts_spillover)
+
+# coefplot(m_spillover, horiz = T, drop = "(Intercept)", sub = "") 
+
+m_spillover_proportion <- feglm(perYear ~
+  new_proportion  | Year + District,
+cluster = "District",
+data = dcounts_spillover |> filter(chamber == "Senate"))
+
+# coefplot(m_spillover_proportion, horiz = T, drop = "(Intercept)", sub = "") 
+
+m_spillover_new_one <- feglm(perYear ~
+  new_one  | Year + District,
+cluster = "District",
+data = dcounts_spillover |> filter(chamber == "Senate"))
+
+# coefplot(m_spillover_new_one, horiz = T, drop = "(Intercept)", sub = "") 
+
+```
+
+### Spillover Effect Tables
+
+- Table: `tables/models_spillover.tex` (sans stars)
+
+```{r models_spillover}
+models_spillover <- list(
+  "(1)" = m_spillover,
+  "(2)" = m_spillover_proportion,
+  "(3)" = m_spillover_new_one
+)
+
+
+rows <- tibble(
+  term = c("Dependent Variable", 
+           "All Districts",
+           "Senate Only"),
+  `(1)` = c("Per Year", 
+            "✓", 
+            ""),
+  `(2)` =c("Per Year", 
+            "", 
+           "✓"),
+    `(3)` = c("Per Year", 
+            "", 
+            "✓")
+)
+
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 9:11)
+
+
+
+modelsummary(models_spillover, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+
+modelsummary(models_spillover, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_omit = gof_omit, 
+             coef_omit = coef_omit,
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_spillover.tex") )
+
 ```
 
 

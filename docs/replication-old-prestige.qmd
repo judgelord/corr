@@ -542,10 +542,10 @@ modelsummary(models_total,  # stars = T,
 
 ## Total Letters 
 
-- Figures: `figs/m-total-[1:4].png`
+- Figures: `figs/m-old-total-[1:4].png`
 
-```{r m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year", fig.subcap= c("1", "2", "3", "4")}
-#| label: "m-total"
+```{r}
+#| label: "m-old-total"
 #| fig-cap: "m-total-[1:4].png"
 #| layout-ncol: 2
 #| fig-height: 4.5
@@ -705,11 +705,11 @@ We estimate that the experience gained between the first and second year in Cong
 
 ### Total Letters Predictions 
 
-- Figures: `figs/m-total-predicted-[1:4].png`
+- Figures: `figs/m-old-total-predicted-[1:4].png`
 
 
 ```{r}
-#| label: "m-total-predicted"
+#| label: "m-old-total-predicted"
 #| fig-cap: "m-total-predicted"
 #| layout-ncol: 2
 #| fig-height: 4.5
@@ -792,11 +792,11 @@ ggtenure() +
 
 DV: Only letters coded as constituency service letters
 
-- Figures: `figs/m-con-[1:4].png`
+- Figures: `figs/m-old-con-[1:4].png`
 
 ```{r}
-#| label: "m-con"
-#| fig-cap: "figs/m-con-[1:4].png"
+#| label: "m-old-con"
+#| fig-cap: "figs/m-old-con-[1:4].png"
 #| layout-ncol: 2
 #| fig-height: 4.5
 #| fig-subcap: 
@@ -903,10 +903,10 @@ We estimate that the experience gained between the first and second year in Cong
 
 ### Constituency Service Predictions 
 
-- Figures: `figs/m-con-predicted-[1:4].png`
+- Figures: `figs/m-old-con-predicted-[1:4].png`
 
 ```{r m-con-predicted,  fig.show="hold", out.width="50%", fig.cap= "Constituency Service", fig.subcap= c("1", "2", "3", "4")}
-#| label: "m-con-predicted"
+#| label: "m-old-con-predicted"
 #| fig-cap: "m-con-predicted"
 #| layout-ncol: 2
 #| fig-height: 4.5
@@ -994,11 +994,11 @@ ggtenure() +
 
 Only using letters coded as constituent letters 
 
-- Figures: `figs/m-policy-[1:4].png`
+- Figures: `figs/m-old-policy-[1:4].png`
 
 ```{r m-policy}
-#| label: "m-policy"
-#| fig-cap: "figs/m-policy-[1:4].png"
+#| label: "m-old-policy"
+#| fig-cap: "figs/m-old-policy-[1:4].png"
 #| layout-ncol: 2
 #| fig-height: 4.5
 #| fig-subcap: 
@@ -1093,10 +1093,10 @@ modelsummary(models_policy, # stars = T,
 
 ### Policy Work Predictions 
 
-- Figures: `figs/m-policy-predicted-[1:4].png`
+- Figures: `figs/m-old-policy-predicted-[1:4].png`
 
 ```{r}
-#| label: "m-policy-predicted"
+#| label: "m-old-policy-predicted"
 #| fig-cap: "m-policy-predicted"
 #| layout-ncol: 2
 #| fig-height: 4.5
@@ -1189,11 +1189,11 @@ Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from 
 
 
 
-- Figures: `figs/m-ratio-[1:2].png`
+- Figures: `figs/m-old-ratio-[1:2].png`
 
 ```{r}
-#| label: "m-ratio"
-#| fig-cap: "figs/m-ratio-[1:4].png"
+#| label: "m-old-ratio"
+#| fig-cap: "figs/m-old-ratio-[1:4].png"
 #| layout-ncol: 2
 #| fig-height: 4.5
 #| fig-subcap: 
@@ -1302,10 +1302,10 @@ We estimate that becoming a committee chair causes the ratio of constituency ser
 
 ### Predictions 
 
-- Figures: `figs/m-ratio-predicted-[1:4].png`
+- Figures: `figs/m-old-ratio-predicted-[1:4].png`
 
 ```{r}
-#| label: "m-ratio-predicted"
+#| label: "m-old-ratio-predicted"
 #| fig-cap: "m-ratio-predicted"
 #| layout-ncol: 2
 #| fig-height: 4.5

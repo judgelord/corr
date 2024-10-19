@@ -309,7 +309,7 @@ Overall, when legislators contact federal agencies, they are helping constituent
 
 \begin{figure}[hbt!]
 \centering
-\caption{Legislator Requests to Federal Agencies by Type 2007-2018} \label{f:type2}
+\caption{Legislator Requests to Federal Agencies by Type 2007-2020} \label{f:type2}
 \includegraphics[width = .8\textwidth]{figs/data_by_type-tall-1}
 \end{figure}
 
@@ -394,7 +394,7 @@ Table \ref{t:models_total} shows estimates from Equation \ref{e:diff1}. All coef
 
 Model 1 (the first column of Table \ref{t:models_total}) shows a cross-sectional comparison across legislators. Legislators with more institutional power have higher rates of constituency service. %Model 1 excludes the legislator-agency and year-agency fixed effects but controls for majority status and being from the same party as the president.
 Committee chairs, ranking members, and members of prestige committees %and oversight committee members 
-provide substantially more constituency service than other legislators. However, these cross-sectional differences may be the result of other legislator characteristics. If legislators who are better at their jobs or exert more effort also receive more prestigious committee positions, then the estimates from Model 1 confound legislators' overall ability with their institutional position.   
+provide substantially more constituency service than other legislators. However, these cross-sectional differences may be the result of other legislator characteristics. If party leaders assign legislators who are better at their jobs or exert more effort to more prestigious committee positions, then the estimates from Model 1 confound legislators' overall ability with their institutional position.   
 
 To address potential confounding, Model 2 (Column 2 of Table \ref{t:models_total}) shows the difference-in-differences specification in Equation \ref{e:diff1}. Across all measures of institutional power, we find that acquiring power increases the number of requests that a given legislator makes. Becoming a committee chair causes an increase of  0.29 requests \textit{per agency} (95-percent confidence interval [0.12, 0.47]). Across all \input{tables/n_agencies}, this represents an increase of approximately 27 additional requests per year, 21.3\% of the average requests per year in our data. %There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of 0.16 contacts per agency, while joining a prestige committee causes a 0.29 per agency increase in the number of contacts a member of Congress makes.
 
@@ -404,7 +404,7 @@ To address potential confounding, Model 2 (Column 2 of Table \ref{t:models_total
 
 \begin{figure}[hbt!]
 \centering
-\caption{Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2018} \label{f:m-total-predicted}
+\caption{Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2020} \label{f:m-total-predicted}
 \includegraphics[width = .8\textwidth]{figs/m-total-predicted-3}
 \end{figure}
 
@@ -458,18 +458,30 @@ The first column of Table \ref{t:district2} provides a simple difference-in-mean
 
 
 \begin{table}[hbt!]
-\caption{The Effect of Electing New Members on a District's Level of Constituency Service} \label{t:district2}
+\caption{The Effect of Electing New Members on a District's Level of Constituency Service} \label{t:models_district}
 \begin{minipage}{\textwidth}
 \begin{center}
-\input{tables/DistrictTableTenure.tex}
+\input{tables/models_district.tex}
 \end{center}
 \footnotetext{This table shows how constituent service at the district level changes over time. Model 1 is a cross-sectional comparison excluding district and year fixed effects. The second column is a district x year difference in differences model. Column 3 focuses is the diff-in-diff subsetted to legislators who survive their first election.}
 \end{minipage}
 \end{table}
 
 
-To account for differences in district size, demographics, and demand for constituency service, the second column of Table \ref{t:district2} estimates the difference-in-differences from Equation \ref{e:district1}. In this specification, we see a large causal effect of a new member taking over: electing a new member causes a decrease of 36 constituency service requests (95-percent confidence interval [-44, -27]), a sizable change in the number of service requests representatives make on behalf of their new constituents. %TODO PERCENT CHANGE 
-The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive 12 fewer constituency service requests---still significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller in magnitude. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.  
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table \ref{t:models_district} provides the estimated effects from the difference-in-differences specification from Equation \ref{e:district1}. In this specification, we see a large causal effect of a new member taking over: electing a new member causes a district’s constituency service to decrease by about 40\%, or 25.29 letters per year (95-percent confidence interval [-16.27, -34.3 ]).
+
+The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon–new legislators providing substantially fewer requests–persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.
+
+\begin{figure}[hbt!]
+\centering
+\caption{Predicted Number of Letters Per District (2007-2020)} \label{f:m-district-predicted}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-1}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-3}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-house-1}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-senate-1}
+\end{figure}
+
+For each model in Table \ref{t:district2} Figure \ref{f:m-district-predicted} shows the predicted total number of letters per district per year by whether a district is represented by a new legislator (compared to counterfactuals where the same legislator has been serving for seven or more years).\footnote{Predictions are based on a district-year pair where (1) the district's average annual contacts equaled the overall average, (2) the district's number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.} 
 
 
 \paragraph{The Costs of Newly Elected Members} Taken together, our results demonstrate that new legislators provide much less constituency service. Legislators in their first year provide much less constituency service than they do in their second year and reach a stable level of service in their third year. Further, when districts elect a new representative or senator, they experience a sharp decrease in constituency service requests made on their behalf. Rather than experienced legislators forgetting about their districts, our evidence suggests that newly elected legislators experience substantial start-up costs and struggle to provide the levels of service that experienced legislators deliver to their constituents.  
@@ -510,12 +522,12 @@ We estimate that becoming a committee chair causes the ratio of constituency ser
 
 \begin{figure}[hbt!]
 \centering
-\caption{Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2018} \label{f:m-ratio-predicted}
+\caption{Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2020} \label{f:m-ratio-predicted}
 \includegraphics[width = .8\textwidth]{figs/m-ratio-predicted-3}
 \end{figure}
 
-Figure \ref{f:m-ratio-predicted} shows the predicted ratio of constituency service to policy work by committee chair status and whether that member has a co-partisan president or not (comparing predictions for counterfactuals where the same legislator did and did not receive a chairship in their sixth year). We estimate chair effects at year six as a plausible year at which a chair position would be acquired. %There is little change in priorities as members gain experience. However, 
-There is a significant difference between the same legislator as a committee chair and a counterfactual where they are not. Notably, whether a member has a co-partisan president does not cause a significant difference. 
+Figure \ref{f:m-ratio-predicted} shows the predicted ratio of constituency service to policy work by committee chair status and whether that member has a co-partisan president or not (comparing predictions for counterfactuals where the same legislator did and did not receive a chairship in their sixth year). We estimate chair effects at seven more years plausible year at which a chair position would be acquired. %There is little change in priorities as members gain experience. However, 
+There is a significant difference between the same legislator as a committee chair and a counterfactual where they are not. Notably, whether a member has a co-partisan president does not cause a significant difference. 
 
 
 
@@ -533,7 +545,7 @@ Figure \ref{f:stateSize} shows that this is the case: senators from larger state
 
 \begin{figure}
 \centering
-\caption{Average Number of Requests per Senator per Year 2007-2018 by State Population.} \label{f:stateSize}
+\caption{Average Number of Requests per Senator per Year 2007-2020 by State Population.} \label{f:stateSize}
 \includegraphics[width = \textwidth]{figs/pop-1}
 \end{figure}
 
@@ -550,14 +562,16 @@ Figure \ref{f:stateSize} shows that this is the case: senators from larger state
 
 Can variation in demand for constituency service explain why more experience and prestigious committee positions provide more constituency service? 
 
-We limited the influence in demand when assessing how power and experience affect the levels of constituency service above. For example, our empirical strategies in Sections \ref{s:prestige}, \ref{s:tenure}, and \ref{s:priority} account for static demand based on the characteristics of the district. %Districts composed of veterans might see more demand for assistance with the Veterans' Administration, or districts with older residents might have greater demand with the Social Security Administration. 
+We limited the influence in demand when assessing how power and experience affect the levels of constituency service above. For example, our empirical strategies in Sections \ref{s:prestige}%, \ref{s:tenure}, 
+and \ref{s:priority} account for static demand based on the characteristics of the district. %Districts composed of veterans might see more demand for assistance with the Veterans' Administration, or districts with older residents might have greater demand with the Social Security Administration. 
 Because our analyses include either legislator-agency or district fixed effects, we compare how the levels of constituency service change holding constant demand related to fixed district characteristics. Furthermore, %theories of legislator capacity suggest that legislators use their increased capacity and resources to solicit constituency service requests and thus generate demand. %Constituent
 demand driven by shifts in legislator behavior is a plausible part of the increased constituency service we attribute to increased capacity and resources.
 
 Yet, we might expect that a legislator's experience or power could affect constituency demand, even without legislators using their increased capacity and resources to generate demand. %, as implied by theories focusing on legislator capacity. 
-For example, constituents could direct more of their demands to legislators who are more powerful or who have served longer because they don't know or trust new representatives (holding constant legislators' levels of soliciting constituency service requests). This section investigates whether that additional constituent demand could plausibly explain our results. We find limited effects of legislator tenure on demand for constituency service. 
+For example, constituents could direct more of their demands to legislators who are more powerful or who have served longer because they don't know or trust new representatives (holding constant legislators' levels of soliciting constituency service requests). As a robustness check, this section investigates whether that additional constituent demand could plausibly explain our results. We find no evidence that the higher levels of constituency service of expierenced members are driven by higher constituent demand. 
 
-This section presents a more direct test of whether constituent demand explains variation in legislators' level of constituency service. If constituents shift demand to more experienced legislators, and such a shift could explain levels of constituency service, then we should observe such shifts when a new member is elected. Suppose constituents shift demand based on legislator experience (as required for shifts in demand to explain our results). In that case, they should redirect their demands away from newly elected legislators toward other representatives. The most natural target for the constituent demands would be one of the senators representing the constituent's state.
+%This section presents a more direct test of whether constituent demand explains variation in legislators' level of constituency service. 
+If constituents shift demand to more experienced legislators, and such a shift could explain levels of constituency service, then we should observe such shifts when a new member is elected. Suppose constituents shift demand based on legislator experience (as required for constituent demand to explain our results). In that case, they should redirect their demands away from newly elected legislators toward other representatives. The most plausable target for these constituent demands would be one of the senators representing the constituent's state. While less plausable, if a new senator replaces a more senior senator, demand could also shift to more senior members of the house.
 
 To assess whether constituents redirect demand toward other more experienced legislators when new members replace their more experienced incumbent representative, we examine how experienced legislators' levels of constituency service change in response to having new representatives in their state. We measure new members in the state in two ways: either the proportion of a state delegation that is new or an indicator of whether there is a new legislator in the delegation. As in Section \ref{s:prestigeresults}, we measure the number of requests a district's representative makes in a particular year. Using this dependent variable, we estimate a series of difference-in-differences regressions where the treatment is new members in the state (Table \ref{t:spill1}). We include district and year fixed effects. We restrict the regression to incumbent legislators only because we are interested in assessing whether constituents with new legislators direct their constituency service requests to these incumbents. 
    
@@ -566,12 +580,12 @@ To assess whether constituents redirect demand toward other more experienced leg
 
 \begin{minipage}{\textwidth}
 \begin{center}
-\input{tables/TableSpill.tex}
+\input{tables/models_spillover.tex}
 \end{center}
 \end{minipage}
 \end{table}
 
-The first two columns of Table \ref{t:spill1} are estimates for all incumbent legislators, and they show that neither the proportion of new members nor a new member significantly affects the level of constituency service that other legislators in the state provide. Columns 3 and 4 of Table \ref{t:spill1} reveal the same pattern when focusing on senators only. Across all four specifications, the estimated effects of new legislators do not approach statistical significance.  This consistent null finding regarding the impact of new legislators in a state delegation provides reassurance that there's little (to no) evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation. %%% Note: Ellie stopped here. 
+The first column of Table \ref{t:spill1} estimates the effect of an expierenced Senator being replaced by a new Senator for all other incumbent legislators, with no significant effect on the level of constituency service that other legislators in the state provide. Columns 2 and 3 of Table \ref{t:spill1} show (insignificant) negative effect when focusing on senators only. This consistent null finding regarding the impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation. %%% Note: Ellie stopped here. 
 
 
 

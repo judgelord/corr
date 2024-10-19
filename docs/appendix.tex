@@ -34,7 +34,7 @@ Small agencies and regional offices had staff search their email history or prov
 
 We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word ``rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations containing the word ``rulemaking" yet uncoded by hand to the ``Policy-Rulemaking" category.\footnote{Hundreds of scripts for processing the raw data from each agency and applying any inductively-generated regular-expression-based coding are available on our GitHub, along with each script's full revision history and all written communication with RAs about processing and coding these data.}
 
-We classify legislator requests into five categories: ``Individual Constituent Service'' (i.e., individual casework or advocacy on behalf of a group such as employees of a company), ``Nonprofit or Local Government Constituent Service'' (e.g., help with a grant application), ``Corporate Constituent Service'' (e.g., help with a specific government contract), ``Corporate Policy'' (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and ``General Policy'' (broader policy work related to legislation, budgets, or rulemaking). We define constituents broadly, so they need not be in a member's district. For example, Representative Tauscher of Wisconsin wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then ``given a chance to resolve issues" with their contract. We coded this case as ``Corporate Constituent Service,'' part of our broader measure of constituent service. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as ``Individual Constituent Service.'' We note these ``hard cases'' to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
+We classify legislator requests into five categories: ``Individual Constituent Service'' (i.e., individual casework or advocacy on behalf of a group such as employees of a company), ``Nonprofit or Local Government Constituent Service'' (e.g., help with a grant application), ``Corporate Constituent Service'' (e.g., help with a specific government contract), ``Corporate Policy'' (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and ``General Policy'' (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporatio). We define constituents broadly, so they need not be in a member's district. For example, Representative Tauscher of Wisconsin wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then ``given a chance to resolve issues" with their contract. We coded this case as ``Corporate Constituent Service,'' part of our broader measure of constituent service. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as ``Individual Constituent Service.'' We note these ``hard cases'' to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
 
 \subsection{Congressional Correspondence Log Coding Guidelines}
 
@@ -146,6 +146,7 @@ As with the analysis of committee prestige, the findings in Table \ref{t:models_
 \caption{The Effect Experience and Institutional Power on Constituency Service} \label{t:models_con}
 \begin{minipage}{\textwidth}
 \begin{center}
+\small
 \input{tables/models_con} % this one is from replication.rmd
 \end{center}
 \footnotetext{This table shows how the number of contacts hand-coded as constituecy service changes as legislators acquire more expiernece and power in Congress. Column 1 shows the average differences across committee assignments and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least 3 years in Congress. Column 4 takes the Log of the counts + 1 as the dependent variable.}
@@ -172,6 +173,7 @@ Column 2 of Table \ref{t:models_con} provides the estimated effects from the dif
 \caption{The Effect Experience and Institutional Power on Policy Work} \label{t:models_policy}
 \begin{minipage}{\textwidth}
 \begin{center}
+\small
 \input{tables/models_policy} % this one is from replication.rmd
 \end{center}
 \footnotetext{This table shows how the number of hand-coded policy work contacts changes as legislators acquire more experience and power in Congress. Column 1 shows the average differences across committee assignments and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least 3 years in Congress. Column 4 takes the Log of the counts + 1 as the dependent variable.}
@@ -191,5 +193,57 @@ Column 2 of Table \ref{t:models_policy} and Figure \ref{f:m-policy-predicted}) p
 \includegraphics[width = .48\textwidth]{figs/m-policy-predicted-4} 
 
 \end{figure}
+
+\subsection{Within-District Models with Partisan Turnover} \label{s:appendix_models_district}
+
+
+The main district-level models in Table \ref{t:models_district} of the paper focus on estimating the effect of legislator experience by leveraging turnover within districts. We compare the service that a district receives before and after electing a new legislator and in the following years as legislators gain experience in office.
+
+As a robustness check, we replicate our within-district results using a subset of district-year-count observations where turnover in a district allows us to assess the partisanship of the prior member holding that seat. We interact an indicator of whether the prior member was of the ``same party" with all other indicators (i.e., whether the member is new, serving in years 1-6, or serving longer than 6 years). We compare the service that a district receives before and after electing a new legislator and in the following years, accounting for whether that member is of the same party. However, a structural constraint of the data means that this robustness check is limited to observations where turnover within a redistricting cycle gives us a measure of whether the legislator replaced a member of the same party or of another party. 
+
+The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do not count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
+
+Many NAs exist for the ``same party" variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE (``0") for ``new member" and have no value for ``same party." Other districts are NA until there is turnover. Thus, adding ``same party" causes significant data loss due to NAs. 
+Specifically, we go from \textbf{7666 observations in Table \ref{t:models_district} to 2822 observations in Table \ref{t:models_district_party} when we include ``same party" in the models below.}
+
+To measure turnover in the Senate where ``districts" have two members, we code ``same party" as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the ``same party" is FALSE. If there are two Democrats and a Democrat is elected, the ``same party" is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, ``same party" is FALSE. As per the VoteView convention, Senate delegations are District ``0" (e.g., ``alabama\_0"). Split Senate delegations appear as ``Democratic Party;Republican Party" in the table below.
+
+now on the number of contacts made from the representative of a particular state or district $i$ in a year $t$, $Y_{it}$. We again use a difference-in-differences approach to account for district-specific characteristics and over-time changes in how legislators provide constituency service. Specifically, we estimate regressions of the form: 
+
+
+\begin{eqnarray}
+Y_{it} & = & \beta_{1}\text{New Member}_{it}*\text{Same Party} + \sum_{s = 2}^{6} \beta_{s} \text{tenure}_{s[it]}*\text{Same Party} + \gamma_{i} + \delta_{t} + \epsilon_{it} \label{e:district1party} 
+\end{eqnarray}
+
+$\gamma_{i}$ is a district-specific fixed effect that accounts for each district's particular demographic characteristics, along with the levels of demand from district residents. $\delta_{t}$ is a year fixed effect that controls for common shocks. Our key result of interest, $\beta_{1}$, is the effect of a district electing a new representative. To understand how the effect of a new representative changes over time, we estimate district-level differences for a legislator's second ($\beta_{2}$) through sixth-year ($\beta_{6})$.\footnote{It is worth noting that this treatment is fundamentally different for a district than within-legislator variation. In each election, each district allows its incumbent to acquire another term or replaces her. This differs from within-legislator comparisons because legislators can only acquire more tenure or leave the chamber. A within-legislator analysis estimates the service provided by incumbents with more or less experience; it cannot estimate the impact of the choice of an incumbent or a new representative incumbent.} % TODO THIS FOOTNOTE IS REPETITIVE.
+
+The first column of Table \ref{t:models_district_party} provides a simple difference-in-means for districts represented by a new member and legislators in their first six years in office. Districts represented by new legislators receive substantially lower levels of constituency service. On average, districts with a new representative have  fewer constituency service requests made on their behalf. The magnitude of this difference shrinks for districts represented by legislators in their second year It then reaches a relatively stable number for districts represented by legislators in their third through sixth years. %, with some slight evidence that legislators make more contacts in election years---the even-numbered years of tenure for the vast majority of legislators in our sample. 
+
+
+
+\begin{table}[hbt!]
+\caption{The Effect of Electing New Members on a District's Level of Constituency Service} \label{t:models_district_party}
+\begin{minipage}{\textwidth}
+\begin{center}
+\small
+\input{tables/models_district_party.tex}
+\end{center}
+\footnotetext{This table shows how constituent service at the district level changes over time. Model 1 is a cross-sectional comparison excluding district and year fixed effects. The second column is a district x year difference in differences model. Column 3 focuses is the diff-in-diff subsetted to legislators who survive their first election.}
+\end{minipage}
+\end{table}
+
+
+To account for differences in district size, demographics, and demand for constituency service, the second column of Table \ref{t:models_district_party} estimates the difference-in-differences from Equation \ref{e:district1party}. In this specification, we see a large causal effect of a new member taking over: electing a new member causes a decrease in constituency service requests.
+The effect of electing a new representative, however, dissipates quickly. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately, though results for the House are not stastically signicant in this restricted model. In short, new legislators make fewer contacts for their constituents than established legislators.  
+
+\begin{figure}[hbt!]
+\centering
+\caption{Predicted Number of Total Letters per District) 2007-2018} \label{f:m-district-predicted-party}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-2}
+\includegraphics[width = .49\textwidth]{figs/m-district-predicted-4}
+\end{figure}
+
+Despite the increased uncertainty caused by the much smaller (and non-random) sample of districts where turnover allows us to measure the new “same party” variable, our main results (direction, statistical significance, and magnitude of effects) are largely the same: legislators contact the bureaucracy significantly less in their first two years in office, even holding district constant. Because the new models contain a large number of interaction terms, we present predictions at modal values in Figure \ref{f:m-district-predicted-party}.
+Figure \ref{f:m-district-predicted-party} shows the predicted total number of letters per district per year by whether a district is represented by a new legislator and whether that legislator replaced a member of their same party (compared to counterfactuals where the same legislator has been serving for more than six years).\footnote{Predictions are based on a district-year pair where (1) the district's average annual contacts equaled the overall average, (2) the district's number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.} 
 
 
