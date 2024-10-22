@@ -1,35 +1,44 @@
-\begin{tabular}[t]{lcc}
+
+
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={ Robust standard errors in parentheses, clustered by legislator.},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]},
+column{1}={halign=l,},
+column{2}={halign=c,},
+column{3}={halign=c,},
+hline{25}={1,2,3}{solid, 0.05em, black},
+}                     %% tabularray inner close
 \toprule
-  & (1) & (2)\\
-\midrule
-\textbf{Dependent Variable} & \textbf{Ratio} & \textbf{Ratio}\\
-\midrule
-Committee Chair & \num{-0.073} & \num{-0.082}\\
- & (\num{0.016}) & (\num{0.017})\\
-Ranking Member & \num{-0.008} & \num{-0.041}\\
- & (\num{0.013}) & (\num{0.014})\\
-Prestige Committee & \num{0.024} & \num{-0.008}\\
- & (\num{0.008}) & \vphantom{1} (\num{0.009})\\
-First Year & \num{0.055} & \num{0.036}\\
- & (\num{0.010}) & (\num{0.014})\\
-Second Year & \num{0.055} & \num{0.036}\\
- & (\num{0.008}) & (\num{0.013})\\
-Third Year & \num{0.068} & \num{0.043}\\
- & (\num{0.009}) & (\num{0.012})\\
-Fourth Year & \num{0.030} & \num{0.006}\\
- & (\num{0.009}) & (\num{0.011})\\
-Fifth Year & \num{0.032} & \num{0.012}\\
- & (\num{0.010}) & (\num{0.011})\\
-Sixth Year & \num{0.029} & \num{0.010}\\
- & (\num{0.008}) & (\num{0.009})\\
-Majority & \num{0.017} & \num{-0.003}\\
- & (\num{0.006}) & (\num{0.006})\\
-President's Party & \num{-0.024} & \num{-0.009}\\
- & (\num{0.005}) & (\num{0.004})\\
-\midrule
-Observations & \num{6441} & \num{6441}\\
-Year Fixed Effects & \checkmark & \checkmark\\
-Legislator Fixed Effects &  & \checkmark\\
+& (1) & (2) \\ \midrule %% TinyTableHeader
+Dependent Variable & Ratio          & Ratio          \\
+Committee Chair    & \num{-0.055}  & \num{-0.070}  \\
+& (\num{0.016}) & (\num{0.019}) \\
+Ranking Member     & \num{0.001}   & \num{-0.030}  \\
+& (\num{0.015}) & (\num{0.017}) \\
+Prestige Committee & \num{0.016}   & \num{-0.009}  \\
+& (\num{0.011}) & (\num{0.009}) \\
+First Year         & \num{0.059}   & \num{0.036}   \\
+& (\num{0.011}) & (\num{0.016}) \\
+Second Year        & \num{0.060}   & \num{0.038}   \\
+& (\num{0.011}) & (\num{0.015}) \\
+Third Year         & \num{0.063}   & \num{0.037}   \\
+& (\num{0.011}) & (\num{0.013}) \\
+Fourth Year        & \num{0.037}   & \num{0.011}   \\
+& (\num{0.011}) & (\num{0.013}) \\
+Fifth Year         & \num{0.036}   & \num{0.012}   \\
+& (\num{0.012}) & (\num{0.013}) \\
+Sixth Year         & \num{0.040}   & \num{0.017}   \\
+& (\num{0.010}) & (\num{0.010}) \\
+Majority           & \num{0.012}   & \num{-0.003}  \\
+& (\num{0.007}) & (\num{0.007}) \\
+President's Party  & \num{-0.029}  & \num{-0.006}  \\
+& (\num{0.007}) & (\num{0.005}) \\
+Observations           & \num{26134}   & \num{26134}   \\
+Year Fixed Effects           & \checkmark              & \checkmark              \\
+Legislator Fixed Effects     &                & \checkmark              \\
 \bottomrule
-\multicolumn{3}{l}{\rule{0pt}{1em}\footnotesize Robust standard errors in parentheses, clustered by legislator.}\\
-\end{tabular}
+\end{talltblr}
+

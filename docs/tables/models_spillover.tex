@@ -1,0 +1,31 @@
+
+
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={ Robust standard errors in parentheses, clustered by District.},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]},
+column{1}={halign=l,},
+column{2}={halign=c,},
+column{3}={halign=c,},
+column{4}={halign=c,},
+hline{9}={1,2,3,4}{solid, 0.05em, black},
+}                     %% tabularray inner close
+\toprule
+& (1) & (2) & (3) \\ \midrule %% TinyTableHeader
+Dependent Variable            & Per Year       & Per Year        & Per Year       \\
+New Senator in Delegation    & \num{2.202}   &                 &                \\
+& (\num{2.498}) &                 &                \\
+New Member in Delegation     &                &                 & \num{-15.049} \\
+&                &                 & (\num{6.909}) \\
+New Proportion in Delegation &                & \num{-23.426}  &                \\
+&                & (\num{18.722}) &                \\
+Observations                      & \num{6224}    & \num{1379}     & \num{1379}    \\
+All Districts                 & \checkmark              &                 &                \\
+Chamber                   &    House            & Senate              & Senate             \\
+Year Fixed Effects                      & \checkmark              & \checkmark               & \checkmark              \\
+District Fixed Effects                  & \checkmark              & \checkmark               & \checkmark              \\
+\bottomrule
+\end{talltblr}
+
