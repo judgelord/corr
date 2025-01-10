@@ -1,40 +1,44 @@
 ---
+journal:
+  blinded: false
+wordcount: 9616
 format:
   #html
-  docx
-  # cmc-article-pdf:
-  #   fig-pos: 'hb'
-  #   fig-env: "figure"
-  #   keep-tex: false
-  #   filters: [citeproc.lua, wordcount.lua]
-  #   include-in-header:
-  #       text: |
-  #         \usepackage{tabularray}
+  #docx: default
+  # pdf: default
+   cmc-article-pdf:
+    fig-pos: 'hb'
+    fig-env: "figure"
+    keep-tex: true
+    filters: [citeproc.lua, wordcount.lua]
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
 subtitle: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
-runningtitle: The Environmental Justice Issue Frame
-runningauthor: Judge-Lord
-author:
-  - name: Devin Judge-Lord
-    affiliations:  
-     - name: University of Michigan
-       department: Ford School of Public Policy
-    email: "judgelor@umich.edu"
-    attributes:
-      corresponding: true
-  - name: Eleanor Neff Powell
-    affiliations:
-     - name: University of Wisconsin-Madison
-  - name: Justin Grimmer
-    affiliations:
-     - name: Stanford University
-thanks: "I will be grateful for any feedback on this draft: [judgelor@umich.edu](mailto:judgelor@umich.edu). The most recent draft is here: [judgelord.github.io/correspondence/corr.pdf](https://judgelord.github.io/correspondence/corr.pdf). Research assistance from Hope Karnopp ... and funding from the ...."
+runningtitle: Shifting Priorities and Capacity
+runningauthor: Judge-Lord, Powell, & Grimmer
+# author:
+#   - name: Devin Judge-Lord
+#     affiliations:
+#      - name: University of Michigan
+#        department: Ford School of Public Policy
+#     email: "judgelor@umich.edu"
+#     attributes:
+#       corresponding: true
+#   - name: Eleanor Neff Powell
+#     affiliations:
+#      - name: University of Wisconsin-Madison
+#   - name: Justin Grimmer
+#     affiliations:
+#      - name: Stanford University
+thanks: |
+ We will be grateful for any feedback on this draft: [judgelor@umich.edu](mailto:judgelor@umich.edu). The most recent draft is here: [judgelord.github.io/correspondence/corr.pdf](https://judgelord.github.io/correspondence/corr.pdf). Research assistance from Hope Karnopp ... and funding from the ...."
 date: today
 abstract: |
- When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of \input{tables/n2007-2020} legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
-linestretch: 1.5
+ When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of 611,239 legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
+keywords: "Congress, constituency service, capacity"
+#linestretch: 1.5
 indent: true
 number-sections: true
+number-depth: 2
 cap-location: top
 bibliography: "docs/congress2019.bib"
 execute:
@@ -42,12 +46,7 @@ execute:
   cache: false
   message: false
   warning: false
-journal:
-  blinded: false
-wordcount: 9616
 ---
-
-Word Count: 9616
 
 # Introduction
 
@@ -361,31 +360,43 @@ countervailing effect of shifting priorities (any outcome in the upper,
 darker-shaded region of @fig-2x2, Subfigure (d), including the scenario shown in
 Subfigure (c)).
 
+                                            
+<!--TABLE 1. --> 
+
 ::: {#tbl-theory}
 
-+----------:+:----------+:--------:+
-|                                    |  Sufficient Increase in Capacity                                     | Insufficient Change in Capacity |
-+-----------+-----------+----------+
-| Priority Shifts                    |  Level of Service: 0 or $\uparrow$                                   | Level of Service: $\downarrow$                                  |
-| to Policy Work                     |  Ratio of $\frac{\textrm{Policy}}{\textrm{Service}}$: $\uparrow$     | Ratio of $\frac{\textrm{Policy}}{\textrm{Service}}$: $\uparrow$ | 
-+-----------+-----------+----------+
-| No Change                          | Level of Service: $\uparrow$                                         | Level of Service: $0$.                                          |
-| in Priorities                      | Ratio of $\frac{\textrm{Policy}}{\textrm{Service}}$: $0$.            | Ratio of $\frac{\textrm{Policy}}{\textrm{Service}}$: $0$        | 
-+-----------+-----------+----------+
++:---------------------------+:------------------------------------------------------------------+:-------------------------------------------------------------------+
+|                            | Sufficient increase in capacity                                   | Insufficient change in capacity                                    |
++----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
+| Priority shifts            | - Level of Service: $0$ or $\uparrow$                             | - Level of Service: $\downarrow$                                   |
+| to policy work             | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$ | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$  | 
++----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
+| No change                  | - Level of service: $\uparrow$                                    | - Level of service: $0$                                            |
+| in priorities              | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$        | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$         | 
++----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
                                     
               
-                                            
-                                                                
-  : Divergent Predictions for the Change in the Levels of Constituency
-  Service and Policy Work as Legislators Gain Experience and Power
+Divergent Predictions for the Change in the Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power
 :::
 
 
 ```{r}
 #| fig-cap: "The Countervailing Effects of Increasing Capacity and Shifting Priorities on Constituency Service"
 #| label: fig-2x2
+#| fig-subcap: 
+#|   - "Increasing Capacity"
+#|   - "Shifting Priorities"
+#|   - "Increasing Capacity + Shifting Priorities"
+#|   - "Increasing Capacity + Shifting Priorities"
+#| layout-ncol: 2
+#| out-width: "100%"
+
 
 knitr::include_graphics("docs/figs/2x2-fig-1.png")
+knitr::include_graphics("docs/figs/2x2-fig-2.png")
+knitr::include_graphics("docs/figs/2x2-fig-3.png")
+knitr::include_graphics("docs/figs/2x2-fig-4.png")
+
 ```
 
 @fig-2x2 formalizes the potential outcomes implied by our theory to clarify the
@@ -434,13 +445,13 @@ office and institutional position.
 Of course, constituent demands inform which agencies legislators
 contact. For example, some districts contain groups---such as veterans
 or social security recipients---who request particular kinds of
-constituency service from their representatives. **Our research design
+constituency service from their representatives. Our research design
 limits the influence of this kind of variation in constituent demand by
 examining how an individual legislator's rates of contact change
 *within* each agency. By looking at the same member representing the
 same constituents in the same district to the same agency over time, we
 limit the extent to which differing constituent populations could
-interfere with our results.**
+interfere with our results.
 
 Legislators may also use their official resources to encourage requests
 from constituents for help navigating the federal bureaucracy through
@@ -693,11 +704,28 @@ coefficients represent the average additional requests per year *per
 agency*; per legislator per year effects are simply these coefficients
 times (the number of agencies).
 
-:::: center
-::: {#tbl-models-total}
-INSERT TABLE
-:::
-::::
+
+```{r}
+#| label: tbl-models-total
+#| tbl-cap: "The Effect of Institutional Power on Constituency Service"
+
+load(here::here("models", "models_total.Rdata"))
+modelsummary::modelsummary(models_total,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             ##align="ldddd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             coef_omit = coef_omit,
+             output = "tinytable",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+    #tinytable::style_tt(i = 1:2, align = "lcccc") |> 
+    # tinytable::format_tt(quarto = T) #|>
+    # digits = 2,
+    # fontsize = 10,
+    # num_mark_big = ",") |>
+    tinytable::style_tt(i = 1, bold = T, line = "b")# , align = "c")
+```
 
 Model 1 (the first column of @tbl-models-total
 shows a cross-sectional comparison across legislators. Legislators with
@@ -722,6 +750,7 @@ represents an increase of approximately 27 additional requests per year,
 ```{r}
 #| fig-cap: "Predicted Number of Total Letters (Within Legislator Difference inDifferences) 2007-2020"
 #| label: fig-m-total-predicted
+
 knitr::include_graphics("docs/figs/m-total-predicted-3.png")
 ```
 
@@ -781,7 +810,9 @@ year and Johnson's first five years in the Senate.
 
 ```{r}
 #| fig-cap: "The Effect of Electing New Legislators in Wisconsin"
-#| fig-subcap: c("(a)", "(b)")
+#| fig-subcap: 
+#|   - ""
+#|   - ""
 #| label: fig-wi
 
 knitr::include_graphics("docs/figs/districts/(WI-07).png")
@@ -809,6 +840,28 @@ $\beta_{1}$, is the effect of a district electing a new representative.
 To understand how the effect of a new representative changes over time,
 we estimate district-level differences for a legislator's second
 ($\beta_{2}$) through sixth-year ($\beta_{6})$.[^10]
+
+```{r}
+#| label: tbl-models-district
+#| tbl-cap: "The Effect of Electing a New Representative on Constituency Service"
+
+load(here::here("models", "models_district.Rdata"))
+modelsummary::modelsummary(models_district,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             #align="ldddd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by district")) |> 
+    # tinytable::format_tt(quarto = T,
+    # digits = 2,
+    # fontsize = 10,
+    # num_mark_big = ",") |>
+    tinytable::style_tt(i = 1, bold = T, line = "b")
+```
+
 
 The first column of @tbl-models-district provides cross-sectional differences
 across districts represented by a new member and legislators in their
@@ -877,12 +930,26 @@ the number of constituency service requests per legislator per year.
 These models test whether legislators' priorities shift among goals as
 they gain experience and power.
 
-:::: center
-::: {#tbl-models-ratio}
-     INSERT TABLE 
-    
-:::
-::::
+```{r}
+#| label: tbl-models-ratio
+#| tbl-cap: "The Effect of Institutional Power on the Ratio of Policy Work to Constituency Service"
+
+load(here::here("models", "models_ratio.Rdata"))
+modelsummary::modelsummary(models_ratio,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             #align="ldd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+    # tinytable::format_tt(quarto = T,
+    # digits = 2,
+    # fontsize = 10,
+    # num_mark_big = ",") |>
+    tinytable::style_tt(i = 1, bold = T, line = "b")
+```
 
 @tbl-models-ratio shows that legislators increase the ratio of
 policy work to constituency service as they obtain more prestigious
@@ -1020,19 +1087,37 @@ state delegation that is new or an indicator of whether there is a new
 legislator (House or Senate) in the delegation. As in @sec-prestigeresults, we measure the number of requests a
 district's representative makes in a particular year. Using this
 dependent variable, we estimate a series of difference-in-differences
-regressions where the treatment is new members in the state @tbl-spill1.
+regressions where the treatment is new members in the state @tbl-models-spillover.
 We include district and year fixed effects. We restrict the regression
 to incumbent legislators only because we are interested in assessing
 whether constituents with new legislators direct their constituency
 service requests to these incumbents.
 
-::: center
-:::
+```{r}
+#| label: tbl-models-spillover
+#| tbl-cap: "Spillover Redirected to Expierenced Legislators when a New Legislators is Elected"
 
-The first column of @tbl-spill1 estimates the effect of an experienced Senator
+load(here::here("models", "models_spillover.Rdata"))
+modelsummary::modelsummary(models_spillover,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             #align="lddd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit,
+             notes = list("Robust standard errors in parentheses, clustered by district")) |> 
+    # tinytable::format_tt(quarto = T,
+    # digits = 2,
+    # fontsize = 10,
+    # num_mark_big = ",") |>
+    tinytable::style_tt(i = 1, bold = T, line = "b")
+```
+
+The first column of @tbl-models-spillover estimates the effect of an experienced Senator
 being replaced by a new Senator for all other incumbent legislators,
 with no significant effect on the level of constituency service that
-other legislators in the state provide. Columns 2 and 3 of @tbl-spill1
+other legislators in the state provide. Columns 2 and 3 of @tbl-models-spillover
 show (insignificant) negative effect when focusing on senators only.
 This consistent null finding regarding the impact of new legislators in
 a state delegation provides reassurance that there is no evidence of
@@ -1177,6 +1262,8 @@ increases capacity, we also show that legislators make fewer service
 requests at the start of their careers and that new legislators make
 substantially fewer service requests than their more experienced
 colleagues.
+
+# References {-}
 
 [^1]: Assistant Professor, University of Michigan
 

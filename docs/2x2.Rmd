@@ -296,7 +296,7 @@ ggplot() +
   theme(legend.position = "",          panel.grid.minor = element_blank() )
 
 
-(capacity + priority)  / (both + regions) + plot_annotation(tag_levels = '1')
+(capacity + priority)  / (both + regions) + plot_annotation(tag_levels = 'a')
 
 
 ```

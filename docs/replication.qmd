@@ -22,7 +22,7 @@ library(here)
 library(ggrepel)
 
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = FALSE, 
+                      cache = TRUE, # CHACHE 
                       fig.width=4.5, 
                       fig.height = 3.5,
                       split = T,
@@ -41,8 +41,16 @@ knit_hooks$set(inline = function(x) {
 })
 
 
-# plot color defaults 
-library(ggplot2); theme_set(theme_bw())
+# plot defaults 
+library(ggplot2); theme_set(
+      theme_minimal() + 
+        theme(
+          # FOR AJPS
+          panel.grid = element_blank(),
+          # END FOR AJPS 
+          panel.border  = element_blank(),
+          panel.grid.major.x = element_blank())
+                            )
   options(
     ggplot2.continuous.color = "cividis",
     ggplot2.continuous.fill = "cividis"
@@ -65,6 +73,235 @@ kablebox_long <- . %>%
   kable_styling() %>% 
   scroll_box(height = "500px")
 ```
+
+
+# Theory 
+
+
+
+```{r 2x2-fig, fig.show="hold", echo=FALSE}
+#| label: 2x2-fig
+#| fig-width: 3.6
+#| fig-height: 3.6
+
+
+# CAPACITY
+capacity <- tibble::tibble(
+  priority = .2,
+  capacity = c(100, NA, NA, NA, NA, 150)
+  ) %>% 
+  ggplot() +
+  aes(x = capacity*priority,
+      y = capacity*(1-priority) ,
+      label = str_c(capacity*priority, ", ", capacity*(1-priority))) + 
+   geom_segment(x = c(0,0,0,0,0,0),
+                 xend = c(100, 110, 120,130,140, 150),
+                 y = c(100, 110, 120,130,140, 150),
+                 yend = c(0,0,0,0,0,0),
+              linetype = 1,
+              alpha = c(.1,.2,.4,.6,.8,1)) + 
+    geom_point(alpha = c(.5, 1,1,1,1,1) ) +
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 148*.2, 
+           yend = 148*.8,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  annotate("text", 
+          label = "50% increase in capacity while maintaining\na 80:20 ratio of constituency service to\npolicy work (80% constitunecy service)", 
+           x = 150*.2, 
+           y = 150*.8,
+          hjust = -.01,
+          vjust = -.1,
+          color = "blue",
+          size = 3) +
+  geom_label(x = 0, 
+             y = c(100, 110, 120,130,140, 150), 
+             label = c("1x", NA, NA, NA, NA, "1.5x"),
+             size = 3,
+             hjust = .44 ) + 
+    scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  labs(title = "",
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
+  theme(legend.position = "", 
+        panel.grid.minor = element_blank() )
+
+
+
+
+# PRIORITY 
+priority <- tibble::tibble(
+  priority = c(.2, .4),
+  capacity = c(100) 
+  ) %>% 
+  mutate(
+    x = capacity*priority,
+      y = capacity*(1-priority)
+  ) %>% 
+  ggplot() +
+  aes(x = x,
+      y = y ) + 
+        geom_segment(x = c(0),
+                 xend = c(100),
+                 y = c(100),
+                 yend = c(0),
+              linetype = 1,
+              alpha = c(.1)) +
+   stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .1) +
+     stat_function(fun =  ~ 3.5*.x , geom = "line", linetype = 2, alpha = .2) +
+   stat_function(fun =  ~ 3*.x , geom = "line", linetype = 2, alpha = .4) +
+   stat_function(fun =  ~ 2.5*.x , geom = "line", linetype = 2, alpha = .6) +
+   stat_function(fun =  ~ 2*.x , geom = "line", linetype = 2, alpha = .8) +
+   stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
+
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 100*.4, 
+           yend = 100*.6,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  geom_point(alpha = c(.5,1) ) +
+  annotate("text", 
+          label = "Shifting priority toward policy work\nwithout increasing capacity", 
+           x = 100*.4, 
+           y = 100*.6,
+          hjust = -.01,
+          vjust = 1.1,
+          color = "blue",
+          size = 3) +
+  geom_label(aes(x = 150*c(.24, .66),
+                 y = 150 ),
+             label = c("80:20", "60:40") ,
+          size = 3) + 
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  #scale_color_gradient(low = "grey", high = "black") +
+  labs(title = "",
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") +
+  theme(legend.position = "",         
+        #panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank() )
+
+
+
+# BOTH  
+both <- tibble::tibble(
+  priority = c(.2, .4),
+  capacity = c(100, 150) 
+  ) %>% 
+  mutate(
+    x = capacity*priority,
+      y = capacity*(1-priority)
+  ) %>% 
+  ggplot() +
+  aes(x = x,
+      y = y ) + 
+      geom_segment(x = c(0, 0),
+                 xend = c(100,150),
+                 y = c(100, 150),
+                 yend = c(0,0),
+              linetype = 1,
+              alpha = c(.1, 1)) +
+   stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .1) +
+   stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
+  geom_label(aes(x = 150*c(.24, .66),
+                 y = 150 ),
+             label = c("80:20", "60:40") ,
+          size = 3) + 
+  geom_segment(x = 100*.2, 
+           y = 100*.8,
+           xend = 148*.4, 
+           yend = 149*.6,
+           arrow = arrow(type = "closed", length = unit(.1, "in")),
+           color = "blue") + 
+  geom_point(alpha = c(.5,1) ) +
+  annotate("text", 
+          label = "Shifting priority toward policy work\n AND increasing capacity by 50%", 
+           x = 150*.4, 
+           y = 150*.6,
+          hjust = .06,
+          vjust = -.5,
+          color = "blue",
+          size = 3) +
+    geom_label(x = 0, y = c(100, 150), 
+             label = c("1x", "1.5x"),
+             size = 3,hjust = .44) + 
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  #scale_color_gradient(low = "grey", high = "black") +
+  labs(title = "",
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
+  theme(legend.position = "",          panel.grid.minor = element_blank() )
+
+
+
+# Regions   
+more_c <- tibble(x = c(0, 20, 37.5,0),
+       y = c(100, 80, 150,150) ) %>% 
+  mutate(label = "A")
+
+less_c <- tibble(x = c(0, 20, 0,0),
+       y = c(0, 80, 80, 0) ) %>% 
+  mutate(label = "D")
+
+
+more_p <- tibble(x = c(19.8, 37.5, 150, 150),
+       y = c(79, 150, 150, 79) ) %>% 
+  mutate(label = "B")
+
+less_p <- tibble(x = c(100, 21, 150, 150),
+       y = c(0, 79, 79, 0) ) %>% 
+  mutate(label = "C")
+
+
+# REGIONS 
+regions <- more_p %>%
+ full_join( less_p) %>% #full_join(more_c) %>% 
+  group_by(label) %>% 
+  mutate(mean_x = mean(x),
+         mean_y = mean(y),
+         name = label %>% 
+           str_replace("B", "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work.") %>% 
+           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service.")) %>% 
+  ungroup() %>% 
+ggplot() +
+  aes(x = x,
+      y = y,
+      fill = label,
+      label = name) + 
+  geom_polygon( alpha = .5) + 
+    geom_segment(x = 0,
+                 xend = 100,
+                 y = 100,
+                 yend = 0,
+              linetype = 1,
+              alpha = c(.01)) +
+     stat_function(fun =  ~ 4*.x , geom = "line", linetype = 2, alpha = .1) +
+  geom_point(x = 20, y = 80, alpha = .5, color = "grey") + 
+  scale_fill_grey() +
+  scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
+  geom_text(aes(x = mean_x, y = mean_y), check_overlap = T,
+          size = 3,
+          vjust =.5) + 
+  labs(title = "",
+       x = "Volume of Policy Work",
+       y = "Volume of Constituency Service") + 
+  theme(legend.position = "",          panel.grid.minor = element_blank() )
+
+
+capacity  
+priority 
+both  
+regions
+
+
+```
+
 
 # Replication data
 
@@ -322,8 +559,8 @@ dcounts_tenure %>%
   geom_hline(aes(yintercept = meanLeg), color = "blue") + 
   geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year , icpsr_agency, NA) ),
                   color = "red", box.padding = 0.5, max.overlaps = Inf) + 
-  labs(x = "Contacts per Legislator per Agency per Year",
-       y = "Contacts per Legislator per Year")
+  labs(x = "Contacts per Legislator per Agency per year",
+       y = "Contacts per Legislator per year")
 
 modal %>%
   distinct(perAgency, bioname, icpsr_agency, agency_year) %>% 
@@ -332,7 +569,7 @@ modal %>%
 ## other variable means
 # dcounts_tenure %>% summarise(across(everything(), mean_or_mode)) %>% kablebox()
 
-# by chair and president's party
+# by chair and President's party
 values <- tidyr::expand(dcounts_tenure,
                         agency = "Treasury_IRS",
                         chair = chair, 
@@ -382,7 +619,7 @@ ggchair <- function(predicted = predicted) {
   
   predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
   
-  predicted$presidents_party %<>% str_replace("0", "Not President's Party") %>% str_replace("1", "President's Party")
+  predicted$presidents_party %<>% str_replace("0", "Not President's party") %>% str_replace("1", "President's party")
 
 predicted %>%  
   ggplot() + 
@@ -396,10 +633,7 @@ predicted %>%
       ) + 
   geom_pointrange(position =  position_dodge(width = -.5)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) + facet_grid(. ~ presidents_party) 
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
 }
 
 
@@ -448,11 +682,7 @@ predicted %>%
       color = chair) + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) 
-  
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
 }
 
 ```
@@ -491,48 +721,61 @@ cm = c("chair" = "Committee Chair",
         "fourth_year" = "Fourth Year",
         "fifth_year" = "Fifth Year",
         "sixth_year" = "Sixth Year",
-       "new_member" = " New Member", 
+       "new_member" = " New Member*", 
        "new_senator" = " New Senator in Delegation",
        "new_one" = " New Member in Delegation",
               "new_proportion" = " New Proportion in Delegation",
        "new_member:same_party" = " New Member x Same Party", 
        "same_party" = "Same Party",
        "majority" = "Majority",
-       "presidents_party" = "President's Party",
+       "presidents_party" = "President's party",
        "Legislator" = "Legislator", 
        "Agency" = "Agency",
-       "FE: icpsr_agency" = "Legislator × Agency Fixed Effects",
-       "icpsr_agency" = "Legislator × Agency Fixed Effects",
+       "FE: icpsr_agency" = "Legislator-Agency Fixed Effects",
+       #"icpsr_agency" = "Legislator × Agency Fixed Effects",
        "FE: District" = "District Fixed Effects",
-       "FE: Year" = "Year Fixed Effects")
+       "FE: Year" = "Year Fixed Effects",
+       "FE: Legislator.*x.*Agency"= "Legislator x agency fixed effects",
+        "FE: Year.*x.*Agency" = "Year x agency fixed effects",
+       "FE: Legislator" = "Legislator fixed effects",
+              "Num.Obs." = "Observations"              )
+
+# FORMATTING FOR AJPS 
+cmAJPS <- cm |> str_to_sentence()
+names(cmAJPS) <- names(cm)
+cm <- cmAJPS
+# END FORMATTING FOR AJPS 
 
 coef_omit = "(Intercept)|majority|presidents_party"
 coef_omit = "none"
 
 setFixest_dict(cm)
 
-gof_omit = "R.*|AIC|BIC|Log.*|Std.*"
 
-options(modelsummary_factory_default = 'kableExtra')
-config_modelsummary(factory_default = 'kableExtra')
+f <- function(x) format(round(x, 3), big.mark=",")
+gm <- list(
+  list("raw" = "nobs", "clean" = "Observations", "fmt" = f),
+    list("raw" = "FE: Year_x_Agency", "clean" = "Year x agency fixed effects", "fmt" = f),
+      list("raw" = "FE: Legislator_x_Agency", "clean" = "Legislator x agency fixed effects", "fmt" = f)
+
+  )
 
 
 # table formatting to match stata (sort of)
 format_table <- . %>% 
   # OLD modelsummary based on kableExtra package (broken): https://stackoverflow.com/questions/78422275/argument-is-of-length-zero-from-kableextra-after-updating-rstudio
-  #kableExtra::row_spec(row = 1, bold = T, hline_after = TRUE) %>% 
   #kableExtra::kable_styling(font_size = 11) %>% 
                     #full_width = TRUE, 
                     #latex_options = c("repeat_header")) %>%
   # NEW modelsummary based on tinytable package: https://vincentarelbundock.github.io/tinytable/vignettes/format.html
-    as.character() %>% 
+  as.character() %>% 
   str_replace("Num.Obs.", "Observations") %>% 
-  str_replace("Std.Errors", "\footnotesize Robust/Clustered Std. Errors") %>% 
-  str_replace("FE: Legislator.*x.*Agency", "Legislator x Agency FE") %>%
-  str_replace("FE: Year.*x.*Agency", "Year x Agency FE") %>% 
-  str_replace("FE: Year", "Year Fixed Effects") %>% 
-  str_replace("FE: District", "District Fixed Effects") %>% 
-  str_replace("FE: Legislator", "Legislator Fixed Effects") %>%
+  str_replace("Std.Errors", "\footnotesize robust clustered standard errors") %>% 
+  str_replace("FE: Legislator.*x.*Agency", "Legislator x agency fixed effects") %>%
+  str_replace("FE: Year.*x.*Agency", "Year x agency fixed effects") %>% 
+  str_replace("FE: Year", "Year fixed effects") %>% 
+  str_replace("FE: District", "District fixed effects") %>% 
+  str_replace("FE: Legislator", "Legislator fixed effects") %>%
     str_replace_all("X|✓", "\\\\\\checkmark") %>% 
   # a random midrule appeared in the wrong place 
   #str_remove("\\midrule") %>% 
@@ -541,11 +784,33 @@ format_table <- . %>%
 
 # for testing table formatting
 if(F){
+# raw   
+ modelsummary(models)
+  
+  load(here::here("models", "models_total.Rdata"))
+
+# markdown 
+modelsummary::modelsummary(models_total,  
+             stars = c('+' = .1, '*' = .05, '**' = .01), 
+             align="ldddd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             coef_omit = coef_omit,
+             output = "html",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+    # tinytable::format_tt(
+    # digits = 2,
+    # fontsize = 11,
+    # num_mark_big = ",") |> 
+    tinytable::style_tt(i = 1, bold = T, line = "b")
+
+  
 # TeX 
 modelsummary(models_total,  # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
@@ -593,7 +858,7 @@ m_total_cross <-feglm (perYear ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_total_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_total_cross, coef_omit = coef_omit)}
 
 coefplot(m_total_cross, horiz = T, drop = "(Intercept)") 
 
@@ -608,7 +873,7 @@ m_total_dnd <-feglm (perYear ~
                     # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_total_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_total_dnd, coef_omit = coef_omit)}
 
 coefplot(m_total_dnd, horiz = T) 
 
@@ -621,7 +886,7 @@ m_total_2nd <-feglm (perYear ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_total_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_total_2nd, coef_omit = coef_omit)}
 coefplot(m_total_2nd, horiz = T) 
 
 
@@ -633,7 +898,7 @@ m_logtotal_dnd <-feglm (log(perYear + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logtotal_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_logtotal_dnd, coef_omit = coef_omit)}
 
 coefplot(m_logtotal_dnd, horiz = T) 
 
@@ -654,11 +919,11 @@ models_total <- list(
 )
 
 rows <- tibble(
-  term = c("Dependent Variable", 
+  term = c("Dependent variable", 
            "Majority",
-           "President's Party",
-           "All Legislators", 
-           "Served At Least 2nd Term"),
+           "President's party",
+           "All legislators", 
+           "Served at least 2nd term"),
   `(1)` = c("Count", "✓", "✓", "✓", ""),
   `(2)` =c("Count", "✓", "✓", "✓", ""),
   `(3)` = c("Count", "✓","✓","", "✓"),
@@ -666,11 +931,11 @@ rows <- tibble(
 )
 
 rows <- tibble(
-  term = c("Dependent Variable", 
+  term = c("Dependent variable", 
            #"Majority",
-           #"President's Party",
-           "All Legislators", 
-           "Served At Least 2nd Term"),
+           #"President's party",
+           "All legislators", 
+           "Served at least 2nd term"),
   `(1)` = c("Count", "✓", ""),
   `(2)` =c("Count", "✓", ""),
   `(3)` = c("Count","", "✓"),
@@ -681,27 +946,27 @@ attr(rows, 'position') <- c(0, 20,21,22,23)
 
 attr(rows, 'position') <- c(0, 24,25)
 
-options(modelsummary_factory_default = 'kableExtra')
-
 
 # HTML
-modelsummary(models_total, stars = T, 
+modelsummary(models_total, 
+             stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit,
+             gof_map = gm,
              coef_omit = coef_omit,
              title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by legislator.")) %>% 
+  tinytable::style_tt(i = 1, bold = T, line = "b")
 
 
-options(modelsummary_factory_default = 'kableExtra')
-options(config_modelsummary(factory_default = 'kableExtra'))
+
 
 # TeX 
-modelsummary(models_total,  # stars = T, 
+modelsummary(models_total,
+             stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
@@ -717,6 +982,9 @@ beta <- m_total_dnd$coefficients %>%
 se <- m_total_dnd$se %>%
   round(3) %>% as_tibble(rownames = "se") %>%
   pivot_wider(names_from = se)
+
+save(models_total, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_total.Rdata"))
 ```
 
 
@@ -753,9 +1021,9 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
   ggchair() + 
-  labs(title = "Predicted Total Letters per Year\n(Cross-Sectional)",
+  labs(title = "Predicted Total Letters per year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Total Letters Per Year",
+       y = "Predicted Total Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -768,9 +1036,9 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
-  labs(title = "Predicted Total Letters Per Year\n(Cross-Sectional)",
+  labs(title = "Predicted Total Letters Per year\n(Cross-Sectional)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -781,14 +1049,14 @@ predicted <- predictions(m_total_dnd,
                          newdata = values)
 
 
-# Predictions by chair and president's party
+# Predictions by chair and President's party
 predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Total Letters per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Total Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -802,9 +1070,9 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Total Letters Per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Total Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -841,7 +1109,7 @@ m_con_cross <-feglm (perYear_con ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_con_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_con_cross, coef_omit = coef_omit)}
 
 coefplot(m_con_cross, horiz = T, drop = "(Intercept)") 
 
@@ -855,7 +1123,7 @@ m_con_dnd <-feglm (perYear_con ~
                     cluster = "Legislator",
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_con_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_con_dnd, coef_omit = coef_omit)}
 coefplot(m_con_dnd, horiz = T) 
 
 
@@ -867,7 +1135,7 @@ m_con_2nd <-feglm (perYear_con ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_con_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_con_2nd, coef_omit = coef_omit)}
 coefplot(m_con_2nd, horiz = T) 
 
 
@@ -879,7 +1147,7 @@ m_logcon_dnd <-feglm (log(perYear_con + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_logcon_dnd, coef_omit = coef_omit)}
 
 coefplot(m_logcon_dnd, horiz = T) 
 ```
@@ -900,14 +1168,14 @@ models_con <- list(
 modelsummary(models_con, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit) %>% 
-  row_spec(row = 1, bold = T, hline_after = TRUE) 
+  tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_con, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
@@ -917,6 +1185,9 @@ modelsummary(models_con, # stars = T,
 beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_con, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_con.Rdata"))
 ```
 
 
@@ -955,9 +1226,9 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Constituency Service Letters per Year\n(Cross-Sectional)",
+  labs(title = "Predicted Constituency Service Letters per year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -971,9 +1242,9 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Constituency Service Letters Per Year\n(Cross Sectional)",
+  labs(title = "Predicted Constituency Service Letters Per year\n(Cross Sectional)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -990,9 +1261,9 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Constituency Service Letters per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Constituency Service Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1006,9 +1277,9 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Constituency Service Letters Per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Constituency Service Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1044,7 +1315,7 @@ m_policy_cross <-feglm (perYear_policy ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_policy_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_policy_cross, coef_omit = coef_omit)}
 
 coefplot(m_policy_cross, horiz = T, drop = "(Intercept)") 
 
@@ -1058,7 +1329,7 @@ m_policy_dnd <-feglm (perYear_policy ~
                     cluster = "Legislator",
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_policy_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_policy_dnd, coef_omit = coef_omit)}
 coefplot(m_policy_dnd, horiz = T) 
 
 
@@ -1070,7 +1341,7 @@ m_policy_2nd <-feglm (perYear_policy ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_tenure_2nd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_tenure_2nd, coef_omit = coef_omit)}
 coefplot(m_policy_2nd, horiz = T) 
 
 
@@ -1082,7 +1353,7 @@ m_logcon_dnd <-feglm (log(perYear_policy + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logcon_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_logcon_dnd, coef_omit = coef_omit)}
 
 coefplot(m_logcon_dnd, horiz = T) 
 ```
@@ -1103,20 +1374,28 @@ models_policy <- list(
 modelsummary(models_policy, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              notes = list("Robust standard errors in parentheses, clustered by legislator." )) %>% 
-  row_spec(row = 1, bold = T, hline_after = TRUE) 
+  tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_policy, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_policy.tex") )
+
+
+beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_policy, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_policy.Rdata"))
 ```
 
 ### Policy Work Predictions 
@@ -1144,9 +1423,9 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() +
-  labs(title = "Predicted Policy Letters per Year\n(Cross-Sectional)",
+  labs(title = "Predicted Policy Letters per year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1160,9 +1439,9 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Policy Letters Per Year\n(Cross Sectional)",
+  labs(title = "Predicted Policy Letters Per year\n(Cross Sectional)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1178,9 +1457,9 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() +
-  labs(title = "Predicted Policy Letters per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Policy Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "")  
@@ -1194,16 +1473,14 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Policy Letters Per Year\nDifference in Differences (Within-Legislator)",
+  labs(title = "Predicted Policy Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years Serving in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
 
-beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
-se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 ```
 
 
@@ -1243,7 +1520,7 @@ m_ratio_cross <- feglm(ratio ~
 cluster = "Legislator",
 data = dcounts_ratio)
 
-if(testing){modelsummary(m_ratio_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_ratio_cross, coef_omit = coef_omit)}
 
 coefplot(m_ratio_cross, horiz = T, drop = "(Intercept)") 
 
@@ -1257,7 +1534,7 @@ m_ratio_dnd <- feglm(ratio ~
 cluster = "Legislator",
 data = dcounts_ratio)
 
-if(testing){modelsummary(m_ratio_dnd, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_ratio_dnd, coef_omit = coef_omit)}
 
 coefplot(m_ratio_dnd, horiz = T) 
 ```
@@ -1273,9 +1550,9 @@ models_ratio <- list(
 )
 
 rows <- tibble(
-  term = c("Dependent Variable", 
+  term = c("Dependent variable", 
            "Majority", 
-           "President's Party"),
+           "President's party"),
   `(1)` = c("Ratio", 
             "✓", 
             "✓"),
@@ -1286,7 +1563,7 @@ rows <- tibble(
 
 # all coef
 rows <- tibble(
-  term = c("Dependent Variable"),
+  term = c("Dependent variable"),
   `(1)` = c("Ratio"),
   `(2)` =c("Ratio")
 )
@@ -1301,14 +1578,14 @@ attr(rows, 'position') <- c(0)
 modelsummary(models_ratio, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_ratio, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
@@ -1319,6 +1596,9 @@ modelsummary(models_ratio, # stars = T,
 beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_ratio, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_ratio.Rdata"))
 ```
 
 ### Ratio Narrative 
@@ -1577,7 +1857,7 @@ m_district_cross <- feglm(perYear ~
 cluster = "District",
 data = dcounts_per_district)
 
-if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_district_cross, coef_omit = coef_omit)}
 
 coefplot(m_district_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
@@ -1588,7 +1868,7 @@ m_district_cross_party <- feglm(perYear ~
 cluster = "District",
 data = dcounts_per_district)
 
-if(testing){modelsummary(m_district_cross, gof_omit = "R.*", coef_omit = coef_omit)}
+if(testing){modelsummary(m_district_cross, coef_omit = coef_omit)}
 
 coefplot(m_district_cross_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
@@ -1665,23 +1945,23 @@ models_district <- list(
 
 
 rows <- tibble(
-  term = c("Dependent Variable", 
+  term = c("Dependent variable", 
            "All Districts",
            "House Only",
            "Senate Only"),
-  `(1)` = c("Per Year", 
+  `(1)` = c("Per year", 
             "✓", 
             "", 
             ""),
-  `(2)` =c("Per Year", 
+  `(2)` =c("Per year", 
            "✓", 
             "", 
             ""),
-    `(3)` = c("Per Year", 
+    `(3)` = c("Per year", 
             "", 
             "✓", 
             ""),
-  `(4)` =c("Per Year", 
+  `(4)` =c("Per year", 
            #"✓", 
            "", 
             "", 
@@ -1698,14 +1978,14 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_district, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
@@ -1716,6 +1996,9 @@ modelsummary(models_district, # stars = T,
 beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_district, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district.Rdata"))
 ```
 
 
@@ -1739,14 +2022,14 @@ attr(rows, 'position') <- c(0, 28:31)
 modelsummary(models_district_party, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_district_party, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
@@ -1826,10 +2109,7 @@ p <- predicted %>%
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   # geom_line() + # requires numeric...look to see how I did this on the other ones
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank()) 
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
 
 if(party){
 p <- predicted %>%  
@@ -1844,10 +2124,7 @@ p <- predicted %>%
       color = same_party) + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
-      theme_minimal() + 
-  theme(panel.border  = element_blank(),
-        panel.grid.major.x = element_blank())
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
 }
 
 return(p)
@@ -1889,7 +2166,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1910,7 +2187,7 @@ predicted %>%
   ggdistrict(party = TRUE) + 
   labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party") 
@@ -1933,7 +2210,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "")
@@ -1955,7 +2232,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -1999,7 +2276,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per House District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "")
@@ -2021,7 +2298,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per House District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2079,7 +2356,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "",
        shape = "")
@@ -2101,7 +2378,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per Year",
+       y = "Predicted Letters Per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2214,16 +2491,16 @@ models_spillover <- list(
 
 
 rows <- tibble(
-  term = c("Dependent Variable", 
+  term = c("Dependent variable", 
            "All Districts",
            "Senate Only"),
-  `(1)` = c("Per Year", 
+  `(1)` = c("Per year", 
             "✓", 
             ""),
-  `(2)` =c("Per Year", 
+  `(2)` =c("Per year", 
             "", 
            "✓"),
-    `(3)` = c("Per Year", 
+    `(3)` = c("Per year", 
             "", 
             "✓")
 )
@@ -2238,14 +2515,14 @@ attr(rows, 'position') <- c(0, 9:11)
 modelsummary(models_spillover, stars = T, 
              add_rows = rows, 
              coef_map = cm,
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% row_spec(row = 1, bold = T, hline_after = TRUE) 
+             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_spillover, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
-             gof_omit = gof_omit, 
+             gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
@@ -2253,6 +2530,10 @@ modelsummary(models_spillover, # stars = T,
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_spillover.tex") )
 
+
+
+save(models_spillover, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_spillover.Rdata"))
 ```
 
 
