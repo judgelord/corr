@@ -4,36 +4,36 @@ journal:
 wordcount: 9616
 format:
   #html
-  #docx: default
-  # pdf: default
-   cmc-article-pdf:
+  #docx
+  cmc-article-pdf:
     fig-pos: 'hb'
     fig-env: "figure"
-    keep-tex: true
     filters: [citeproc.lua, wordcount.lua]
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
 subtitle: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
 runningtitle: Shifting Priorities and Capacity
 runningauthor: Judge-Lord, Powell, & Grimmer
-# author:
-#   - name: Devin Judge-Lord
-#     affiliations:
-#      - name: University of Michigan
-#        department: Ford School of Public Policy
-#     email: "judgelor@umich.edu"
-#     attributes:
-#       corresponding: true
-#   - name: Eleanor Neff Powell
-#     affiliations:
-#      - name: University of Wisconsin-Madison
-#   - name: Justin Grimmer
-#     affiliations:
-#      - name: Stanford University
+author:
+  - name: Devin Judge-Lord
+    affiliations:
+     - name: University of Michigan
+       #department: Ford School of Public Policy
+    email: "judgelor@umich.edu"
+    attributes:
+      corresponding: true
+  - name: Eleanor Neff Powell
+    affiliations:
+     - name: University of Wisconsin-Madison
+       #department: Department of Political Science
+  - name: Justin Grimmer
+    affiliations:
+     - name: Stanford University
+     #department: Department of Political Science and Hoover Institution
 thanks: |
- We will be grateful for any feedback on this draft: [judgelor@umich.edu](mailto:judgelor@umich.edu). The most recent draft is here: [judgelord.github.io/correspondence/corr.pdf](https://judgelord.github.io/correspondence/corr.pdf). Research assistance from Hope Karnopp ... and funding from the ...."
+ Links to appendicies and data: [judgelord.github.io/research/correspondence/](https://judgelord.github.io/research/correspondence/). We are grateful for research assistance from Rochelle Snyder, Anna Meier, Hope Karnopp, Jessie Munson, Fatima Ali, Dan Kojis, Aaron Gold, Julia Derzay, Maggie Nead, Lucy McNeil, and Sam Schutt and funding from the ....TODO"
 date: today
 abstract: |
- When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of 611,239 legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
+ When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of `{r} readLines(here::here("docs", "tables", "n2007-2020"))` legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
 keywords: "Congress, constituency service, capacity"
 #linestretch: 1.5
 indent: true
@@ -47,6 +47,18 @@ execute:
   message: false
   warning: false
 ---
+
+```{r}
+# inline numbers round to 2
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.na(as.numeric(x))) {
+      return(x)
+      } else
+        return(as.numeric(x) |> round(2) |> prettyNum(big.mark = ",", scientific = F))
+    }
+  )
+```
 
 # Introduction
 
@@ -101,8 +113,10 @@ restricted to small subsets of agencies and, thus, a small subset of
 policy domains. Our larger dataset enables us to comprehensively test
 how the behavior of legislators shifts as they gain institutional power
 and ensures that our conclusions are not limited to subsets of the
-executive branch. To assess absolute and relative shifts in legislator
-contacts to agencies, we hand code the content of requests as policy
+executive branch. 
+
+To assess absolute and relative shifts in legislator
+contacts to agencies, we hand code the content of  `{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` requests as policy
 work or constituency service. Doing so also yields many illuminating
 descriptives about modern congressional representation. For example,
 over 80% of contacts are made on behalf of constituents, and less than
@@ -365,19 +379,23 @@ Subfigure (c)).
 
 ::: {#tbl-theory}
 
-+:---------------------------+:------------------------------------------------------------------+:-------------------------------------------------------------------+
-|                            | Sufficient increase in capacity                                   | Insufficient change in capacity                                    |
-+----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
-| Priority shifts            | - Level of Service: $0$ or $\uparrow$                             | - Level of Service: $\downarrow$                                   |
-| to policy work             | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$ | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$  | 
-+----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
-| No change                  | - Level of service: $\uparrow$                                    | - Level of service: $0$                                            |
-| in priorities              | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$        | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$         | 
-+----------------------------+-------------------------------------------------------------------+--------------------------------------------------------------------+
++:---------------------------+:------------------------------------------------------------------+:------------------------------------------------------------------+
+|                            | Sufficient increase in capacity                                   | Insufficient change in capacity                                   |
++----------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+|                            |                                                                   |                                                                   | +----------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+| Priority shifts            | - Level of service: $0$ or $\uparrow$                             | - Level of service: $\downarrow$                                  |
+| to policy work             | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$ | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$ | 
++----------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+|                            |                                                                   |                                                                   | 
++----------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
+| No change                  | - Level of service: $\uparrow$                                    | - Level of service: $0$                                           |
+| in priorities              | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$        | - Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$        | 
++----------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------+
                                     
               
 Divergent Predictions for the Change in the Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power
 :::
+
 
 
 ```{r}
@@ -389,7 +407,7 @@ Divergent Predictions for the Change in the Levels of Constituency Service and P
 #|   - "Increasing Capacity + Shifting Priorities"
 #|   - "Increasing Capacity + Shifting Priorities"
 #| layout-ncol: 2
-#| out-width: "100%"
+#| out-width: 100%
 
 
 knitr::include_graphics("docs/figs/2x2-fig-1.png")
@@ -491,15 +509,15 @@ over to more experienced and powerful members within a state delegation.
 
 # Data: A Census of Legislator Requests to Federal Agencies {#sec-data}
 
-To assess how experience and power affect constituency service, we filed
+To assess how experience and power affect constituency service, we filed  `{r} readLines(here::here("docs", "tables", "foia_requests"))`
 Freedom Of Information Act (FOIA) requests with all federal departments,
 agencies, and sub-agencies for all records of incoming communication
 from members of Congress between January 1, 2007, and the date of our
-request.[^5] Between February 2017 and February 2021, we received data
-on instances of members of Congress contacting federal agencies. These
+request.[^5] Between February 2017 and February 2024, we received data
+on  `{r} readLines(here::here("docs", "tables", "n"))` instances of members of Congress contacting `{r} readLines(here::here("docs", "tables", "n_agencies"))` federal agencies. These
 contacts include letters from an individual legislators, committee
 chairs in their capacity as committee chairs, and groups of legislators.
-We focus on requests made from 2007 to 2020, resulting in a data set of
+We focus on requests made from 2007 to 2020, resulting in a data set of `{r} readLines(here::here("docs", "tables", "n2007-2020"))`
 contacts.[^6]
 
 ## Data processing and coding
@@ -513,10 +531,10 @@ Appendix provides procedures and replication code for converting the raw
 records from federal agencies into the data set required for our
 analysis.
 
-For requests, we use the text or summaries of letters to classify
+For `{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` requests, we use the text or summaries of letters to classify
 legislators' reasons for contacting federal agencies. Our coding process
 began with the authors coding a representative sample of records using
-our codebook (see Appendix). We then trained Research Assistants to
+our codebook (see Online Appendix). We then trained Research Assistants to
 continue the coding. The first several thousand letters were
 double-coded. For example, of over 10,000 letters for the Environmental
 Protection Agency, the first 2,500 were double-coded. Our overall
@@ -556,6 +574,7 @@ requests made to federal agencies.
 ```{r}
 #| fig-cap: "Legislator Requests to Federal Agencies by Type, 2007-2020"
 #| label: fig-type2
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/data_by_type-tall-1.png")
 ```
@@ -585,6 +604,7 @@ contacted agencies 117 times per year.
 ```{r}
 #| fig-cap: "Variation in Average Legislator Requests by Percentile"
 #| label: fig-contact1
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/percentiles-1.png")
 ```
@@ -607,6 +627,7 @@ Senators at the upper, middle, and lower parts of the distribution.
 ```{r}
 #| fig-cap: "Variation in Legislator Requests by Year, 2007-2017"
 #| label: fig-peryear
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/counts-per-year-1.png")
 ```
@@ -702,12 +723,13 @@ specification at the district level.
 effect of institutional power on levels of constituency service. All
 coefficients represent the average additional requests per year *per
 agency*; per legislator per year effects are simply these coefficients
-times (the number of agencies).
+times `{r} readLines(here::here("docs", "tables", "n_agencies"))` (the number of agencies).
 
 
 ```{r}
 #| label: tbl-models-total
 #| tbl-cap: "The Effect of Institutional Power on Constituency Service"
+#| out-width: 100%
 
 load(here::here("models", "models_total.Rdata"))
 modelsummary::modelsummary(models_total,  
@@ -718,13 +740,18 @@ modelsummary::modelsummary(models_total,
              gof_map = gm, 
              coef_omit = coef_omit,
              output = "tinytable",
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-    #tinytable::style_tt(i = 1:2, align = "lcccc") |> 
-    # tinytable::format_tt(quarto = T) #|>
-    # digits = 2,
-    # fontsize = 10,
-    # num_mark_big = ",") |>
-    tinytable::style_tt(i = 1, bold = T, line = "b")# , align = "c")
+             notes = list("Robust standard errors in parentheses, clustered by legislator.",
+                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator per year effects are simply these coefficients times the number of agencies in the data.")) |>  
+
+# coef alignment by decimal
+    tinytable::style_tt(j = 2:4, 
+                        #i = 3:25, # Not sure why specifying rows causes and error, but columns does not
+                        align = "d") |>
+    # header alignment
+    tinytable::style_tt(i = 0:1, align = "lcccc") |>
+    tinytable::style_tt(i = 25:30, align = "lcccc") |>
+  # bold header 
+    tinytable::style_tt(i = 1, bold = T, line = "b") 
 ```
 
 Model 1 (the first column of @tbl-models-total
@@ -743,13 +770,13 @@ shows the difference-in-differences specification in @eq-diff1.
 Across all measures of institutional power, we find that acquiring power
 increases the number of requests that a given legislator makes. Becoming
 a committee chair causes an increase of 0.29 requests *per agency*
-(95-percent confidence interval \[0.12, 0.47\]). Across all , this
-represents an increase of approximately 27 additional requests per year,
-21.3% of the average requests per year in our data.
+(95-percent confidence interval \[0.12, 0.47\]). 
+Across all `{r} readLines(here::here("docs", "tables", "n_agencies"))` agencies, this represents an increase of approximately 27 additional requests per year, 21.3% of the average requests per year in our data.
 
 ```{r}
 #| fig-cap: "Predicted Number of Total Letters (Within Legislator Difference inDifferences) 2007-2020"
 #| label: fig-m-total-predicted
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/m-total-predicted-3.png")
 ```
@@ -811,9 +838,10 @@ year and Johnson's first five years in the Senate.
 ```{r}
 #| fig-cap: "The Effect of Electing New Legislators in Wisconsin"
 #| fig-subcap: 
-#|   - ""
-#|   - ""
+#|   - "Representatives of Wisconson's 7th District"
+#|   - "Senators from Wisconsin"
 #| label: fig-wi
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/districts/(WI-07).png")
 knitr::include_graphics("docs/figs/districts/(WI).png")
@@ -844,6 +872,7 @@ we estimate district-level differences for a legislator's second
 ```{r}
 #| label: tbl-models-district
 #| tbl-cap: "The Effect of Electing a New Representative on Constituency Service"
+#| out-width: 100%
 
 load(here::here("models", "models_district.Rdata"))
 modelsummary::modelsummary(models_district,  
@@ -933,6 +962,7 @@ they gain experience and power.
 ```{r}
 #| label: tbl-models-ratio
 #| tbl-cap: "The Effect of Institutional Power on the Ratio of Policy Work to Constituency Service"
+#| out-width: 100%
 
 load(here::here("models", "models_ratio.Rdata"))
 modelsummary::modelsummary(models_ratio,  
@@ -976,6 +1006,7 @@ the ratio.
 ```{r}
 #| label: fig-m-ratio-predicted
 #| fig-cap: "Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2020"
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/m-ratio-predicted-3.png")
 
@@ -1030,7 +1061,7 @@ of service senators provide, even among states of similar sizes.
 ```{r}
 #| fig-cap: "Average Number of Requests per Senator per Year 2007-2020 by State Population"
 #| label: fig-stateSize
-
+#| out-width: 100%
 
 knitr::include_graphics("docs/figs/pop-1.png")
 ```
@@ -1096,6 +1127,7 @@ service requests to these incumbents.
 ```{r}
 #| label: tbl-models-spillover
 #| tbl-cap: "Spillover Redirected to Expierenced Legislators when a New Legislators is Elected"
+#| out-width: 100%
 
 load(here::here("models", "models_spillover.Rdata"))
 modelsummary::modelsummary(models_spillover,  
@@ -1263,6 +1295,8 @@ requests at the start of their careers and that new legislators make
 substantially fewer service requests than their more experienced
 colleagues.
 
+\clearpage
+
 # References {-}
 
 [^1]: Assistant Professor, University of Michigan
@@ -1292,16 +1326,17 @@ colleagues.
     included over a thousand follow-up and clarification emails, dozens
     of hours on the phone with FOIA officers, and nearly 100 appeals of
     incomplete records or inappropriate denials, including multiple
-    cases where we pursued and won orders from judges requiring
-    compliance with our request. By rigorously pursuing a census of
+    cases where we pursued and won orders from federal judges requiring
+    compliance with our request. Our efforts yielded records from every department except the State Department, which has an infamous backlog and been processing our request for over seven years. Our data also include most independent agencies, commissions, boards, executive offices (e.g., the White House Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the U.S. Export-Import Bank.
+    By rigorously pursuing a census of
     records, we limit any response bias that may exist in more
-    easily-obtained samples.
+    easily-obtained samples. 
 
 [^6]: Some agencies did not provide records for the full span of years.
     Our models include legislator-by-agency fixed effects to account for
     any left censoring, ensuring that our comparisons leverage variation
     within each agency, limiting the opportunity for censoring to affect
-    our results.
+    our results. Because FOIA requests often take several years, data for years after 2020 are still incomplete.
 
 [^7]: To measure committee prestige, we use a revealed preference
     approach--what do members think is most valuable--using party

@@ -22,7 +22,7 @@ library(here)
 library(ggrepel)
 
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = TRUE, # CHACHE 
+                      cache = FALSE, # CACHE 
                       fig.width=4.5, 
                       fig.height = 3.5,
                       split = T,
@@ -47,6 +47,7 @@ library(ggplot2); theme_set(
         theme(
           # FOR AJPS
           panel.grid = element_blank(),
+          legend.position = "bottom",
           # END FOR AJPS 
           panel.border  = element_blank(),
           panel.grid.major.x = element_blank())
@@ -629,8 +630,10 @@ predicted %>%
       ymax = conf.high, #predicted + 1.96*std.error,
       fill = chair,
       shape = chair,
-      color = chair
+      color = chair,
+      label = chair,
       ) + 
+  geom_text() + 
   geom_pointrange(position =  position_dodge(width = -.5)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
@@ -679,7 +682,9 @@ predicted %>%
       ymin = conf.low,# predicted - 1.96*std.error,
       ymax = conf.high, #predicted + 1.96*std.error,
       shape = chair,
-      color = chair) + 
+      color = chair,
+      label = ifelse(year_in_congress == "7\nor more", chair, NA) + 
+  geom_text() + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
@@ -731,13 +736,13 @@ cm = c("chair" = "Committee Chair",
        "presidents_party" = "President's party",
        "Legislator" = "Legislator", 
        "Agency" = "Agency",
-       "FE: icpsr_agency" = "Legislator-Agency Fixed Effects",
-       #"icpsr_agency" = "Legislator × Agency Fixed Effects",
-       "FE: District" = "District Fixed Effects",
-       "FE: Year" = "Year Fixed Effects",
-       "FE: Legislator.*x.*Agency"= "Legislator x agency fixed effects",
-        "FE: Year.*x.*Agency" = "Year x agency fixed effects",
-       "FE: Legislator" = "Legislator fixed effects",
+       # FIXED EFFECTS FORMATTED BY GM ? 
+       # "FE: icpsr_agency" = "Legislator-agency fixed effects",
+       # "FE: District" = "District fixed effects",
+       # "FE: Year" = "Year fixed effects",
+       # "FE: Legislator.*x.*Agency"= "Legislator x agency fixed effects",
+       #  "FE: Year.*x.*Agency" = "Year x agency fixed effects",
+       # "FE: Legislator" = "Legislator fixed effects",
               "Num.Obs." = "Observations"              )
 
 # FORMATTING FOR AJPS 
@@ -752,12 +757,21 @@ coef_omit = "none"
 setFixest_dict(cm)
 
 
-f <- function(x) format(round(x, 3), big.mark=",")
-gm <- list(
-  list("raw" = "nobs", "clean" = "Observations", "fmt" = f),
-    list("raw" = "FE: Year_x_Agency", "clean" = "Year x agency fixed effects", "fmt" = f),
-      list("raw" = "FE: Legislator_x_Agency", "clean" = "Legislator x agency fixed effects", "fmt" = f)
+format_n <- function(x) format(round(x, 3), big.mark=",")
+f <- function(x) stringr::str_replace(x, "[A-z]", "✓")
+f("X")
+f("x")
 
+gm <- list(
+  list("raw" = "nobs", "clean" = "Observations", "fmt" = format_n),
+    list("raw" = "FE: Year_x_Agency", "clean" = "Year x agency fixed effects", "fmt" = f),
+      list("raw" = "FE: Legislator_x_Agency", "clean" = "Legislator x agency fixed effects", "fmt" = f),
+  list("raw" = "FE: icpsr_agency", "clean" = "Legislator-agency fixed effects", "fmt" = f),
+       list("raw" = "FE: District", "clean" = "District fixed effects", "fmt" = f),
+       list("raw" = "FE: Year", "clean" = "Year fixed effects", "fmt" = f),
+       list("raw" = "FE: Legislator.*x.*Agency", "clean" = "Legislator x agency fixed effects", "fmt" = f),
+        list("raw" = "FE: Year.*x.*Agency", "clean" = "Year x agency fixed effects", "fmt" = f),
+       list("raw" = "FE: Legislator", "clean" = "Legislator fixed effects", "fmt" = f)
   )
 
 
@@ -792,17 +806,13 @@ if(F){
 # markdown 
 modelsummary::modelsummary(models_total,  
              stars = c('+' = .1, '*' = .05, '**' = .01), 
-             align="ldddd",
+             #align="ldddd",
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
              coef_omit = coef_omit,
              output = "html",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-    # tinytable::format_tt(
-    # digits = 2,
-    # fontsize = 11,
-    # num_mark_big = ",") |> 
     tinytable::style_tt(i = 1, bold = T, line = "b")
 
   
@@ -948,16 +958,22 @@ attr(rows, 'position') <- c(0, 24,25)
 
 
 # HTML
-modelsummary(models_total, 
-             stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm,
+modelsummary::modelsummary(models_total,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             ##align="ldddd",
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
              coef_omit = coef_omit,
-             title = "The Effect of Expierence and Institutional Power on Legislator Contacts", 
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) %>% 
-  tinytable::style_tt(i = 1, bold = T, line = "b")
-
+             output = "tinytable",
+             notes = list("Robust standard errors in parentheses, clustered by legislator.",
+                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator per year effects are simply these coefficients times the number of agencies in the data.")) |>  
+  # header alignment
+    tinytable::style_tt(i = 1, align = "lcccc") |>
+# coef alignment by decimal
+    tinytable::style_tt(j = 2:4, i = 3:25, align = "d") |>
+  # bold header 
+    tinytable::style_tt(i = 1, bold = T, line = "b") 
 
 
 
@@ -1037,8 +1053,8 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
   labs(title = "Predicted Total Letters Per year\n(Cross-Sectional)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1056,7 +1072,7 @@ predicted %>%
   ggchair() + 
   labs(title = "Predicted Total Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1071,8 +1087,8 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Total Letters Per year\nDifference in Differences (Within-Legislator)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1228,7 +1244,7 @@ predicted %>%
   ggchair() + 
   labs(title = "Predicted Constituency Service Letters per year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1243,8 +1259,8 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Constituency Service Letters Per year\n(Cross Sectional)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1263,7 +1279,7 @@ predicted %>%
   ggchair() + 
   labs(title = "Predicted Constituency Service Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1278,8 +1294,8 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Constituency Service Letters Per year\nDifference in Differences (Within-Legislator)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1425,7 +1441,7 @@ predicted %>%
   ggchair() +
   labs(title = "Predicted Policy Letters per year\n(Cross-Sectional)",
        x = "",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1440,8 +1456,8 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Policy Letters Per year\n(Cross Sectional)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1459,7 +1475,7 @@ predicted %>%
   ggchair() +
   labs(title = "Predicted Policy Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "")  
@@ -1474,8 +1490,8 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Policy Letters Per year\nDifference in Differences (Within-Legislator)",
-       x = "Years Serving in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years serving in Congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -1647,7 +1663,7 @@ predicted <- predictions(m_ratio_cross,
 predicted %>%
 ggtenure() +
   labs(title = "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
-       x = "Years Serving in Congress",
+       x = "Years serving in Congress",
        y = "Predicted Ratio of\nConstituent to Policy Work",
        fill = "",
        color = "",
@@ -1677,7 +1693,7 @@ predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title = "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
-       x = "Years Serving in Congress",
+       x = "Years serving in Congress",
        y = "Predicted Ratio of\nConstituent to Policy Work",
        fill = "",
        color = "",
@@ -1946,9 +1962,9 @@ models_district <- list(
 
 rows <- tibble(
   term = c("Dependent variable", 
-           "All Districts",
-           "House Only",
-           "Senate Only"),
+           "All districts",
+           "House only",
+           "Senate only"),
   `(1)` = c("Per year", 
             "✓", 
             "", 
@@ -1980,7 +1996,9 @@ modelsummary(models_district, stars = T,
              coef_map = cm,
              gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+             output = "tinytable",
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% 
+  tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_district, # stars = T, 
              add_rows = rows,               
@@ -1988,7 +2006,7 @@ modelsummary(models_district, # stars = T,
              gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_district.tex") )
@@ -2024,7 +2042,7 @@ modelsummary(models_district_party, stars = T,
              coef_map = cm,
              gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_district_party, # stars = T, 
              add_rows = rows,               
@@ -2032,7 +2050,7 @@ modelsummary(models_district_party, # stars = T,
              gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
@@ -2165,8 +2183,8 @@ predicted <- predictions(m_district_cross,
 predicted %>%
 ggdistrict() +
   labs(title = "Letters Per District\n(Cross-Sectional)",
-       x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       x = "Years in congress",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "") 
@@ -2187,7 +2205,7 @@ predicted %>%
   ggdistrict(party = TRUE) + 
   labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party") 
@@ -2210,7 +2228,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "")
@@ -2232,7 +2250,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2241,7 +2259,7 @@ predicted %>%
 
 
 
-### Per District Predictions (House Only)
+### Per District Predictions (House only)
 
 - Figures: `figs/m-district-predicted-house-[1:2].png`
 
@@ -2276,7 +2294,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per House District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "")
@@ -2298,7 +2316,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per House District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2308,7 +2326,7 @@ predicted %>%
 
 
 
-### Per District Predictions (Senate Only)
+### Per District Predictions (Senate only)
 
 - Figures: `figs/m-district-predicted-senate-[1:2].png`
 
@@ -2356,7 +2374,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "",
        shape = "")
@@ -2378,7 +2396,7 @@ predicted %>%
   ggdistrict(party = TRUE) +
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted Letters Per year",
+       y = "Predicted letters per year",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2492,8 +2510,8 @@ models_spillover <- list(
 
 rows <- tibble(
   term = c("Dependent variable", 
-           "All Districts",
-           "Senate Only"),
+           "All districts",
+           "Senate only"),
   `(1)` = c("Per year", 
             "✓", 
             ""),
@@ -2517,7 +2535,7 @@ modelsummary(models_spillover, stars = T,
              coef_map = cm,
              gof_map = gm, 
              coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by District.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
 
 modelsummary(models_spillover, # stars = T, 
              add_rows = rows,               
@@ -2525,7 +2543,7 @@ modelsummary(models_spillover, # stars = T,
              gof_map = gm, 
              coef_omit = coef_omit,
              output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by District.") ) %>% 
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_spillover.tex") )

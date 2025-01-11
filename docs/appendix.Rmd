@@ -17,7 +17,7 @@ editor_options:
 
 ```{r global.options, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = TRUE, 
+                      cache = FALSE, 
                       fig.width=8.5, 
                       split = T,
                       fig.align = 'center', 
@@ -40,9 +40,16 @@ library(kableExtra)
 library(here)
 library(ggrepel)
 
-# library(lfe)
-
-library(ggplot2); theme_set(theme_bw())
+# plot defaults 
+library(ggplot2); theme_set(
+  theme_minimal() + 
+        theme(
+          # FOR AJPS
+          panel.grid = element_blank(),         legend.position = "bottom",
+          # END FOR AJPS 
+          panel.border  = element_blank(),
+          panel.grid.major.x = element_blank())
+                            )
   options(
     ggplot2.continuous.color = "cividis",
     ggplot2.continuous.fill = "cividis"
@@ -67,6 +74,43 @@ kablebox_long <- . %>%
 ```
 
 # Theory
+
+
+
+
+::: {#tbl-theory2}
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky"></th>
+    <th class="tg-0pky">Sufficient increase in capacity</th>
+    <th class="tg-0pky">Insufficient change in capacity</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">Priority shifts <br> to policy work</td>
+    <td class="tg-0pky">Level of Service: $0$ or $\uparrow$<br>Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$</td>
+    <td class="tg-0pky">Level of Service: $\downarrow$<br>Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $\uparrow$</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">No change<br>in priorities</td>
+    <td class="tg-0pky">Level of service: $\uparrow$<br>Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$</td>
+    <td class="tg-0pky">Level of service: $0$<br>Ratio of $\frac{\textrm{policy}}{\textrm{service}}$: $0$</td>
+  </tr>
+</tbody></table>
+
+
+Divergent Predictions for the Change in the Levels of Constituency Service and Policy Work as Legislators Gain Experience and Power
+:::
+
 
 Synthetic figures, ignoring baseline levels of each type.
 
@@ -108,7 +152,7 @@ x2 %>%
   labs(y = "Change in Level Provided\n(e.g., the number of requests to agencies)",
        title = "",
        x = "") + 
-  #theme_minimal() + 
+  ## theme_minimal() + 
   xlim(-.2,1.2) + 
   ylim(-1.1,3.1) + 
   theme(panel.grid = element_blank(),
@@ -189,9 +233,9 @@ load(
        str_replace("Correspondence","correspondence_data")
      ) 
 
-all_contacts %>% count() %>% pull(n)  %>% write(file = here::here("docs/tables/n"))
+all_contacts %>% count() %>% pull(n)  %>% write(file = here::here("docs", "tables", "n"))
 
-all_contacts %>% count(TYPE != "NA") %>% pull(n) %>% .[[2]] %>% write(file = here::here("docs/tables/n_coded"))
+all_contacts %>% count(TYPE != "NA") %>% pull(n) %>% .[[2]] %>% write(file = here::here("docs", "tables", "n_coded"))
 
 n_agencies <- all_contacts $agency %>% unique() %>% length()
 
@@ -214,14 +258,14 @@ all_contacts2 <- all_contacts #FIXME
 
 #load(here::here("data", "all_contacts_paper.Rdata"))
 
-all_contacts2 %<>% mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituency\nService", NA) ) %>%
-  mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nWork", type) )
+all_contacts2 %<>% mutate(type = ifelse(TYPE %in% c(1,2,3), "Constituency\nservice", NA) ) %>%
+  mutate(type = ifelse(TYPE %in% c(4,5), "Policy\nwork", type) )
 
-all_contacts2$Type %<>% str_replace("Indiv. Constituent" , "Constituent (Individual)") %>% 
-  str_replace("Corp. Constituent" , "Constituent (Corporate)")%>% 
-  str_replace("501c3 or Local Gov." , "Constituent (501c3 or Local Gov.)")%>% 
-  str_replace("Corp. Policy" , "Policy (Corporate)")%>% 
-  str_replace("^Policy$" , "Policy (General)")
+all_contacts2$Type %<>% str_replace("Indiv. Constituent" , "Constituent (individual)") %>% 
+  str_replace("Corp. Constituent" , "Constituent (corporate)")%>% 
+  str_replace("501c3 or Local Gov." , "Constituent (501c3 or local\n government)")%>% 
+  str_replace("Corp. Policy" , "Policy (corporate)")%>% 
+  str_replace("^Policy$" , "Policy (general)")
 
 
 load(here::here("data", "dcounts_min.Rdata"))
@@ -302,15 +346,15 @@ type2020 <- d %>%
   summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
   ungroup()
 
-write(sum(type2020$n), file = "docs/tables/n2007-2020")
+write(sum(type2020$n), file = here::here("docs", "tables", "n2007-2020"))
 
 coded <- d %>% 
     filter(year> 2006, year < 2021) %>%
-  mutate(coded = !is.na(type)) %>% 
+  mutate(coded = !is.na(type)) %>%
   group_by(coded) %>% 
   summarise(n = sum(per_icpsr_chamber_year_agency_type)) 
 
-coded %>% filter(coded) %>% .$n |> write(file = "docs/tables/n2007-2020coded")
+coded %>% filter(coded) %>% .$n |> write(file = here::here("docs", "tables", "n2007-2020coded"))
 
 coded_ratio = coded$n[2]/(sum(coded$n))
 
@@ -481,9 +525,9 @@ dcounts %>%
   geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "House mean", min.segment.length = 0, size = 3, fill = NA, vjust = -.3, hjust = 0) + 
   scale_x_continuous(breaks = seq(2008, 2016, 1)) +
   labs(x = "",
-       y = "Number of Requests", 
+       y = "Number of requests", 
        fill = cq %>% str_remove_all("\\(|\\)")) + 
-  theme_minimal() + 
+  # theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
         axis.text.x = element_text(angle = 45))+ 
@@ -509,12 +553,13 @@ dcounts %>%
   geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
   scale_x_continuous(breaks = seq(2007, 2017, 1)) +
   labs(x = "",
-       y = "Number of Requests", 
+       y = "Number of requests", 
        fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
-  theme_minimal() + 
+  # theme_minimal() + 
   theme(panel.grid.major.x =  element_blank(),
         panel.grid.minor.x =  element_blank(),
-        axis.text.x = element_text(angle = 45))+ 
+        axis.text.x = element_text(angle = 45),
+        legend.position = "bottom")+ 
     scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
 
 
@@ -535,10 +580,10 @@ dcounts %>%
   geom_text(aes(y = mean_per_chamber), x = 2007.5, label = "Chamber average", min.segment.length = 0, size = 3, fill = NA, vjust = 1.3, hjust = 0) + 
   scale_x_continuous(breaks = seq(2008, 2017, 1)) +
   labs(x = "",
-       y = "Number of Requests", 
+       y = "Number of requests", 
        fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
-  theme_minimal() + 
-  theme(panel.grid.major.x =  element_blank(),
+  # theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),         legend.position = "bottom",
         panel.grid.minor.x =  element_blank(),
         axis.text.x = element_text(angle = 45))+ 
     scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
@@ -567,10 +612,10 @@ dcounts %>%
             size = 3, vjust = 1.3, hjust = 0) + 
   scale_x_continuous(breaks = seq(2008, 2016, 1)) +
   labs(x = "",
-       y = "Number of Requests", 
+       y = "Number of requests", 
        fill = str_c(CHAMBER, "-", cq) %>% str_remove_all("\\(|\\)") ) + 
-  theme_minimal() + 
-  theme(panel.grid.major.x =  element_blank(),
+  # theme_minimal() + 
+  theme(panel.grid.major.x =  element_blank(),         legend.position = "bottom",
         panel.grid.minor.x =  element_blank(),
         axis.text.x = element_text(angle = 45))+ 
     scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
@@ -626,10 +671,10 @@ percentiles %>%
   geom_text(aes(x = Percentile, y = mean, label = ifelse(rank <14 | Percentile < 30, member_state, "")), check_overlap = T, 
                   size = 2,
                   hjust = "inward") + 
-  theme_minimal() + 
+  # theme_minimal() + 
   labs(#title = "Average Legislator Requests per Year by Percentile",
-       x = "Percentile Within Chamber",
-       y = "Average Requests per Year") +     facet_grid(. ~ chamber , scales = "free_y") 
+       x = "Percentile within chamber",
+       y = "Average requests per year") +     facet_grid(. ~ chamber , scales = "free_y") 
 
   
 ```
@@ -685,17 +730,22 @@ p <- dcounts %>%
              label = "Mitch McConnell") +
   labs(x = "",
        color = " ",
-       y = paste("Requests per Legislator per Year"),
+       y = paste("Requests per legislator per year"),
        title = "") +
   scale_x_continuous(breaks = unique(dcounts$year)) + 
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) +
-  theme_minimal() + 
-  theme(panel.background = element_blank(),
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
+
+# FIXME, this takes a long time 
+p +
+  # theme_minimal() + 
+  theme(panel.background = element_blank(), 
+        legend.position = "inside",
+        legend.position.inside = c(1, 1),
+            legend.justification.inside = c(1, 1),
         axis.ticks = element_blank(),
         axis.text.x = element_text(angle = 30, vjust = 0)) 
 
-# FIXME, this takes a long time 
-p
+
 
 ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=6)
 ```   
@@ -726,9 +776,11 @@ dcounts %>%
             min.segment.length = 0,
             size = 2.5) + theme_bw() +
   labs(title = "",
-       x = "State Population (log scale)",
-       y = "Average Number of Requests per Year") +
-  scale_x_log10(labels = comma)
+       x = "State population (log scale)",
+       y = "Average number of requests per year") +
+  scale_x_log10(labels = comma) +
+  theme_minimal() + 
+  theme(panel.grid = element_blank())
 ```   
 
 ---
@@ -770,7 +822,7 @@ type_totals %>%
   scale_y_continuous(breaks = seq(0,500000, 50000), limits = c(0,500000)) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts"),
+       y = paste("Number of contacts"),
        title = "") +
   #geom_text(aes(label = Type, x = Type,y = nT) ) + 
   theme(panel.border = element_blank(),
@@ -781,14 +833,14 @@ type_totals %>%
   ggpubr::geom_bracket(
     xmin = type_totals$Type[1], xmax = type_totals$Type[3], 
     y.position = 380000,
-    label = paste(type_totals$percent_t[1], "Constituency Service" ),
+    label = paste(type_totals$percent_t[1], "Constituency service" ),
     #hjust = 1,
     vjust = -1
   ) + 
   ggpubr::geom_bracket(
     xmin = type_totals$Type[4], xmax = type_totals$Type[5], 
     y.position = 85000,
-    label = paste(type_totals$percent_t[5], "Policy Work"),
+    label = paste(type_totals$percent_t[5], "Policy work"),
     #hjust = 1,
     vjust = -1
   )+ 
@@ -813,10 +865,10 @@ all_contacts2 %>%
   scale_y_continuous(labels = scales::comma) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts\nN =", sum(nrow(all_contacts2))),
+       y = paste("Number of contacts\nN =", sum(nrow(all_contacts2))),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),
+  theme(panel.border = element_blank(),         legend.position = "bottom",
         panel.grid.major.x = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x = element_text())
@@ -838,7 +890,7 @@ type_totals %>%
   scale_y_continuous(breaks = seq(0,500, 100), limits = c(0,700)) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts (Thousands)"),
+       y = paste("Number of contacts (thousands)"),
        title = "") +
   #theme_void() + 
   theme(panel.border = element_blank(),
@@ -877,10 +929,10 @@ all_contacts2 %>%
   scale_y_continuous(breaks = seq(0,500, 50)) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts (Thousands)"),
+       y = paste("Number of contacts (thousands)"),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),
+  theme(panel.border = element_blank(),         legend.position = "bottom",
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x.top = element_text())
@@ -910,10 +962,10 @@ all_contacts2 %>%
   scale_y_continuous(breaks = seq(0,500, 50)) + 
   labs(x = "",
        fill = "",
-       y = paste("Number of Contacts (Thousands)\nN =", N),
+       y = paste("Number of contacts (thousands)\nN =", N),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),
+  theme(panel.border = element_blank(),         legend.position = "bottom",
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x.top = element_text())
@@ -932,7 +984,7 @@ chairs <- all_contacts %>% distinct(icpsr, chair, year)
 d %<>% left_join(chairs) %>% 
   mutate(chair = chair %>%
            replace_na(0),
-         Chair = ifelse(chair == 1, "Committee Chair", " Non-Chair"))
+         Chair = ifelse(chair == 1, "Committee chair", " Non-chair"))
 
 chair <- d %>% 
   group_by(type, year, icpsr, Chair) %>% 
@@ -949,7 +1001,7 @@ chair %>%
   facet_wrap("Chair") + 
   labs(x = "", # "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 
@@ -965,7 +1017,7 @@ chair %>%
   facet_wrap("Chair") + 
   labs(x = "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 ```
@@ -1266,11 +1318,11 @@ chair_adjusted <- chair %>%
   # assuming consistant proportions to uncoded data 
   mutate(mean = mean*multiplier) %>%
   # baseline = non-chairs mean
-  mutate(baseline = ifelse(Chair == "Committee Chair", NA, mean) ) %>%
+  mutate(baseline = ifelse(Chair == "Committee chair", NA, mean) ) %>%
   fill(baseline) %>%
   # point estimates and uncertiatty only for chair estimates 
-  mutate(estimate = ifelse(Chair == "Committee Chair", mean, NA)) %>% 
-  mutate(std.error = ifelse(Chair == "Committee Chair", std.error, NA)) 
+  mutate(estimate = ifelse(Chair == "Committee chair", mean, NA)) %>% 
+  mutate(std.error = ifelse(Chair == "Committee chair", std.error, NA)) 
 
 chair_adjusted %>% 
   #mutate(Chair = ifelse() )
@@ -1284,7 +1336,7 @@ chair_adjusted %>%
   facet_wrap("Chair") + 
   labs(x = "", #Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 
@@ -1302,7 +1354,7 @@ chair_adjusted %>%
   labs(x = "", #Type of Legislator Request to Agency",
        y = "Share of Requests per Year",
        fill = "") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         axis.text.x = element_blank(),
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
@@ -1322,7 +1374,7 @@ chair_adjusted %>%
   labs(x = "", #Type of Legislator Request to Agency",
        y = "Average Requests per Year",
        fill = "") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         axis.text.x = element_blank(),
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
@@ -1341,7 +1393,7 @@ chair_adjusted %>%
   labs(x = "", #Type of Legislator Request to Agency",
        y = "Average Requests per Year",
        fill = "") +
-  theme(panel.grid.major.x = element_blank(),
+  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
         axis.text.x = element_blank(),
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
