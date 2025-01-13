@@ -624,7 +624,7 @@ ggchair <- function(predicted = predicted) {
 
 predicted %>%  
   ggplot() + 
-  aes(x = "", 
+  aes(x = presidents_party, 
       y = estimate, # predicted, 
       ymin = conf.low,# predicted - 1.96*std.error,
       ymax = conf.high, #predicted + 1.96*std.error,
@@ -633,10 +633,11 @@ predicted %>%
       color = chair,
       label = chair,
       ) + 
-  geom_text() + 
+  geom_text(check_overlap = T, hjust = 1.1) + 
   geom_pointrange(position =  position_dodge(width = -.5)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
+  theme(legend.position = "none")
 }
 
 
@@ -683,11 +684,12 @@ predicted %>%
       ymax = conf.high, #predicted + 1.96*std.error,
       shape = chair,
       color = chair,
-      label = ifelse(year_in_congress == "7\nor more", chair, NA) + 
-  geom_text() + 
+      label = ifelse(year_in_congress == "7\nor more", chair, NA) ) + 
+  geom_text(check_overlap = T, hjust = 1.1) + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
-  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis")  +
+  theme(legend.position = "none")
 }
 
 ```
@@ -1037,7 +1039,7 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
   ggchair() + 
-  labs(title = "Predicted Total Letters per year\n(Cross-Sectional)",
+  labs(title =  "", # "Predicted Total Letters per year\n(Cross-Sectional)",
        x = "",
        y = "Predicted Total Letters Per year",
        fill = "",
@@ -1052,7 +1054,7 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
-  labs(title = "Predicted Total Letters Per year\n(Cross-Sectional)",
+  labs(title =  "", # "Predicted Total Letters Per year\n(Cross-Sectional)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1070,7 +1072,7 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Total Letters per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Total Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
        y = "Predicted letters per year",
        fill = "",
@@ -1086,7 +1088,7 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Total Letters Per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Total Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1242,7 +1244,7 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Constituency Service Letters per year\n(Cross-Sectional)",
+  labs(title =  "", # "Predicted Constituency Service Letters per year\n(Cross-Sectional)",
        x = "",
        y = "Predicted letters per year",
        fill = "",
@@ -1258,7 +1260,7 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Constituency Service Letters Per year\n(Cross Sectional)",
+  labs(title =  "", # "Predicted Constituency Service Letters Per year\n(Cross Sectional)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1277,7 +1279,7 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() + 
-  labs(title = "Predicted Constituency Service Letters per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Constituency Service Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
        y = "Predicted letters per year",
        fill = "",
@@ -1293,7 +1295,7 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Constituency Service Letters Per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Constituency Service Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1439,7 +1441,7 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() +
-  labs(title = "Predicted Policy Letters per year\n(Cross-Sectional)",
+  labs(title =  "", # "Predicted Policy Letters per year\n(Cross-Sectional)",
        x = "",
        y = "Predicted letters per year",
        fill = "",
@@ -1455,7 +1457,7 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Policy Letters Per year\n(Cross Sectional)",
+  labs(title =  "", # "Predicted Policy Letters Per year\n(Cross Sectional)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1473,7 +1475,7 @@ predicted %>%
   mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
   ggchair() +
-  labs(title = "Predicted Policy Letters per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Policy Letters per year\nDifference in Differences (Within-Legislator)",
        x = "",
        y = "Predicted letters per year",
        fill = "",
@@ -1489,7 +1491,7 @@ predicted %>%
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Policy Letters Per year\nDifference in Differences (Within-Legislator)",
+  labs(title =  "", # "Predicted Policy Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -1649,9 +1651,9 @@ predicted <- predictions(m_ratio_cross,
 # Cross-sectional predictions
 predicted %>%
 ggchair() +
-  labs(title = "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
+  labs(title = "", # Predicted ratio of constituent to policy work\n(cross-sectional)",
        x = "",
-       y = "Predicted Ratio of\nConstituent to Policy Work",
+       y = "Predicted ratio of\nconstituent to policy work",
        fill = "",
        color = "",
        shape = "")
@@ -1662,9 +1664,9 @@ predicted <- predictions(m_ratio_cross,
 
 predicted %>%
 ggtenure() +
-  labs(title = "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
+  labs(title = "", # "Predicted Ratio of Constituent to Policy Work\n(Cross-Sectional)",
        x = "Years serving in Congress",
-       y = "Predicted Ratio of\nConstituent to Policy Work",
+       y = "Predicted ratio of\nconstituent to policy work",
        fill = "",
        color = "",
        shape = "")
@@ -1678,9 +1680,9 @@ predicted <- predictions(m_ratio_dnd,
 # diff in diff plot
 predicted %>%
   ggchair() + 
-  labs(title = "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+  labs(title = "", # "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
        x = "",
-       y = "Predicted Ratio of\nConstituent to Policy Work",
+       y = "Predicted ratio of\nconstituent to policy work",
        fill = "",
        color = "",
        shape = "")
@@ -1692,9 +1694,9 @@ predicted <- predictions(m_ratio_dnd,
 predicted %>%
 ggtenure() +
     geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
-  labs(title = "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
+  labs(title = "", # "Predicted Ratio of Constituent to Policy Work\nDifference in Differences (Within-Legislator)",
        x = "Years serving in Congress",
-       y = "Predicted Ratio of\nConstituent to Policy Work",
+       y = "Predicted ratio of\nconstituent to policy work",
        fill = "",
        color = "",
        shape = "")
