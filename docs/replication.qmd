@@ -618,9 +618,9 @@ values_tenure <- tidyr::expand(dcounts_tenure,
 # helper functions to plot predicted values
 ggchair <- function(predicted = predicted) {
   
-  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  predicted$chair %<>% str_replace("0", " Not\nchair") %>% str_replace("1", "Chair")
   
-  predicted$presidents_party %<>% str_replace("0", "Not President's party") %>% str_replace("1", "President's party")
+  predicted$presidents_party %<>% str_replace("0", "Not President's\nparty") %>% str_replace("1", "President's\nparty")
 
 predicted %>%  
   ggplot() + 
@@ -633,8 +633,13 @@ predicted %>%
       color = chair,
       label = chair,
       ) + 
-  geom_text(check_overlap = T, hjust = 1.1) + 
-  geom_pointrange(position =  position_dodge(width = -.5)  )  + 
+      geom_text_repel(direction = "y", 
+                      hjust= -.25, 
+                      min.segment.length = Inf, 
+                      force = 2,
+                      vjust = 0, 
+                      check_overlap = T) + 
+  geom_pointrange(position =  position_dodge(width = -.1)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis") +
   theme(legend.position = "none")
@@ -672,7 +677,7 @@ predicted %<>%
   
 predicted %<>% filter(chair == 0 | name %in% c("sixth", "more"))
 
-  predicted$chair %<>% str_replace("0", "Not Chair") %>% str_replace("1", "Chair")
+  predicted$chair %<>% str_replace("0", " Not\nchair") %>% str_replace("1", "Chair")
   
 
 predicted %>%  
@@ -684,8 +689,11 @@ predicted %>%
       ymax = conf.high, #predicted + 1.96*std.error,
       shape = chair,
       color = chair,
-      label = ifelse(year_in_congress == "7\nor more", chair, NA) ) + 
-  geom_text(check_overlap = T, hjust = 1.1) + 
+      label = ifelse(year_in_congress == "6", chair, NA) ) + 
+    geom_text_repel(direction = "y", 
+                    min.segment.length = Inf,
+                    hjust= -.15, 
+                    check_overlap = T) + 
   geom_pointrange(position =  position_dodge(width = -.3)  )  + 
   scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
   scale_color_viridis_d(begin = 0, end = .6, option = "cividis")  +
@@ -2057,6 +2065,9 @@ modelsummary(models_district_party, # stars = T,
   format_table() %>%
    write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
 
+
+save(models_district_party, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_party.Rdata"))
 ```
 
 ### Per District Narrative 

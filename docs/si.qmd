@@ -1,0 +1,330 @@
+---
+journal:
+  blinded: false
+wordcount: 9616
+format:
+  #html
+  #docx
+  cmc-article-pdf:
+    fig-pos: 'hb'
+    fig-env: "figure"
+    filters: [citeproc.lua, wordcount.lua]
+title: Supplemental Information --- How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
+subtitle: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
+runningtitle: Shifting Priorities and Capacity
+runningauthor: Judge-Lord, Powell, & Grimmer
+author:
+  - name: Devin Judge-Lord
+    affiliations:
+     - name: University of Michigan
+       #department: Ford School of Public Policy
+    email: "judgelor@umich.edu"
+    attributes:
+      corresponding: true
+  - name: Eleanor Neff Powell
+    affiliations:
+     - name: University of Wisconsin-Madison
+       #department: Department of Political Science
+  - name: Justin Grimmer
+    affiliations:
+     - name: Stanford University
+     #department: Department of Political Science and Hoover Institution
+thanks: |
+ Links to appendicies and data: [judgelord.github.io/research/correspondence/](https://judgelord.github.io/research/correspondence/). We are grateful for research assistance from Rochelle Snyder, Anna Meier, Hope Karnopp, Jessie Munson, Fatima Ali, Dan Kojis, Aaron Gold, Julia Derzay, Maggie Nead, Lucy McNeil, and Sam Schutt and funding from the ....TODO"
+date: today
+abstract: |
+ 
+ When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect representation.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of `{r} readLines(here::here("docs", "tables", "n2007-2020"))` legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
+ Verification Materials:
+ The data and materials required to verify the computational reproducibility of the results, procedures and analyses in this article are available on the American Journal of Political Science Dataverse within the Harvard Dataverse Network, at: XXX
+keywords: "Congress, constituency service, capacity"
+#linestretch: 1.5
+indent: true
+number-sections: true
+number-depth: 2
+cap-location: top
+bibliography: "docs/congress2019.bib"
+execute:
+  echo: false
+  cache: false
+  message: false
+  warning: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+# inline numbers round to 2
+knitr::knit_hooks$set(
+  inline = function(x) {
+    if (is.na(as.numeric(x))) {
+      return(x)
+      } else
+        return(as.numeric(x) |> round(2) |> prettyNum(big.mark = ",", scientific = F))
+    }
+  )
+```
+
+
+# Appendix {-}
+
+
+# FOIA Data
+
+Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. The FOIA office expects to fill our May 2018 request in 2024.] 
+and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. 
+
+## Variation in Responses to Identical FOIA Request
+
+Responses to our FOIA requests varied significantly. Most agencies offered logs of congressional correspondence, which record a date, sender, summary of the request, and other information used by agency staff to process and respond to requests. Logs generally include any written requests, as well as many phone and email records. For example, between May 2015 and December 2017, the Department of Justice Office of Administrative Law Judges received 132 emails, 109 telephone calls, and only 54 letters. Between 2007 and 2017, the Postal Regulatory Commission received 100 emails, 30 faxes, 173 letters, and 118 calls. In this paper, we use "contacts'' and "letters'' interchangeably to refer to all modes of correspondence. 
+
+Small agencies and regional offices had staff search their email history or provided hand-written records, which we then transcribed. Department Secretary offices generally queried a correspondence tracking database designed to track all correspondence. Still, our FOIA requests to sub-departmental components almost always recovered additional congressional correspondence records missing from central databases. As one central office FOIA officer put it, "Legislative Affairs is supposed to be the front door for the department, but if somebody knows somebody, well..." (personal communication, February 21, 2018). Because of such idiosyncratic relationships, capturing correspondence patterns that "go around'' a Department Secretary's office is key to avoiding erroneous inferences about legislator behavior. For example, when chairs of the Homeland Security committee wrote about immigration enforcement issues, they almost always contacted the Department of Homeland Security (DHS) office of the Executive Secretary, but, at the same time, the Immigration Customs Enforcement (ICE) component of DHS directly received thousands of requests from a different set of legislators. Our systematic data collection ensures that we capture the totality of legislators' behavior.
+
+
+\input{tables/FOIA.tex}
+
+
+
+# Contact Codebook {#codebook}
+
+
+We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word "rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations containing the word "rulemaking" yet uncoded by hand to the "Policy-Rulemaking" category.^[Hundreds of scripts for processing the raw data from each agency and applying any inductively-generated regular-expression-based coding are available on our GitHub, along with each script's full revision history and all written communication with RAs about processing and coding these data.]
+
+We classify legislator requests into five categories: "Individual Constituent Service'' (i.e., individual casework or advocacy on behalf of a group such as employees of a company), "Nonprofit or Local Government Constituent Service'' (e.g., help with a grant application), "Corporate Constituent Service'' (e.g., help with a specific government contract), "Corporate Policy'' (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and "General Policy'' (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporatio). We define constituents broadly, so they need not be in a member's district. For example, Representative Tauscher of Wisconsin wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then "given a chance to resolve issues" with their contract. We coded this case as "Corporate Constituent Service,'' part of our broader measure of constituent service. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as "Individual Constituent Service.'' We note these "hard cases'' to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
+
+## Congressional Correspondence Log Coding Guidelines
+
+The first step is to identify the columns that contain the member of Congress (or Committee), the date that the member-initiated correspondence, and the column that best describes the subject. These should be named FROM, DATE, and SUBJECT. 
+
+We aim to classify the subject of correspondence between members of Congress and government agencies. You can do this using keywords (potential keywords in italics below), but it may also require googling subject lines (e.g., what does this acronym mean in this context!?) and inferring why the legislator made the request. Doing so may require identifying a member's relevant policy positions. For example, if the subject is "mining regulations" or "open internet," a member's voting history on related bills or donations from the industry may help us infer if the letter was policy work on behalf of the industry (type 4) or not (type 5). Limiting your search to a date range around the letter date may yield relevant public statements. If you have questions, find something interesting, or, in your efforts to classify a confusing correspondence, you discover information like a related public statement, note it in the NOTES column. In some cases, columns other than the SUBJECT may offer helpful information. This may be difficult at first, but it will get easier. 
+
+The outcome is a spreadsheet with the first columns being FROM, DATE, SUBJECT, TYPE, CERTAINTY, ALT_TYPE.
+
+
+Below are five potential codes for the TYPE and three potential codes for your level of CERTAINTY that it is this type. If you are less than Very Certain (i.e., if only Fairly Certain or Toss Up), record your second best guess as ALT_TYPE; otherwise, leave this column blank. Only leave NOTES if you think it would be helpful for the team to revisit the entry.
+
+TYPE
+
+1 = Personal Service
+
+**Definition:** Individual, non-commercial constituent service.
+Examples: Help with a government form, passport, visa, back pay, military honor, enlistment, criminal case, request for personal information (e.g., one’s FBI file), disability application, worker compensation, personal complaint, discrimination case, job application, health insurance, financial services complaints, etc.
+
+2 = Commercial Service - Transactional 
+
+**Definition:** Anything related to a specific individual case by a business (including business owners like farmers and consultants). 
+
+- General Examples: Help with a grant application, payment, loan, or contract (buying anything from or selling anything to a government agency). Help with an individual case of tax assessment, fine, or regulatory enforcement action. Help with public relations on behalf of a business.
+- Specific Examples: allocation of radio spectrum, a case against a company, tax dispute, contract for the purchase of military surplus, crop insurance distribution, debt settlement, foreclosure assistance, a fine for a law violation, etc.
+
+3 = Government and Nonprofit Service - Transactional
+
+**Definition:** Same as for (2-Commercial Service), but for municipal or state governments (including cities, counties, etc.) or non-business-oriented nonprofit organizations (i.e., NOT ones that represent an industry or trade association)
+
+4 = Commercial Service - Policy
+
+
+**Definition:** Anything applying to a class of commercial activity or businesses (e.g., shipping, airlines, agriculture), including legislation, bills, acts, appropriations, authorizations, etc.
+
+- General Examples: Authorization of or appropriation to a government program targeted towards a particular industry or industries. Regulation of industry or commercial practice or competition.
+-  Specific Examples: Milk prices, insurance or loan eligibility criteria, purchasing policies, crop insurance rates, pollution criteria, classification of products for trade or taxation, conservation appropriation, worker visa types, restrictions, or caps, etc.
+ 
+5 = Policy Work - NOT in the service of any individual, business, or specific industry.
+
+Examples of Policy Work: 
+
+- Lawmaking 
+- Request for policy-relevant information. This includes prospective legislation, legislation under consideration, or already implemented legislation that requires oversight.  
+- Oversight
+- Committee requesting a report or testimony at a hearing
+- Requesting clarity on an agency rule
+- Lobbying administrative policy
+- Agency rulemaking with non-commercial implications (comments on agency rulemaking may often be (3)) 
+- Political work
+- Meeting with organized constituent groups (e.g., workers, people with disabilities, environmentalists) about policy (meetings with industry groups generally fall under (4)).
+- Media requests
+
+
+6 = Other 
+
+
+	Suggest a new category in the NOTES column only if you cannot fit it under 1-4. For example, requesting dirt on one's political opponents could be called "partisan" as none of the above. Other specific types: thank you (for thank you notes with no other information), congratulations (for congratulatory correspondence on appointments or retirements with no other information), family member (for correspondence on behalf of a family member) 
+
+
+
+# Additional Models {#appendix_models}
+
+## Interpreting Experence Effects
+
+In the paper, we draw inferences about the effects of legislator experience from a within-district design, showing that new legislators provide less constituency service. The within-legislator design shows results consistent with this conclusion. However, we interpret indicator variables for years of experience in the within-legislator design with caution given the complexity of this model with time shocks and experience increasing in time, which has the potential to cause identification issues in interpreting the estimates for years of experience. Including years of experience as a control is appropriate and important for correctly chair effects, which are clearly identified in these models.  
+
+If we interpret this alternative measure of experience as identified, it shows further support for the conclusions of the within-district models. Legislators make significantly fewer requests to agencies in their first year than they do the following year. Subsequent increases are less significant.  
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of 0.24 requests *per agency*. The experience gained between the first and seventh years causes an increase of 0.51 per agency. Across all \input{tables/n_agencies} agencies in these data, this represents an increase of approximately 46 additional requests per year, 45.5% of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.28 per agency, an increase of approximately 25 additional requests per year, 24.5% of the average number of requests per year in our data.
+
+```{r}
+#| label: m-total-predicted-time
+knitr::include_graphics("docs/figs/m-total-predicted-4.png")
+```
+
+@fig-m-total-predicted-time shows the predicted total number of letters in Congress and committee chair status (comparing predictions for counterfactuals where the same legislator did and did not receive a chairmanship in their sixth year).^[Predictions are based on a legislator-agency pair where (1) the legislators' average annual contacts equaled the overall average, (2) the legislators' number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.]
+
+
+@fig-m-total-predicted-time uses the coefficients in legislators' first six years in office from Table @tbl-models_total. The reference group is representatives who have served longer than six years.^[Interpreting these coefficients requires that we assume the effects of tenure and committee assignment are linearly separable. This assumption is reasonable because most legislators do not become chairs, ranking members, or join prestige committees in their first six years, and almost none in their first two years. 
+
+The first column of Table @tbl-models_total shows large cross-sectional differences: legislators in their first year make fewer contacts than more experienced legislators. First-year legislators make approximately 0.255 fewer requests per agency than legislators in their seventh year or beyond. This difference shrinks in the second year and then is mostly gone. But we advise caution in interpreting the differences in Column 1 because they conflate the effect of increased experience with other characteristics that may correlate with whether a legislator remains in office and, thus whether we observe them in later years.   
+
+To account for possible differences in legislators who obtain different levels of tenure, the second column of Table @tbl-models_total estimates the difference-in-differences specification in @eq-diff1. The tenure coefficients show that legislators provide less constituency service in their first year in office. As they acquire experience, they make more requests to federal agencies. In their first year in office, legislators provide 21.33 (\input{tables/n_agencies} $\times$ (.512 - .275)) fewer requests per agency than legislators in their second year and 29.07 (\input{tables/n_agencies} $\times$ (.512 - .189)) fewer requests than legislators in their third year---both differences are statistically significant at conventional levels. The overall increase in levels of constituency service from a legislator's first to third year is similar in size to the increase that comes from becoming a member of the oversight committee. Once legislators enter their fourth year, their behavior no longer differs from more experienced legislators. We find small and statistically insignificant differences for legislators in their fourth through sixth years. As legislators acquire experience and build their office's organizational capacity in their first two years, they make more contacts with federal agencies.  
+
+As with the analysis of committee prestige, the findings in Table @tbl-models_total are robust to alternative specifications. Despite the difference-in-difference design, we might still be concerned that the set of legislators who served a third year differs from those who served a first year. If this were the case, our findings would result from both the experience and a selection effect due to House members who win reelection, a potential indication that they are better able to perform the job than other legislators. To address the potentially different samples each year, the third column of Table @tbl-models_total assesses the changes in the number of contacts of federal agencies for legislators who serve for at least three years. The pattern is similar: legislators initially provide less constituency service in their first two years than in subsequent years. Column 4 in Table @tbl-models_total shows that the results are robust to analyzing $\log(Y_{ijt} + 1)$, ensuring that our results are not because of outliers. Additional models below estimate the same models as Table @tbl-models_total on hand-coded subsets of the data, showing similar results. 
+
+
+ 
+
+
+
+
+## Constituency Service Only
+
+```{r}
+#| tbl-cap: "The Effect Experience and Institutional Power on Constituency Service"
+#| label: tbl-models_con
+
+
+load(here::here("models", "models_con.Rdata"))
+modelsummary::modelsummary(models_con,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit, 
+             notes = "This table shows how the number of contacts hand-coded as constituecy service changes as legislators acquire more expiernece and power in Congress. Column 1 shows the average differences across committee assignments and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least 3 years in Congress. Column 4 takes the Log of the counts + 1 as the dependent variable."
+)
+
+```
+
+Table @tbl-models_con is identical to Table @tbl-models_total except that we subset the data to only legislator requests hand-coded as constituency service. 
+Column 2 of Table @tbl-models_con provides the estimated effects from the difference-in-differences specification in @eq-diff1. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. We estimate that the experience gained between the first and second year in Congress causes an increase of 0.02 requests *per agency*. The experience gained between the first and seventh year causes an increase of 0.21 per agency. Across all 92 agencies, this represents an increase of approximately 19 additional requests per year, 21.9% of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.19 per agency, an increase of approximately 17 additional requests per year, 19.6% of the average requests per year in our data.
+
+
+```{r}
+#| fig-cap: "Predicted Number of Constituency Service Requests"
+#| label: fig-m-con-predicted
+#| fig-subcap: 
+#|   - "Model 1"
+#|   - "Model 2"
+#|   - "Model 3"
+#|   - "Model 4"
+#| layout-ncol: 2
+#| out-width: 100%
+knitr::include_graphics("docs/figs/m-con-predicted-1.png")
+knitr::include_graphics("docs/figs/m-con-predicted-2.png")
+knitr::include_graphics("docs/figs/m-con-predicted-3.png")
+knitr::include_graphics("docs/figs/m-con-predicted-4.png")
+```
+
+## Policy Work Only
+
+```{r}
+#| fig-cap: "The Effect Experience and Institutional Power on Policy Work"
+#| label: tbl-models_policy
+
+load(here::here("models", "models_policy.Rdata"))
+modelsummary::modelsummary(models_policy,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit, 
+             notes = "This table shows how the number of hand-coded policy work contacts changes as legislators acquire more experience and power in Congress. Column 1 shows the average differences across committee assignments and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least 3 years in Congress. Column 4 takes the Log of the counts + 1 as the dependent variable."
+)
+```
+
+
+Table @tbl-models_policy is identical to Table @tbl-models_total except that we subset the data to only legislator requests hand-coded as policy work. 
+Column 2 of Table @tbl-models_policy and @fig-m-policy-predicted) provide the estimated effects from the difference-in-differences specification in @eq-diff1. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of 0.17  policy requests(95-percent confidence interval [0.11, 0.24]). Across all 92 agencies, this represents an increase of approximately 16 additional requests per year, 96.8%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of 0.11 contacts per agency while joining a prestige committee causes a 0.17 per agency increase in the policy requests a member of Congress makes.
+
+```{r}
+#| fig-cap: "Predicted Number of Policy Requests"
+#| label: fig-m-policy-predicted
+#| fig-subcap: 
+#|   - "Model 1"
+#|   - "Model 2"
+#|   - "Model 3"
+#|   - "Model 4"
+#| layout-ncol: 2
+#| out-width: 100%
+knitr::include_graphics("docs/figs/m-policy-predicted-1.png")
+knitr::include_graphics("docs/figs/m-policy-predicted-2.png")
+knitr::include_graphics("docs/figs/m-policy-predicted-3.png")
+knitr::include_graphics("docs/figs/m-policy-predicted-4.png")
+```
+
+## Within-District Models with Partisan Turnover {#appendix_models_district}
+
+
+The main district-level models in Table @tbl-models_district@eq- of the paper focus on estimating the effect of legislator experience by leveraging turnover within districts. We compare the service that a district receives before and after electing a new legislator and in the following years as legislators gain experience in office.
+
+As a robustness check, we replicate our within-district results using a subset of district-year-count observations where turnover in a district allows us to assess the partisanship of the prior member holding that seat. We interact an indicator of whether the prior member was of the "same party" with all other indicators (i.e., whether the member is new, serving in years 1-6, or serving longer than 6 years). We compare the service that a district receives before and after electing a new legislator and in the following years, accounting for whether that member is of the same party. However, a structural constraint of the data means that this robustness check is limited to observations where turnover within a redistricting cycle gives us a measure of whether the legislator replaced a member of the same party or of another party. 
+
+The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do not count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
+
+Many NAs exist for the "same party" variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
+Specifically, we go from **7666 observations in Table @tbl-models_district to 2822 observations in Table @tbl-models_district_party when we include "same party" in the models below.**
+
+To measure turnover in the Senate where "districts" have two members, we code "same party" as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the "same party" is FALSE. If there are two Democrats and a Democrat is elected, the "same party" is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, "same party" is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
+
+now on the number of contacts made from the representative of a particular state or district $i$ in a year $t$, $Y_{it}$. We again use a difference-in-differences approach to account for district-specific characteristics and over-time changes in how legislators provide constituency service. Specifically, we estimate regressions of the form: 
+
+$$
+\begin{aligned}
+Y_{it} & = & \beta_{1}\text{New Member}_{it}*\text{Same Party} + \sum_{s = 2}^{6} \beta_{s} \text{tenure}_{s[it]}*\text{Same Party} + \gamma_{i} + \delta_{t} + \epsilon_{it} 
+\end{aligned}
+$$ {#eq-district1party}
+
+$\gamma_{i}$ is a district-specific fixed effect that accounts for each district's particular demographic characteristics, along with the levels of demand from district residents. $\delta_{t}$ is a year fixed effect that controls for common shocks. Our key result of interest, $\beta_{1}$, is the effect of a district electing a new representative. To understand how the effect of a new representative changes over time, we estimate district-level differences for a legislator's second ($\beta_{2}$) through sixth-year ($\beta_{6})$.^[It is worth noting that this treatment is fundamentally different for a district than within-legislator variation. In each election, each district allows its incumbent to acquire another term or replaces her. This differs from within-legislator comparisons because legislators can only acquire more tenure or leave the chamber. A within-legislator analysis estimates the service provided by incumbents with more or less experience; it cannot estimate the impact of the choice of an incumbent or a new representative incumbent.] 
+
+The first column of Table @tbl-models_district_party provides a simple difference-in-means for districts represented by a new member and legislators in their first six years in office. Districts represented by new legislators receive substantially lower levels of constituency service. On average, districts with a new representative have  fewer constituency service requests made on their behalf. The magnitude of this difference shrinks for districts represented by legislators in their second year It then reaches a relatively stable number for districts represented by legislators in their third through sixth years. %, with some slight evidence that legislators make more contacts in election years---the even-numbered years of tenure for the vast majority of legislators in our sample. 
+
+
+
+```{r}
+#| title: "The Effect of Electing New Members on a District's Level of Constituency Service" 
+#| label: tbl-models_district_party
+
+load(here::here("models", "models_district_party.Rdata"))
+modelsummary::modelsummary(models_district_party,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             coef_omit = coef_omit, 
+             notes =  "This table shows how constituent service at the district level changes over time. Model 1 is a cross-sectional comparison excluding district and year fixed effects. The second column is a district x year difference in differences model. Column 3 focuses is the diff-in-diff subsetted to legislators who survive their first election."
+)
+
+```
+
+
+To account for differences in district size, demographics, and demand for constituency service, the second column of Table @tbl-models_district_party estimates the difference-in-differences from @eq-district1party. In this specification, we see a large causal effect of a new member taking over: electing a new member causes a decrease in constituency service requests.
+The effect of electing a new representative, however, dissipates quickly. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately, though results for the House are not stastically signicant in this restricted model. In short, new legislators make fewer contacts for their constituents than established legislators.  
+
+```{r}
+#| fig-cap: "Predicted Number of Total Letters per District) 2007-2018"
+#| label: fig-m-district-predicted-party
+#| fig-subcap: 
+#|   - "Model 1"
+#|   - "Model 2"
+#| layout-ncol: 2
+#| out-width: 100%
+knitr::include_graphics("docs/figs/m-district-predicted-2.png")
+knitr::include_graphics("docs/figs/m-district-predicted-4.png")
+```
+
+Despite the increased uncertainty caused by the much smaller (and non-random) sample of districts where turnover allows us to measure the new “same party” variable, our main results (direction, statistical significance, and magnitude of effects) are largely the same: legislators contact the bureaucracy significantly less in their first two years in office, even holding district constant. Because the new models contain a large number of interaction terms, we present predictions at modal values in @fig-m-district-predicted-party.
+@fig-m-district-predicted-party shows the predicted total number of letters per district per year by whether a district is represented by a new legislator and whether that legislator replaced a member of their same party (compared to counterfactuals where the same legislator has been serving for more than six years).^[Predictions are based on a district-year pair where (1) the district's average annual contacts equaled the overall average, (2) the district's number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.]
+
+

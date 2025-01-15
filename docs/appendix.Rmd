@@ -222,6 +222,12 @@ FOIA %>% select(-Coded) %>%
   row_spec(row = 17, bold = T) %>% 
   #kable_styling(font_size = 9, full_width = TRUE) %>% 
        write_file(here::here("docs", "tables", "FOIA.tex")) 
+
+FOIA |>
+  dplyr::select(-Coded) |>
+  dplyr::rename(N = Observations) |> 
+  write.csv(file = here::here("docs", "tables", "FOIA.csv"),
+          row.names = F) 
 ```
 
 ```{r data, cache=FALSE}
