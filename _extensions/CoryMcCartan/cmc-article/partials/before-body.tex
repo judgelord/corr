@@ -1,0 +1,26 @@
+$if(font-serif-only)$$else$\allsectionsfont{\sffamily}$endif$
+
+$if(title)$
+\maketitle
+$endif$
+
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(dataverse)$
+\textbf{\textit{Verification Materials:}}
+The data and materials required to verify the computational reproducibility of the results, procedures and analyses in this article are available on the American Journal of Political Science Dataverse within the Harvard Dataverse Network, at: 
+$dataverse$
+$endif$
+
+$if(keywords)$
+\textbf{\textit{Keywords:}}\quad $for(keywords)$$keywords$$sep$~\textbullet~$endfor$
+$endif$
+
+$if(wordcount)$
+\textbf{\textit{Word count:}} $wordcount$
+$endif$
