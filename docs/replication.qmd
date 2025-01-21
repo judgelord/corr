@@ -22,7 +22,7 @@ library(here)
 library(ggrepel)
 
 knitr::opts_chunk$set(echo = TRUE, 
-                      cache = FALSE, # CACHE 
+                      cache =F, # CACHE 
                       fig.width=4.5, 
                       fig.height = 3.5,
                       split = T,
@@ -36,8 +36,8 @@ knitr::opts_chunk$set(echo = TRUE,
 knit_hooks$set(inline = function(x) {
   if (is.na(as.numeric(x))) {
     return(x)
-    } else 
-        return(round(x,2))
+    } else
+        return(as.numeric(x) |> round(2))
 })
 
 
@@ -84,6 +84,7 @@ kablebox_long <- . %>%
 #| label: 2x2-fig
 #| fig-width: 3.6
 #| fig-height: 3.6
+#| layout-ncol: 2
 
 
 # CAPACITY
@@ -114,7 +115,7 @@ capacity <- tibble::tibble(
            y = 150*.8,
           hjust = -.01,
           vjust = -.1,
-          color = "blue",
+          color = "black",
           size = 3) +
   geom_label(x = 0, 
              y = c(100, 110, 120,130,140, 150), 
@@ -156,21 +157,20 @@ priority <- tibble::tibble(
    stat_function(fun =  ~ 2.5*.x , geom = "line", linetype = 2, alpha = .6) +
    stat_function(fun =  ~ 2*.x , geom = "line", linetype = 2, alpha = .8) +
    stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
-
+  geom_point(alpha = c(.5,1) ) +
   geom_segment(x = 100*.2, 
            y = 100*.8,
            xend = 100*.4, 
            yend = 100*.6,
            arrow = arrow(type = "closed", length = unit(.1, "in")),
            color = "blue") + 
-  geom_point(alpha = c(.5,1) ) +
   annotate("text", 
           label = "Shifting priority toward policy work\nwithout increasing capacity", 
            x = 100*.4, 
            y = 100*.6,
           hjust = -.01,
           vjust = 1.1,
-          color = "blue",
+          color = "black",
           size = 3) +
   geom_label(aes(x = 150*c(.24, .66),
                  y = 150 ),
@@ -212,20 +212,20 @@ both <- tibble::tibble(
                  y = 150 ),
              label = c("80:20", "60:40") ,
           size = 3) + 
+    geom_point(alpha = c(.5,1) ) +
   geom_segment(x = 100*.2, 
            y = 100*.8,
            xend = 148*.4, 
            yend = 149*.6,
            arrow = arrow(type = "closed", length = unit(.1, "in")),
            color = "blue") + 
-  geom_point(alpha = c(.5,1) ) +
   annotate("text", 
           label = "Shifting priority toward policy work\n AND increasing capacity by 50%", 
            x = 150*.4, 
            y = 150*.6,
           hjust = .06,
           vjust = -.5,
-          color = "blue",
+          color = "black",
           size = 3) +
     geom_label(x = 0, y = c(100, 150), 
              label = c("1x", "1.5x"),
@@ -266,8 +266,10 @@ regions <- more_p %>%
   mutate(mean_x = mean(x),
          mean_y = mean(y),
          name = label %>% 
-           str_replace("B", "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work.") %>% 
-           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service.")) %>% 
+           str_replace("B", "c_{i1}p_{i1} > c_{i2}p_{i2}") %>% # "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work.") %>% 
+           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service"),
+           #expression("$c_{i1}p_{i1} > c_{i2}p_{i2}$")
+           ) %>% 
   ungroup() %>% 
 ggplot() +
   aes(x = x,
@@ -286,7 +288,9 @@ ggplot() +
   scale_fill_grey() +
   scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
-  geom_text(aes(x = mean_x, y = mean_y), check_overlap = T,
+  geom_text(aes(x = mean_x, y = mean_y), 
+            check_overlap = T, 
+            #parse = T,
           size = 3,
           vjust =.5) + 
   labs(title = "",
@@ -318,6 +322,17 @@ load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
 load(here::here("data", "dcounts_per_district.Rdata"))
 load(here::here("data", "members.Rdata"))
+```
+
+
+
+```{r means}
+mean_total <- mean(dcounts_tenure$perYear)
+mean_con <- mean(dcounts_tenure$perYear_con)
+mean_pol <- mean(dcounts_tenure$perYear_policy)
+
+save(mean_total, mean_con, mean_pol,
+     file = here::here("data", "means.Rdata"))
 ```
 
 
@@ -454,6 +469,7 @@ n_agency <- dcounts_tenure$agency |> unique() |> length()
 ```
 
 ## Descriptives
+
 ```{r}
 # check N
 dcounts_tenure %>% tally(perYear, name = "Member-Level Observations") |> kable()
@@ -510,6 +526,50 @@ dcounts_tenure %>% group_by(agency) %>% summarise(n = perYear %>% sum()) %>% arr
 # total per legislator-agency pair 
 dcounts_tenure %>% group_by(Legislator_x_Agency) %>% summarise(n = perYear %>% sum()) %>% arrange(-n) %>% kablebox()
 ```
+
+### Gini coefficients 
+
+```{r gini}
+library(ineq)
+gini <- dcounts_tenure |> 
+  ungroup() |> 
+  group_by(year, chamber) |> 
+  summarise(gini = round(Gini(perYear),2)) |>
+  arrange(- year) |> 
+  filter(year > 2006) 
+
+gini|> 
+  kablebox()
+
+gini |> 
+  ggplot() +
+  aes( x = year, y = gini, color = chamber) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+gini2 <- dcounts_tenure |> 
+  filter(perYear > 0) |> 
+  ungroup() |> 
+  group_by(year, chamber) |> 
+  summarise(gini = round(Gini(perYear),2)) |>
+  arrange(- year) |> 
+  filter(year > 2006) 
+
+gini2|> 
+  kablebox()
+
+gini2 |> 
+  ggplot() +
+  aes( x = year, y = gini, color = chamber) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+In 2023, Columbia had the highest Gini coefficient at .55. 
+
+https://ourworldindata.org/what-is-the-gini-coefficient
+
+(The Gini coefficient for House campaign spending in 2016 was .29).  
 
 
 ## Values for Predictions
@@ -736,7 +796,7 @@ cm = c("chair" = "Committee Chair",
         "fourth_year" = "Fourth Year",
         "fifth_year" = "Fifth Year",
         "sixth_year" = "Sixth Year",
-       "new_member" = " New Member*", 
+       "new_member" = " New Member", 
        "new_senator" = " New Senator in Delegation",
        "new_one" = " New Member in Delegation",
               "new_proportion" = " New Proportion in Delegation",
@@ -769,8 +829,6 @@ setFixest_dict(cm)
 
 format_n <- function(x) format(round(x, 3), big.mark=",")
 f <- function(x) stringr::str_replace(x, "[A-z]", "✓")
-f("X")
-f("x")
 
 gm <- list(
   list("raw" = "nobs", "clean" = "Observations", "fmt" = format_n),
@@ -1016,9 +1074,9 @@ save(models_total, rows, cm, gm, coef_omit, beta, se,
 
 ### Total Letters Narrative
 
-To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `\ref{tab:models_total}`) provide the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes an `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
+To address potential confounding in across-legislator comparisons, the estimates from Model 2 (Column 2 of Table `@tbl-models_total`) provide the estimated effects from the difference-in-differences specification in Equation `@eq-diff1`. Across all measures of institutional power, we find that more power increases the number of requests that legislators make. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  requests *per agency* (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean_total ) %>% round(2)*100 `% of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes an `r beta$chair` per agency increase in the number of contacts a member of Congress makes.
 
-We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all n_agency agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests *per agency*. The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all n_agency agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean_total ) %>% round(2)*100 `% of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean_total ) %>% round(2)*100 `% of the average requests per year in our data. 
 
 ### Total Letters Predictions 
 
@@ -1095,7 +1153,7 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
-    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1) %>% str_replace("N", "1")))) + 
   labs(title =  "", # "Predicted Total Letters Per year\nDifference in Differences (Within-Legislator)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
@@ -1219,9 +1277,9 @@ save(models_con, rows, cm, gm, coef_omit, beta, se,
 
 ### Constituency Service Narrative 
 
-Table `\ref{tab:models_con}` is identical to Table` \ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as constituency service. 
-Column 2 of Table `\ref{tab:models_con}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. 
-We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests `\textit{per agency}`.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean(dcounts_tenure$perYear_con) ) %>% round(3)*100 ``\%` of the average requests per year in our data. 
+Table `@tbl-models_con` is identical to Table `@tbl-models_total` except that we subset the data to only legislator requests hand-coded as constituency service. 
+Column 2 of Table `@tbl-models_con` provides the estimated effects from the difference-in-differences specification in Equation `@eq-diff1`. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. 
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second-beta$first`  requests *per agency*.  The experience gained between the first and seventh year causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta$first) / mean_con ) %>% round(2)*100 `% of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta$second) / mean_con ) %>% round(2)*100 `% of the average requests per year in our data. 
 
 
 ### Constituency Service Predictions 
@@ -1267,7 +1325,7 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
-    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
+   # geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title =  "", # "Predicted Constituency Service Letters Per year\n(Cross Sectional)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
@@ -1464,7 +1522,6 @@ predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
 ggtenure() +
-    geom_line(aes(x = as.numeric(year_in_congress %>% str_sub(1,1)))) + 
   labs(title =  "", # "Predicted Policy Letters Per year\n(Cross Sectional)",
        x = "Years serving in Congress",
        y = "Predicted letters per year",
@@ -1512,8 +1569,84 @@ ggtenure() +
 
 ### Policy Work Narrative
 
-Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total}` except that we subset the data to only legislator requests hand-coded as policy work. 
-Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
+Table `@tbl-models_policy` is identical to Table `@tbl-models_total` except that we subset the data to only legislator requests hand-coded as policy work. 
+Column 2 of Table `@tbl-models_policy` provides the estimated effects from the difference-in-differences specification in Equation `@eq-diff1`. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests *per agency* (95-percent confidence interval [`r beta$chair - se$chair*1.96`, `r beta$chair + se$chair*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$chair*n_agency) %>% round(0)` additional requests per year, `r (beta$chair / mean_pol ) %>% round(2)*100`% of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency, while joining a prestige committee causes a `r beta$chair` per agency increase in the policy requests a member of Congress makes.
+
+
+## Total + Constituency
+
+### Total + Constituency Service Table
+
+- Table: `tables/models_total_con.tex` (sans stars)
+
+```{r models_total_con}
+models_total_con <- list(
+  "(1)" = m_total_cross,
+  "(2)" = m_total_dnd,
+  "(3)" =  m_con_cross,
+  "(4)" = m_con_dnd
+)
+
+
+rows <- tibble(
+  term = c("Dependent variable"),
+  `(1)` = c("Total Count"),
+  `(2)` =c("Total Count"),
+  `(3)` = c("Constituent Service"),
+  `(4)` = c("Constituent Service") 
+)
+
+attr(rows, 'position') <- c(0)
+
+modelsummary::modelsummary(models_total_con, stars = T, 
+             add_rows = rows, 
+             coef_map = cm,
+             gof_map = gm, 
+             coef_omit = coef_omit) %>% 
+  tinytable::style_tt(i = 1, bold = T, line = "b")
+
+beta_total <- m_total_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+beta_con <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+se_total <- m_total_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se) |> mutate_all(as.numeric)
+
+se_con <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)|> mutate_all(as.numeric)
+
+save(models_total_con, rows, cm, gm, beta_total, se_total, beta_con, se_con,
+     file = here::here("models", "models_total_con.Rdata"))
+```
+
+
+### Total + Constituency Service Narrative 
+
+ `@tab-models_total_con` shows the effects of institutional power and expierence on overall requests to federal agencies (Models 1 and 1) and constituency service requests (Models 3 and 4). Models 3 and 4 are identical to models 1 and 2 except that we subset the data to only legislator requests hand-coded as constituency service. 
+Columns 2 and 4 of `@tab-models_total_con` provides the estimated effects from the difference-in-differences specification in `@eq-diff1`. 
+More experience and receiving a committee chairship increases the total requests to federal agencies.
+More experience increases the level of constituency service that legislators provide. 
+The effect of being a committee chair is positive but not significant at the .05 level. 
+
+Becoming a committee chair causes an increase of `r beta_total$chair` requests *per agency*
+(95-percent confidence interval [`r beta_total$chair-1.96*se_total$chair`, `r beta_total$chair+1.96*se_total$chair`]). Across all
+`{r} readLines(here::here("docs", "tables", "n_agencies"))` agencies,
+this represents an increase of approximately `r beta_total$chair*n_agency` additional requests per
+year,  `r ((-beta_total$second) / mean_total ) %>% round(2)*100`% of the average requests per year in our data.
+
+
+Subsetting to requests hand-coded as constituency service, we estimate that becoming a committee chair causes an increase of `r beta_con$chair` requests *per agency*, but this increase is not significant at the .05 level (95-percent confidence interval [`r beta_con$chair-1.96*se_con$chair`, `r beta_con$chair+1.96*se_con$chair`]). Across all
+`{r} readLines(here::here("docs", "tables", "n_agencies"))` agencies, this represents an increase of approximately `r beta_con$chair*n_agency` additional requests per
+year,  `r ((-beta_con$second) / mean_con ) %>% round(2)*100`% of the average constituency service requests per year in our data.
+
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta_total$second-beta_total$first`  requests *per agency*.  
+The experience gained between the first and seventh year causes an increase of `r -beta_total$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta_total$first*n_agency) %>% round(0)` additional requests per year, `r ((-beta_total$first) / mean_total ) %>% round(2)*100`% of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta_total$second` per agency, an increase of approximately `r (-beta_total$second*n_agency) %>% round(0)` additional requests per year, `r ((-beta_total$second) / mean_total ) %>% round(2)*100`% of the average requests per year in our data. 
+
+
+Subsetting to requests hand-coded as constituency service, we estimate that the experience gained between the first and second year in Congress causes an increase of `r beta_con$second-beta_con$first` constituency service requests *per agency*.  
+The experience gained between the first and seventh year causes an increase of `r -beta_con$first` per agency. Across all `r n_agency` agencies, this represents an increase of approximately `r (-beta_con$first*n_agency) %>% round(0)` additional constituency service requests per year, `r ((-beta_con$first) / mean_total ) %>% round(2)*100`% of the average constituency service requests per year in our data. Again, there is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta_con$second` per agency, an increase of approximately `r (-beta_con$second*n_agency) %>% round(0)` additional constituency service requests per year, `r ((-beta_con$second) / mean_total ) %>% round(2)*100`% of the average requests per year in our data. 
+
+
+
 
 # Ratio 
 
@@ -1629,7 +1762,7 @@ save(models_ratio, rows, cm, gm, coef_omit, beta, se,
 
 ### Ratio Narrative 
 
-Column 2 of Table `\ref{tab:models_ratio}` provides the estimated effects from the difference-in-differences specification. 
+Column 2 of Table `@tbl-models_ratio` provides the estimated effects from the difference-in-differences specification. 
 We estimate that becoming a committee chair causes the ratio of constituency service to policy work to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair + se$chair*1.96`, `r beta$chair - se$chair*1.96` ]). Becoming a ranking member of a committee causes a decrease of `r -beta$ranking_minority`  in the ratio.
 
 
@@ -1742,7 +1875,7 @@ Many NAs exist for the `same party` variable because we only observe it when the
 
 To measure turnover in the Senate where "districts" have two members, we code `same party` as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the `same party` is FALSE. If there are two Democrats and a Democrat is elected, the `same party` is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, `same_party` is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
 
-```{r}
+```{r crosswalk}
 # year congress crosswalk 
 year_congress <- dcounts_tenure %>% distinct(year, congress)
 
@@ -1821,7 +1954,7 @@ party_crosswalk  |>  #filter(chamber == "House") |>
 
 
 
-```{r}
+```{r add-crosswalk}
 
 # Add same_party variable to district counts data 
 dcounts_per_district %<>% 
@@ -2072,7 +2205,7 @@ save(models_district_party, rows, cm, gm, coef_omit, beta, se,
 
 ### Per District Narrative 
 
-To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `\ref{tab:models_district}` provides the estimated effects from the difference-in-differences specification  from Equation `\ref{e:district1}`.
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification  from Equation `@eq-district1`.
 In this specification, we see a large causal effect of a new member taking over: 
 electing a new member  causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
@@ -2239,6 +2372,7 @@ predicted <- predictions(m_district_dnd,
 
 predicted %>%
 ggdistrict() +
+      geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per District\n(Difference-in-differneces)",
        x = "Years in Congress",
        y = "Predicted letters per year",
@@ -2261,6 +2395,7 @@ predicted <- predictions(m_district_dnd_party,
 # diff in diff plot
 predicted %>%
   ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per District\n(Difference-in-differences)",
        x = "Years in Congress",
        y = "Predicted letters per year",
@@ -2305,6 +2440,7 @@ predicted <- predictions(m_district_dnd_house,
 
 predicted %>%
 ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per House District\n(Difference-in-differneces)",
        x = "Years in Congress",
        y = "Predicted letters per year",
@@ -2327,6 +2463,7 @@ predicted <- predictions(m_district_dnd_house_party,
 # diff in diff plot
 predicted %>%
   ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per House District\n(Difference-in-differences)",
        x = "Years in Congress",
        y = "Predicted letters per year",
@@ -2385,6 +2522,7 @@ predicted <- predictions(m_district_dnd_senate,
 
 predicted %>%
 ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
        y = "Predicted letters per year",
@@ -2407,6 +2545,7 @@ predicted <- predictions(m_district_dnd_senate_party,
 # diff in diff plot
 predicted %>%
   ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
        y = "Predicted letters per year",
