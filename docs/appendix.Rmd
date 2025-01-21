@@ -745,9 +745,10 @@ p <- dcounts %>%
 p +
   # theme_minimal() + 
   theme(panel.background = element_blank(), 
+        # AJPS formatting 
         legend.position = "inside",
-        legend.position.inside = c(1, 1),
-            legend.justification.inside = c(1, 1),
+        #legend.position.inside = c(1, 1),
+        # legend.justification.inside = c(1, 1),
         axis.ticks = element_blank(),
         axis.text.x = element_text(angle = 30, vjust = 0)) 
 
@@ -874,7 +875,8 @@ all_contacts2 %>%
        y = paste("Number of contacts\nN =", sum(nrow(all_contacts2))),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),         legend.position = "bottom",
+  theme(panel.border = element_blank(),         
+        legend.position = "bottom",
         panel.grid.major.x = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x = element_text())
@@ -938,7 +940,8 @@ all_contacts2 %>%
        y = paste("Number of contacts (thousands)"),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),         legend.position = "bottom",
+  theme(panel.border = element_blank(),         
+        legend.position = "bottom",
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x.top = element_text())
@@ -971,7 +974,8 @@ all_contacts2 %>%
        y = paste("Number of contacts (thousands)\nN =", N),
        title = "") +
   #theme_void() + 
-  theme(panel.border = element_blank(),         legend.position = "bottom",
+  theme(panel.border = element_blank(),         
+        legend.position = "bottom",
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
         axis.text.x.top = element_text())
@@ -1007,7 +1011,8 @@ chair %>%
   facet_wrap("Chair") + 
   labs(x = "", # "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
+  theme(panel.grid.major.x = element_blank(),         
+        legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 
@@ -1023,7 +1028,8 @@ chair %>%
   facet_wrap("Chair") + 
   labs(x = "Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
+  theme(panel.grid.major.x = element_blank(),         
+        legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 ```
@@ -1143,6 +1149,10 @@ df %<>%
   # mutate(agency_year) %>% 
   mutate(lpyear = log(perYear + 1))
 ```
+
+---
+
+
 
 ---
 
@@ -1342,7 +1352,8 @@ chair_adjusted %>%
   facet_wrap("Chair") + 
   labs(x = "", #Type of Legislator Request to Agency",
        y = "Average Requests per Year") +
-  theme(panel.grid.major.x = element_blank(),         legend.position = "bottom",
+  theme(panel.grid.major.x = element_blank(),        
+        legend.position = "bottom",
         panel.border = element_blank(),
         axis.ticks.x = element_blank())
 
