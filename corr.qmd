@@ -6,7 +6,7 @@ format:
   #html
   #docx
   cmc-article-pdf:
-    fig-pos: 'hb'
+    fig-pos: 'h!'
     fig-env: "figure"
     filters: [citeproc.lua, wordcount.lua]
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
@@ -50,10 +50,10 @@ warning: false
 ---
 
 ```{r knit-options}
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = F)
 
 # inline numbers round to 2
-knit_hooks$set(inline = function(x) {
+knitr::knit_hooks$set(inline = function(x) {
   if (is.na(as.numeric(x))) {
     return(x)
     } else
@@ -83,7 +83,7 @@ modelsummary <- function(models, notes = "", center_rows = 1){
 load(here::here("data", "means.Rdata"))
 
 # number of agencies for inline code
-n_agency <-  readLines(here::here("docs", "tables", "n_agencies"))
+n_agency <-  readLines(here::here("docs", "tables", "n_agencies")) |> as.numeric()
 ```
 
 # Introduction
@@ -551,14 +551,12 @@ Of Information Act (FOIA) requests with all federal departments,
 agencies, and sub-agencies for all records of incoming communication
 from members of Congress between January 1, 2007, and the date of our
 request.[^2] Between February 2017 and February 2024, we received data
-on `{r} readLines(here::here("docs", "tables", "n"))` instances of
+on `{r} readLines(here::here("docs", "tables", "n2007-2020"))` instances of
 members of Congress contacting
 `r n_agency` federal
-agencies. These contacts include letters from an individual legislators,
+agencies from 2007 to 2020.[^3] These contacts include letters from an individual legislators,
 committee chairs in their capacity as committee chairs, and groups of
-legislators. We focus on requests made from 2007 to 2020, resulting in a
-data set of `{r} readLines(here::here("docs", "tables", "n2007-2020"))`
-contacts.[^3]
+legislators. We were able to hand-code `{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` for whether they focus on constituency service or policy.
 
 [^2]: In addition to our initial requests, collecting these data
     included over a thousand follow-up and clarification emails, dozens
@@ -593,8 +591,7 @@ Online Supplemental Information provides procedures and replication code for con
 records from federal agencies into the data set required for our
 analysis.
 
-For `{r} readLines(here::here("docs", "tables", "n2007-2020coded"))`
-requests, we use the text or summaries of letters to classify
+We use the text or summaries of letters to classify
 legislators' reasons for contacting federal agencies. Our coding process
 began with the authors coding a representative sample of records using
 our codebook (see Online Supplemental Information). We then trained Research Assistants
@@ -885,7 +882,7 @@ three. Indeed, the only year in our data with fewer contacts from the
 representative of Wisconsin's 7th district than the average member of
 the House (the dotted line in the top panel of @fig-wi) was
 Representative Duffy's first year in Congress. @fig-wi shows similar
-dips in the level of constituency service in the transition from Senator
+dips in the level of service in the transition from Senator
 Feingold to Senator Johnson and from Senator Kohl to Senator Baldwin.
 The only years in which Wisconsin's senators contacted the federal
 bureaucracy fewer times than the Senate average (the dotted line in the
@@ -910,8 +907,7 @@ the level of our analysis from the legislator to the district and focus
 now on the number of contacts made from the representative of a
 particular state or district $i$ in a year $t$, $Y_{it}$. We again use a
 difference-in-differences approach to account for district-specific
-characteristics and over-time changes in how legislators provide
-constituency service. Specifically, we estimate regressions of the form:
+characteristics and over-time changes in the number of requests legislators make. Specifically, we estimate regressions of the form:
 
 $$\begin{aligned}
 Y_{it} & = & \beta_{1}\text{New Member}_{it} + \sum_{s = 2}^{6} \beta_{s} \text{tenure}_{s[it]} + \gamma_{i} + \delta_{t} + \epsilon_{it}  
@@ -938,13 +934,13 @@ we estimate district-level differences for a legislator's second
 
 ```{r}
 #| label: tbl-models-district
-#| tbl-cap: "The Effect of Electing a New Representative on Constituency Service"
+#| tbl-cap: "The Effect of Electing a New Representative on Requests to Federal Agencies"
 #| out-width: 100%
 
 load(here::here("models", "models_district.Rdata"))
 modelsummary(models_district,
              center_rows = 14:26,
-             notes = list("Robust standard errors in parentheses, clustered by district", "This table shows how constituent service varies across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) |>
+             notes = list("Robust standard errors in parentheses, clustered by district", "This table shows how contacts on behalof of a district varies across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) |>
   # bold new member line  
     tinytable::style_tt(i = 12:13, bold = T, background = "yellow") 
 ```
@@ -953,20 +949,19 @@ The first column of @tbl-models-district provides cross-sectional
 differences across districts represented by a new member and legislators
 in their first six years in office @eq-district1 minus the district
 fixed effect, $\gamma_{i}$). Districts represented by new legislators
-receive substantially lower levels of constituency service. On average,
+receive substantially lower levels of service. On average,
 districts with a new representative have 34.7 fewer
 requests made on their behalf. The magnitude of this difference shrinks
 for districts represented by legislators in their second year (29.33
-fewer constituency service requests). It then reaches a relatively
+fewer requests). It then reaches a relatively
 stable number for districts represented by legislators in their third
 through sixth years.
 
-To account for differences in district size, demographics, and demand
-for constituency service, Column 2 of @tbl-models-district provides the
+To account for differences in district demographics and demand
+for service, Column 2 of @tbl-models-district provides the
 estimated effects from the difference-in-differences specification from
 @eq-district1. In this specification, we see a large causal effect of a
-new member taking over: electing a new member causes a district's
-constituency service to decrease by about 40%, or `r -beta$new_member` letters per year
+new member taking over: electing a new member causes the number of requests behalf of a given district to decrease by about 40%, or `r -beta$new_member` letters per year
 (95-percent confidence interval [`r beta$new_member-1.96*se$new_member`, `r beta$new_member+1.96*se$new_member`]).
 
 The effect of electing a new representative, however, dissipates
@@ -1011,7 +1006,7 @@ where the same legislator has been serving for seven or more years).[^8]
 #### The Costs of Electoral Turnover
 
 Taken together, our results demonstrate that new legislators provide
-much less policy work and constituency service. Legislators in their first year and second year contact federal agencies significantly less than legislators serving longer than six years. Further, when
+much less policy work and less constituency service. Legislators in their first year and second year contact federal agencies significantly less than legislators serving longer than six years. Further, when
 districts elect a new representative or senator, people in the district experiences a sharp decrease in requests made on their behalf. Rather
 than experienced legislators forgetting about their districts, our
 evidence suggests that newly elected legislators experience substantial
@@ -1074,16 +1069,16 @@ knitr::include_graphics("docs/figs/m-ratio-predicted-3.png")
 to policy work by committee chair status and whether that member has a
 co-partisan president or not (comparing predictions for counterfactuals
 where the same legislator did and did not receive a chairship in their
-sixth year). We estimate chair effects using our most senior category of
+sixth year). We estimate chair effects for our most senior category of
 "7 or more years" as a plausible time at which a chair position would be
 acquired. There is a significant difference between the same legislator
 as a committee chair and a counterfactual where they are not. Notably,
 whether a member has a co-partisan president does not cause a
 significant difference.
 
-Taken together, our ratio results from this section and the level results from the previous section show that as legislators acquire more power their contacts with the bureaucracy become more policy focused. 
+Taken together, these findings about how the ratio of policy work to constituency service varies across legislators show that as legislators acquire more experience and power their contacts with the bureaucracy become more policy focused. 
 
-We have shown that as legislators acquire more power they make more contacts with the bureaucracy and those contacts become relatively more policy focused. Taken together our results show that the total number of constituency service requests do not drop, even as the proportion of requests that are constituency service related decreases. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2) we found that becoming a committee chair causes an increase of 0.29 requests per agency (95-percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.--> <!--TODO INSERT EVIDENCE FOR THIS --> 
+However, as we discuss further in @sec-discussion, the total number of constituency service requests do not drop, even as the proportion of requests that are constituency service related decreases. Thus, while statistically and substantively significant, the "shifting priorities" effects we show in this section are insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease constituency service among longer serving or more powerful legislators.<!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2) we found that becoming a committee chair causes an increase of 0.29 requests per agency (95-percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.--> <!--TODO INSERT EVIDENCE FOR THIS --> 
 
 
 # The Effects of Demand for Constituency Service {#sec-demand}
