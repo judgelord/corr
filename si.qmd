@@ -38,9 +38,6 @@ execute:
   cache: false
   message: false
   warning: false
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r knit-options}
@@ -60,8 +57,8 @@ knitr::knit_hooks$set(
 
 # FOIA Data
 
-Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. The FOIA office expects to fill our May 2018 request in 2024.] 
-and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. 
+Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. The FOIA office expected to fill our May 2018 request in 2024. As of January 2025, we are still waiting for this data.] 
+and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all `{r} readLines(here::here("docs", "tables", "n2007-2020"))` records we have processed. In the paper, we focus on `{r} readLines(here::here("docs", "tables", "n2007-2020"))` of these requests sent from January 1, 2007 to December 31, 2020.
 
 ## Variation in Responses to Identical FOIA Request
 
@@ -91,7 +88,7 @@ read.csv() |>
 
 We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word "rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations containing the word "rulemaking" yet uncoded by hand to the "Policy-Rulemaking" category.^[Hundreds of scripts for processing the raw data from each agency and applying any inductively-generated regular-expression-based coding are available on our GitHub, along with each script's full revision history and all written communication with RAs about processing and coding these data.]
 
-We classify legislator requests into five categories: "Individual Constituent Service" (i.e., individual casework or advocacy on behalf of a group such as employees of a company), "Nonprofit or Local Government Constituent Service" (e.g., help with a grant application), "Corporate Constituent Service" (e.g., help with a specific government contract), "Corporate Policy" (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and "General Policy" (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporation). We define constituents broadly, so they need not be in a member's district. In practice, most legislators screen constituents by home address and redirect non-resident constituents to the member who represents them. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as "Individual Constituent Service." We note these "hard cases" to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
+We classify legislator requests into five categories: "Individual Constituent Service" (i.e., individual casework or advocacy on behalf of a group such as employees of a company), "Nonprofit or Local Government Constituent Service" (e.g., help with a grant application), "Corporate Constituent Service" (e.g., help with a specific government contract), "Corporate Policy" (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and "General Policy" (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporation). For example, Representative Tauscher wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then "given a chance to resolve issues" with their contract. We coded this case as "Corporate Constituent Service," part of our broader measure of constituent service. We define constituents broadly, so they need not be in a member's district. In practice, most legislators screen constituents by home address and redirect non-resident constituents to the member who represents them. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as "Individual Constituent Service." We note these "hard cases" to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
 
 ## Congressional Correspondence Log Coding Guidelines
 
@@ -101,8 +98,7 @@ We aim to classify the subject of correspondence between members of Congress and
 
 The outcome is a spreadsheet with the first columns being FROM, DATE, SUBJECT, TYPE, CERTAINTY, ALT_TYPE.
 
-
-Below are five potential codes for the TYPE and three potential codes for your level of CERTAINTY that it is this type. If you are less than Very Certain (i.e., if only Fairly Certain or Toss Up), record your second best guess as ALT_TYPE; otherwise, leave this column blank. Only leave NOTES if you think it would be helpful for the team to revisit the entry.
+Below are five codes for the TYPE and three codes for your level of CERTAINTY that it is this type. If you are less than Very Certain (i.e., if only Fairly Certain or Toss Up), record your second best guess as ALT_TYPE; otherwise, leave this column blank. Only leave NOTES if you think it would be helpful for the team to revisit the entry.
 
 ## TYPE
 
@@ -166,7 +162,7 @@ We estimate that the experience gained between the first and second year in Cong
 
 ```{r}
 #| label: tbl-models-total
-#| tbl-cap: "The Effect of Institutional Power on Constituency Service"
+#| tbl-cap: "The Effect of Institutional Power on Requests to Fedearal Agenices"
 #| out-width: 100%
 
 load(here::here("models", "models_total.Rdata"))
@@ -256,7 +252,7 @@ knitr::include_graphics("docs/figs/m-con-predicted-4.png")
 ## Policy Work Only
 
 ```{r}
-#| fig-cap: "The Effect Experience and Institutional Power on Policy Work"
+#| tbl-cap: "The Effect Experience and Institutional Power on Policy Work"
 #| label: tbl-models_policy
 
 load(here::here("models", "models_policy.Rdata"))
