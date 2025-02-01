@@ -4180,8 +4180,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
 
-      function styleCell_s6sxu33n1302fpb6b0po(i, j, css_id) {
-          var table = document.getElementById("tinytable_s6sxu33n1302fpb6b0po");
+      function styleCell_2vy3ki1n9k9p9s19ogxh(i, j, css_id) {
+          var table = document.getElementById("tinytable_2vy3ki1n9k9p9s19ogxh");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -4191,7 +4191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_s6sxu33n1302fpb6b0po');
+        var table = document.getElementById('tinytable_2vy3ki1n9k9p9s19ogxh');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4199,8 +4199,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_s6sxu33n1302fpb6b0po(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_s6sxu33n1302fpb6b0po");
+      function spanCell_2vy3ki1n9k9p9s19ogxh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_2vy3ki1n9k9p9s19ogxh");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4230,22 +4230,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_xyl7nid415mlx6lekagz',}, 
-          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_xda7teb3hlvcxe9gghe4',}, 
-          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_wzksbwjgwvfbflqh2en5',}, 
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_wuc4k9e9j41gd6r31hsw',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_t2q1p7nfr9ulpfjgs2kr',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_nos5i8hff7foiigbzgol',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_m0skrtbzccdnjaptb92k',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_k4y1qjm5y3ufa69srv8v',}, 
-          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_81ki44nsel82syr1vvkv',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_1xloax8azksyoadd34w4',}, 
+          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_w3by7z85il0gf66kcuta',}, 
+          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_vthyee1im7rprothmyjw',}, 
+          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_ph4oxhi5cqnww0juqzlq',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_on1r5tlqbqflrcjzmip4',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_8vrj0ocpuil2m2ycbasz',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_8c345pyyle0qblhqarzu',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_7w5z8l1c01jeybx9prjq',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_75nhbtl6c0i7hzjm6dfq',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_5q9jb1cwobznj7ya4upr',}, 
+          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_5arcx6yb89r09e2sidtq',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_s6sxu33n1302fpb6b0po(cell.i, cell.j, group.css_id);
+                  styleCell_2vy3ki1n9k9p9s19ogxh(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -4253,19 +4253,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_xyl7nid415mlx6lekagz, .table th.tinytable_css_xyl7nid415mlx6lekagz { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_xda7teb3hlvcxe9gghe4, .table th.tinytable_css_xda7teb3hlvcxe9gghe4 { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_wzksbwjgwvfbflqh2en5, .table th.tinytable_css_wzksbwjgwvfbflqh2en5 { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_wuc4k9e9j41gd6r31hsw, .table th.tinytable_css_wuc4k9e9j41gd6r31hsw { text-align: left; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_t2q1p7nfr9ulpfjgs2kr, .table th.tinytable_css_t2q1p7nfr9ulpfjgs2kr { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_nos5i8hff7foiigbzgol, .table th.tinytable_css_nos5i8hff7foiigbzgol { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_m0skrtbzccdnjaptb92k, .table th.tinytable_css_m0skrtbzccdnjaptb92k { text-align: left; }
-      .table td.tinytable_css_k4y1qjm5y3ufa69srv8v, .table th.tinytable_css_k4y1qjm5y3ufa69srv8v { text-align: left; font-weight: bold; border-bottom: solid black 0.1em; }
-      .table td.tinytable_css_81ki44nsel82syr1vvkv, .table th.tinytable_css_81ki44nsel82syr1vvkv { text-align: center; }
-      .table td.tinytable_css_1xloax8azksyoadd34w4, .table th.tinytable_css_1xloax8azksyoadd34w4 { text-align: center; font-weight: bold; border-bottom: solid black 0.1em; }
+      .table td.tinytable_css_w3by7z85il0gf66kcuta, .table th.tinytable_css_w3by7z85il0gf66kcuta { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_vthyee1im7rprothmyjw, .table th.tinytable_css_vthyee1im7rprothmyjw { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_ph4oxhi5cqnww0juqzlq, .table th.tinytable_css_ph4oxhi5cqnww0juqzlq { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_on1r5tlqbqflrcjzmip4, .table th.tinytable_css_on1r5tlqbqflrcjzmip4 { text-align: left; font-weight: bold; border-bottom: solid black 0.1em; }
+      .table td.tinytable_css_8vrj0ocpuil2m2ycbasz, .table th.tinytable_css_8vrj0ocpuil2m2ycbasz { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_8c345pyyle0qblhqarzu, .table th.tinytable_css_8c345pyyle0qblhqarzu { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_7w5z8l1c01jeybx9prjq, .table th.tinytable_css_7w5z8l1c01jeybx9prjq { text-align: left; }
+      .table td.tinytable_css_75nhbtl6c0i7hzjm6dfq, .table th.tinytable_css_75nhbtl6c0i7hzjm6dfq { text-align: center; font-weight: bold; border-bottom: solid black 0.1em; }
+      .table td.tinytable_css_5q9jb1cwobznj7ya4upr, .table th.tinytable_css_5q9jb1cwobznj7ya4upr { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_5arcx6yb89r09e2sidtq, .table th.tinytable_css_5arcx6yb89r09e2sidtq { text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_s6sxu33n1302fpb6b0po" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_2vy3ki1n9k9p9s19ogxh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -4758,8 +4758,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
 
-      function styleCell_y9rls8qew01xmtjhrmcg(i, j, css_id) {
-          var table = document.getElementById("tinytable_y9rls8qew01xmtjhrmcg");
+      function styleCell_48ymr8hs7li4xhy6iez5(i, j, css_id) {
+          var table = document.getElementById("tinytable_48ymr8hs7li4xhy6iez5");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -4769,7 +4769,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_y9rls8qew01xmtjhrmcg');
+        var table = document.getElementById('tinytable_48ymr8hs7li4xhy6iez5');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4777,8 +4777,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_y9rls8qew01xmtjhrmcg(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_y9rls8qew01xmtjhrmcg");
+      function spanCell_48ymr8hs7li4xhy6iez5(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_48ymr8hs7li4xhy6iez5");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4808,22 +4808,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_vdjio35a5ufsrwwkcxpd',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_ug21j0efwqy0dwm4wt9y',}, 
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_rzupbny94vyaqbsa07ps',}, 
-          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_h7yvs1f3rnq1lsla6hdq',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_eqcfudy1c48k9dp2432b',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_bs002ei7unb7yj4zxrkz',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_b3bqaxxijjps93xgjqnf',}, 
-          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_avkiq0ba9nk5r43qvy0a',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_3rcyw7hirn3w04m38rr8',}, 
-          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_1o7am6dvqxzhk8d6dsx4',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_w9on8vrgmdzcmevfzwm4',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_r8z74ovt7urszwydtjg3',}, 
+          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_pyodxkiahg3osw1td8g4',}, 
+          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_o273qyciine8ahsp2jk7',}, 
+          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_gbd29rvrdtcnh62j3q2c',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_e45lirf02oybl5nyqysl',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_cufnafmipnq5ckt1swf0',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_5yf1dbre6yy99x1z5076',}, 
+          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_28hepr40i4t5mxmqvo19',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_1hoyjfc9da2j9m4xu753',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_y9rls8qew01xmtjhrmcg(cell.i, cell.j, group.css_id);
+                  styleCell_48ymr8hs7li4xhy6iez5(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -4831,19 +4831,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_vdjio35a5ufsrwwkcxpd, .table th.tinytable_css_vdjio35a5ufsrwwkcxpd { text-align: center; }
-      .table td.tinytable_css_ug21j0efwqy0dwm4wt9y, .table th.tinytable_css_ug21j0efwqy0dwm4wt9y { text-align: left; text-align: left; }
-      .table td.tinytable_css_rzupbny94vyaqbsa07ps, .table th.tinytable_css_rzupbny94vyaqbsa07ps { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_h7yvs1f3rnq1lsla6hdq, .table th.tinytable_css_h7yvs1f3rnq1lsla6hdq { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_eqcfudy1c48k9dp2432b, .table th.tinytable_css_eqcfudy1c48k9dp2432b { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; font-weight: bold; border-bottom: solid black 0.1em; }
-      .table td.tinytable_css_bs002ei7unb7yj4zxrkz, .table th.tinytable_css_bs002ei7unb7yj4zxrkz { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_b3bqaxxijjps93xgjqnf, .table th.tinytable_css_b3bqaxxijjps93xgjqnf { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_avkiq0ba9nk5r43qvy0a, .table th.tinytable_css_avkiq0ba9nk5r43qvy0a { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_3rcyw7hirn3w04m38rr8, .table th.tinytable_css_3rcyw7hirn3w04m38rr8 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; font-weight: bold; border-bottom: solid black 0.1em; }
-      .table td.tinytable_css_1o7am6dvqxzhk8d6dsx4, .table th.tinytable_css_1o7am6dvqxzhk8d6dsx4 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_w9on8vrgmdzcmevfzwm4, .table th.tinytable_css_w9on8vrgmdzcmevfzwm4 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; font-weight: bold; border-bottom: solid black 0.1em; }
+      .table td.tinytable_css_r8z74ovt7urszwydtjg3, .table th.tinytable_css_r8z74ovt7urszwydtjg3 { text-align: left; text-align: left; }
+      .table td.tinytable_css_pyodxkiahg3osw1td8g4, .table th.tinytable_css_pyodxkiahg3osw1td8g4 { text-align: center; }
+      .table td.tinytable_css_o273qyciine8ahsp2jk7, .table th.tinytable_css_o273qyciine8ahsp2jk7 { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_gbd29rvrdtcnh62j3q2c, .table th.tinytable_css_gbd29rvrdtcnh62j3q2c { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_e45lirf02oybl5nyqysl, .table th.tinytable_css_e45lirf02oybl5nyqysl { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_cufnafmipnq5ckt1swf0, .table th.tinytable_css_cufnafmipnq5ckt1swf0 { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_5yf1dbre6yy99x1z5076, .table th.tinytable_css_5yf1dbre6yy99x1z5076 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_28hepr40i4t5mxmqvo19, .table th.tinytable_css_28hepr40i4t5mxmqvo19 { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_1hoyjfc9da2j9m4xu753, .table th.tinytable_css_1hoyjfc9da2j9m4xu753 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; font-weight: bold; border-bottom: solid black 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_y9rls8qew01xmtjhrmcg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_48ymr8hs7li4xhy6iez5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -5329,8 +5329,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
 
-      function styleCell_1uzdrvldg84db90rx5xc(i, j, css_id) {
-          var table = document.getElementById("tinytable_1uzdrvldg84db90rx5xc");
+      function styleCell_lp7yjqeiapp57d2xabag(i, j, css_id) {
+          var table = document.getElementById("tinytable_lp7yjqeiapp57d2xabag");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -5340,7 +5340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_1uzdrvldg84db90rx5xc');
+        var table = document.getElementById('tinytable_lp7yjqeiapp57d2xabag');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -5348,8 +5348,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_1uzdrvldg84db90rx5xc(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_1uzdrvldg84db90rx5xc");
+      function spanCell_lp7yjqeiapp57d2xabag(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_lp7yjqeiapp57d2xabag");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -5379,22 +5379,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_sdk0hmdlac4pljxtr68i',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_sd3iv7kwquftbq8ax85u',}, 
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_ry1fadvdkd284qmugmy9',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_oty1yyf640l5vh9azajn',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_lmkq3veshp0v6ovscr1v',}, 
-          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_jy7w6m8uajrz1k0gtzx9',}, 
-          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_h56arwhham4vhpwu85j4',}, 
-          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_e4qby4bdq7rn8njmzplj',}, 
-          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_7tkp3b5rzbv2fkpd83xn',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_6q924f8sa7nvxi0syowx',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_x375z3bm4jebvb4z0jiw',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 27, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 },  ], css_id: 'tinytable_css_vrdxdmb9235psyr7tbrh',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_qkrgir8mn33dfeueh4ur',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_ogqu87kp8soo5lq3qa50',}, 
+          { positions: [ { i: 28, j: 1 }, { i: 28, j: 3 }, { i: 28, j: 2 }, { i: 28, j: 4 },  ], css_id: 'tinytable_css_kou2x094lthl14i7qbpf',}, 
+          { positions: [ { i: 23, j: 1 }, { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_kdo194pr3qqvdtpou11w',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 },  ], css_id: 'tinytable_css_ic5c7fxidf87xgdabwov',}, 
+          { positions: [ { i: 28, j: 0 },  ], css_id: 'tinytable_css_h6d335xbj8d7e4d2njtj',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_cfm1kuk3r65i3sm02gg0',}, 
+          { positions: [ { i: 2, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 5, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 10, j: 3 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 5, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 10, j: 4 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 16, j: 4 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 21, j: 4 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 7, j: 4 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 12, j: 4 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 20, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 14, j: 4 }, { i: 11, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 22, j: 4 }, { i: 15, j: 4 }, { i: 24, j: 4 }, { i: 17, j: 4 }, { i: 26, j: 4 }, { i: 19, j: 4 }, { i: 27, j: 4 },  ], css_id: 'tinytable_css_2jz5feo72b1vzypyd03r',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_1uzdrvldg84db90rx5xc(cell.i, cell.j, group.css_id);
+                  styleCell_lp7yjqeiapp57d2xabag(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -5402,19 +5402,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_sdk0hmdlac4pljxtr68i, .table th.tinytable_css_sdk0hmdlac4pljxtr68i { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_sd3iv7kwquftbq8ax85u, .table th.tinytable_css_sd3iv7kwquftbq8ax85u { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_ry1fadvdkd284qmugmy9, .table th.tinytable_css_ry1fadvdkd284qmugmy9 { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_oty1yyf640l5vh9azajn, .table th.tinytable_css_oty1yyf640l5vh9azajn { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_lmkq3veshp0v6ovscr1v, .table th.tinytable_css_lmkq3veshp0v6ovscr1v { text-align: left; text-align: left; }
-      .table td.tinytable_css_jy7w6m8uajrz1k0gtzx9, .table th.tinytable_css_jy7w6m8uajrz1k0gtzx9 { text-align: center; }
-      .table td.tinytable_css_h56arwhham4vhpwu85j4, .table th.tinytable_css_h56arwhham4vhpwu85j4 { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_e4qby4bdq7rn8njmzplj, .table th.tinytable_css_e4qby4bdq7rn8njmzplj { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_7tkp3b5rzbv2fkpd83xn, .table th.tinytable_css_7tkp3b5rzbv2fkpd83xn { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_6q924f8sa7nvxi0syowx, .table th.tinytable_css_6q924f8sa7nvxi0syowx { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_x375z3bm4jebvb4z0jiw, .table th.tinytable_css_x375z3bm4jebvb4z0jiw { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_vrdxdmb9235psyr7tbrh, .table th.tinytable_css_vrdxdmb9235psyr7tbrh { text-align: left; text-align: left; }
+      .table td.tinytable_css_qkrgir8mn33dfeueh4ur, .table th.tinytable_css_qkrgir8mn33dfeueh4ur { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ogqu87kp8soo5lq3qa50, .table th.tinytable_css_ogqu87kp8soo5lq3qa50 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_kou2x094lthl14i7qbpf, .table th.tinytable_css_kou2x094lthl14i7qbpf { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_kdo194pr3qqvdtpou11w, .table th.tinytable_css_kdo194pr3qqvdtpou11w { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_ic5c7fxidf87xgdabwov, .table th.tinytable_css_ic5c7fxidf87xgdabwov { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_h6d335xbj8d7e4d2njtj, .table th.tinytable_css_h6d335xbj8d7e4d2njtj { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_cfm1kuk3r65i3sm02gg0, .table th.tinytable_css_cfm1kuk3r65i3sm02gg0 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_2jz5feo72b1vzypyd03r, .table th.tinytable_css_2jz5feo72b1vzypyd03r { text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_1uzdrvldg84db90rx5xc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_lp7yjqeiapp57d2xabag" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -5802,8 +5802,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
 
-      function styleCell_khn65a46ciepo3npgwc9(i, j, css_id) {
-          var table = document.getElementById("tinytable_khn65a46ciepo3npgwc9");
+      function styleCell_9r1gd6w54rkq5zpx6w67(i, j, css_id) {
+          var table = document.getElementById("tinytable_9r1gd6w54rkq5zpx6w67");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -5813,7 +5813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_khn65a46ciepo3npgwc9');
+        var table = document.getElementById('tinytable_9r1gd6w54rkq5zpx6w67');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -5821,8 +5821,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_khn65a46ciepo3npgwc9(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_khn65a46ciepo3npgwc9");
+      function spanCell_9r1gd6w54rkq5zpx6w67(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_9r1gd6w54rkq5zpx6w67");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -5852,22 +5852,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_rvaq2hz1zio9hb9fh1qx',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_pa9cxv96mcs3evk3seiu',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 },  ], css_id: 'tinytable_css_od8iam0vy156lrtsy96t',}, 
-          { positions: [ { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 }, { i: 23, j: 1 },  ], css_id: 'tinytable_css_hr5cl24i3ot8q5mam6au',}, 
-          { positions: [ { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 3 },  ], css_id: 'tinytable_css_czfuv0pk904oahh4ov9m',}, 
-          { positions: [ { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 7, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 18, j: 1 }, { i: 11, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 22, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 12, j: 3 }, { i: 9, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 2, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 6, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 10, j: 2 }, { i: 2, j: 1 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 9, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 12, j: 4 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 22, j: 4 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 4 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 14, j: 2 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 15, j: 2 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 5, j: 4 }, { i: 6, j: 4 }, { i: 11, j: 4 }, { i: 16, j: 4 }, { i: 13, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 20, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 19, j: 4 }, { i: 24, j: 4 }, { i: 21, j: 4 }, { i: 18, j: 4 },  ], css_id: 'tinytable_css_8d6exzavej2uw9hyrbkl',}, 
-          { positions: [ { i: 26, j: 0 },  ], css_id: 'tinytable_css_7ftxjmg9m2a3ykigv212',}, 
-          { positions: [ { i: 26, j: 3 }, { i: 26, j: 2 }, { i: 26, j: 1 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_7fki4j9gjuahr8nhuqgw',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_5hnlcamr3wzef6h5r70f',}, 
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_4z674u8dwcmcko8ghroe',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_z194ghu7cpjl2270a2gl',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_ylqcyldqfzqcxh1i0qar',}, 
+          { positions: [ { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 7, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 18, j: 1 }, { i: 11, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 22, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 12, j: 3 }, { i: 9, j: 3 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 2, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 6, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 10, j: 2 }, { i: 2, j: 1 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 9, j: 4 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 12, j: 4 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 22, j: 4 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 4 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 14, j: 2 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 15, j: 2 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 5, j: 4 }, { i: 6, j: 4 }, { i: 11, j: 4 }, { i: 16, j: 4 }, { i: 13, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 20, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 19, j: 4 }, { i: 24, j: 4 }, { i: 21, j: 4 }, { i: 18, j: 4 },  ], css_id: 'tinytable_css_px0x6k91zcvpnu711gar',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_iqyolcng52lrwnbt6738',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_i2e1ybyubff5hlwnep87',}, 
+          { positions: [ { i: 26, j: 3 }, { i: 26, j: 2 }, { i: 26, j: 1 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_fbe9od8wdy5g1ewz1qz7',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 },  ], css_id: 'tinytable_css_c1l904dliybi5hi3k56b',}, 
+          { positions: [ { i: 23, j: 4 }, { i: 23, j: 3 }, { i: 23, j: 2 }, { i: 23, j: 1 },  ], css_id: 'tinytable_css_714xo4oezd1utmauj8zs',}, 
+          { positions: [ { i: 26, j: 0 },  ], css_id: 'tinytable_css_35u6d6g7bvs4vmjbyu9a',}, 
+          { positions: [ { i: 1, j: 2 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 3 },  ], css_id: 'tinytable_css_1oviczfdyh2b422dg8pp',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_khn65a46ciepo3npgwc9(cell.i, cell.j, group.css_id);
+                  styleCell_9r1gd6w54rkq5zpx6w67(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -5875,19 +5875,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_rvaq2hz1zio9hb9fh1qx, .table th.tinytable_css_rvaq2hz1zio9hb9fh1qx { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_pa9cxv96mcs3evk3seiu, .table th.tinytable_css_pa9cxv96mcs3evk3seiu { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_od8iam0vy156lrtsy96t, .table th.tinytable_css_od8iam0vy156lrtsy96t { text-align: left; text-align: left; }
-      .table td.tinytable_css_hr5cl24i3ot8q5mam6au, .table th.tinytable_css_hr5cl24i3ot8q5mam6au { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_czfuv0pk904oahh4ov9m, .table th.tinytable_css_czfuv0pk904oahh4ov9m { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_8d6exzavej2uw9hyrbkl, .table th.tinytable_css_8d6exzavej2uw9hyrbkl { text-align: center; }
-      .table td.tinytable_css_7ftxjmg9m2a3ykigv212, .table th.tinytable_css_7ftxjmg9m2a3ykigv212 { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_7fki4j9gjuahr8nhuqgw, .table th.tinytable_css_7fki4j9gjuahr8nhuqgw { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_5hnlcamr3wzef6h5r70f, .table th.tinytable_css_5hnlcamr3wzef6h5r70f { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_4z674u8dwcmcko8ghroe, .table th.tinytable_css_4z674u8dwcmcko8ghroe { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_z194ghu7cpjl2270a2gl, .table th.tinytable_css_z194ghu7cpjl2270a2gl { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ylqcyldqfzqcxh1i0qar, .table th.tinytable_css_ylqcyldqfzqcxh1i0qar { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_px0x6k91zcvpnu711gar, .table th.tinytable_css_px0x6k91zcvpnu711gar { text-align: center; }
+      .table td.tinytable_css_iqyolcng52lrwnbt6738, .table th.tinytable_css_iqyolcng52lrwnbt6738 { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_i2e1ybyubff5hlwnep87, .table th.tinytable_css_i2e1ybyubff5hlwnep87 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_fbe9od8wdy5g1ewz1qz7, .table th.tinytable_css_fbe9od8wdy5g1ewz1qz7 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_c1l904dliybi5hi3k56b, .table th.tinytable_css_c1l904dliybi5hi3k56b { text-align: left; text-align: left; }
+      .table td.tinytable_css_714xo4oezd1utmauj8zs, .table th.tinytable_css_714xo4oezd1utmauj8zs { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_35u6d6g7bvs4vmjbyu9a, .table th.tinytable_css_35u6d6g7bvs4vmjbyu9a { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_1oviczfdyh2b422dg8pp, .table th.tinytable_css_1oviczfdyh2b422dg8pp { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_khn65a46ciepo3npgwc9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_9r1gd6w54rkq5zpx6w67" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -6226,8 +6226,8 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <script>
 
-      function styleCell_e6q08p3ggv2btkh6p7pw(i, j, css_id) {
-          var table = document.getElementById("tinytable_e6q08p3ggv2btkh6p7pw");
+      function styleCell_qdbkkodvtxprbi79ilzh(i, j, css_id) {
+          var table = document.getElementById("tinytable_qdbkkodvtxprbi79ilzh");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -6237,7 +6237,7 @@ The experience gained between the first and seventh year causes an increase of 0
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_e6q08p3ggv2btkh6p7pw');
+        var table = document.getElementById('tinytable_qdbkkodvtxprbi79ilzh');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -6245,8 +6245,8 @@ The experience gained between the first and seventh year causes an increase of 0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_e6q08p3ggv2btkh6p7pw(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_e6q08p3ggv2btkh6p7pw");
+      function spanCell_qdbkkodvtxprbi79ilzh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_qdbkkodvtxprbi79ilzh");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -6276,22 +6276,22 @@ The experience gained between the first and seventh year causes an increase of 0
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_uj8jgldj4c20fjv3isjh',}, 
-          { positions: [ { i: 26, j: 1 }, { i: 26, j: 2 },  ], css_id: 'tinytable_css_qnsdlzmmtkb2aealfgm1',}, 
-          { positions: [ { i: 26, j: 0 },  ], css_id: 'tinytable_css_mxhbm76aur6odrlahdfy',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_mtehyad37xfwnc1xwbzr',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_jl10powasivt01n7au83',}, 
-          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 9, j: 2 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 12, j: 2 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 22, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 25, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 24, j: 2 },  ], css_id: 'tinytable_css_j5trxfap72f8fdbn55pj',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 },  ], css_id: 'tinytable_css_cl1v4keockzuumeazn0d',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_amqhgpm89110tl2x3v78',}, 
-          { positions: [ { i: 23, j: 1 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_5js0pj9dcueil6gd36op',}, 
-          { positions: [ { i: 1, j: 2 }, { i: 1, j: 1 },  ], css_id: 'tinytable_css_4hd1dxdjp8doe0vn3xvj',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_ytl4skei3k42g00bkjzf',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_p91oo9oysj2jekwxc0jy',}, 
+          { positions: [ { i: 26, j: 0 },  ], css_id: 'tinytable_css_ogm1vgixbyvcf0zbnftb',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_k4lqowbpum7un80o0pht',}, 
+          { positions: [ { i: 23, j: 1 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_jtgcs4yxt7a19pycmcxk',}, 
+          { positions: [ { i: 26, j: 1 }, { i: 26, j: 2 },  ], css_id: 'tinytable_css_aqw6wz7n74dfgoroznd9',}, 
+          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 9, j: 2 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 12, j: 2 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 22, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 25, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 24, j: 2 },  ], css_id: 'tinytable_css_7sxb1nyt75iud3fkbhtn',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_5ausd1oo3rxze9h2j2xe',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 },  ], css_id: 'tinytable_css_4um4wunprmp2rz6ghzdi',}, 
+          { positions: [ { i: 1, j: 2 }, { i: 1, j: 1 },  ], css_id: 'tinytable_css_27a9i3qrlrh56wip141b',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_e6q08p3ggv2btkh6p7pw(cell.i, cell.j, group.css_id);
+                  styleCell_qdbkkodvtxprbi79ilzh(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -6299,19 +6299,19 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_uj8jgldj4c20fjv3isjh, .table th.tinytable_css_uj8jgldj4c20fjv3isjh { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_qnsdlzmmtkb2aealfgm1, .table th.tinytable_css_qnsdlzmmtkb2aealfgm1 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_mxhbm76aur6odrlahdfy, .table th.tinytable_css_mxhbm76aur6odrlahdfy { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_mtehyad37xfwnc1xwbzr, .table th.tinytable_css_mtehyad37xfwnc1xwbzr { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_jl10powasivt01n7au83, .table th.tinytable_css_jl10powasivt01n7au83 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_j5trxfap72f8fdbn55pj, .table th.tinytable_css_j5trxfap72f8fdbn55pj { text-align: center; }
-      .table td.tinytable_css_cl1v4keockzuumeazn0d, .table th.tinytable_css_cl1v4keockzuumeazn0d { text-align: left; text-align: left; }
-      .table td.tinytable_css_amqhgpm89110tl2x3v78, .table th.tinytable_css_amqhgpm89110tl2x3v78 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_5js0pj9dcueil6gd36op, .table th.tinytable_css_5js0pj9dcueil6gd36op { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_4hd1dxdjp8doe0vn3xvj, .table th.tinytable_css_4hd1dxdjp8doe0vn3xvj { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_ytl4skei3k42g00bkjzf, .table th.tinytable_css_ytl4skei3k42g00bkjzf { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_p91oo9oysj2jekwxc0jy, .table th.tinytable_css_p91oo9oysj2jekwxc0jy { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ogm1vgixbyvcf0zbnftb, .table th.tinytable_css_ogm1vgixbyvcf0zbnftb { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_k4lqowbpum7un80o0pht, .table th.tinytable_css_k4lqowbpum7un80o0pht { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_jtgcs4yxt7a19pycmcxk, .table th.tinytable_css_jtgcs4yxt7a19pycmcxk { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_aqw6wz7n74dfgoroznd9, .table th.tinytable_css_aqw6wz7n74dfgoroznd9 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_7sxb1nyt75iud3fkbhtn, .table th.tinytable_css_7sxb1nyt75iud3fkbhtn { text-align: center; }
+      .table td.tinytable_css_5ausd1oo3rxze9h2j2xe, .table th.tinytable_css_5ausd1oo3rxze9h2j2xe { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_4um4wunprmp2rz6ghzdi, .table th.tinytable_css_4um4wunprmp2rz6ghzdi { text-align: left; text-align: left; }
+      .table td.tinytable_css_27a9i3qrlrh56wip141b, .table th.tinytable_css_27a9i3qrlrh56wip141b { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_e6q08p3ggv2btkh6p7pw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_qdbkkodvtxprbi79ilzh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -7762,8 +7762,8 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <script>
 
-      function styleCell_t5e19osrwvo8i2etl126(i, j, css_id) {
-          var table = document.getElementById("tinytable_t5e19osrwvo8i2etl126");
+      function styleCell_lvy0v9zkkwzowdgr9qsk(i, j, css_id) {
+          var table = document.getElementById("tinytable_lvy0v9zkkwzowdgr9qsk");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -7773,7 +7773,7 @@ The experience gained between the first and seventh year causes an increase of 0
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_t5e19osrwvo8i2etl126');
+        var table = document.getElementById('tinytable_lvy0v9zkkwzowdgr9qsk');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -7781,8 +7781,8 @@ The experience gained between the first and seventh year causes an increase of 0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_t5e19osrwvo8i2etl126(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_t5e19osrwvo8i2etl126");
+      function spanCell_lvy0v9zkkwzowdgr9qsk(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_lvy0v9zkkwzowdgr9qsk");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -7812,22 +7812,22 @@ The experience gained between the first and seventh year causes an increase of 0
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 5, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 6, j: 2 }, { i: 18, j: 1 }, { i: 12, j: 2 }, { i: 7, j: 1 }, { i: 17, j: 1 }, { i: 9, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 12, j: 3 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 1 }, { i: 2, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 5, j: 4 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 18, j: 3 }, { i: 12, j: 4 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 11, j: 4 }, { i: 3, j: 4 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 4, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 8, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 16, j: 4 },  ], css_id: 'tinytable_css_y229938jk2dtee3l62xu',}, 
-          { positions: [ { i: 13, j: 2 }, { i: 13, j: 1 }, { i: 13, j: 3 }, { i: 13, j: 4 },  ], css_id: 'tinytable_css_wpijg7c5pa85cga6czkb',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_ozrqo7kaxv06u0vpa9ip',}, 
-          { positions: [ { i: 13, j: 0 },  ], css_id: 'tinytable_css_olss6m3cyohjmv0a24c8',}, 
-          { positions: [ { i: 19, j: 1 }, { i: 19, j: 3 }, { i: 19, j: 2 }, { i: 19, j: 4 },  ], css_id: 'tinytable_css_nhcrxt0tsnyscvslnpvh',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_mfwkoj78v3onf86fmpfj',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_h4d99feoxulq5silb5js',}, 
-          { positions: [ { i: 19, j: 0 },  ], css_id: 'tinytable_css_gee367e1o5n6ytbu06ze',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 17, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 18, j: 0 },  ], css_id: 'tinytable_css_ewit9hy7d0y53hh1cwto',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 4 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_08gr7aq2z6d1koevfmpm',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_zizvfhqx5rkw8fg982cv',}, 
+          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 5, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 6, j: 2 }, { i: 18, j: 1 }, { i: 12, j: 2 }, { i: 7, j: 1 }, { i: 17, j: 1 }, { i: 9, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 12, j: 3 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 1 }, { i: 2, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 5, j: 4 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 18, j: 3 }, { i: 12, j: 4 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 11, j: 4 }, { i: 3, j: 4 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 4, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 8, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 16, j: 4 },  ], css_id: 'tinytable_css_vl10d761zwci951pbf6m',}, 
+          { positions: [ { i: 19, j: 1 }, { i: 19, j: 3 }, { i: 19, j: 2 }, { i: 19, j: 4 },  ], css_id: 'tinytable_css_qnsv5urc5l08cl4zdysi',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_p1lz7twigphe8knlioli',}, 
+          { positions: [ { i: 13, j: 0 },  ], css_id: 'tinytable_css_opqonoiatqtanch48zdt',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_nqpthn4opysxo0r1adz8',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 17, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 18, j: 0 },  ], css_id: 'tinytable_css_gl2at80iwz2vqrekuu8z',}, 
+          { positions: [ { i: 13, j: 2 }, { i: 13, j: 1 }, { i: 13, j: 3 }, { i: 13, j: 4 },  ], css_id: 'tinytable_css_d7c4uqvbjdqknmijqpn0',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 4 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_1fqgvcg7colfv1pxm9v6',}, 
+          { positions: [ { i: 19, j: 0 },  ], css_id: 'tinytable_css_1655ni91laa5l6i2hbei',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_t5e19osrwvo8i2etl126(cell.i, cell.j, group.css_id);
+                  styleCell_lvy0v9zkkwzowdgr9qsk(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -7835,19 +7835,19 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_y229938jk2dtee3l62xu, .table th.tinytable_css_y229938jk2dtee3l62xu { text-align: center; }
-      .table td.tinytable_css_wpijg7c5pa85cga6czkb, .table th.tinytable_css_wpijg7c5pa85cga6czkb { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_ozrqo7kaxv06u0vpa9ip, .table th.tinytable_css_ozrqo7kaxv06u0vpa9ip { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_olss6m3cyohjmv0a24c8, .table th.tinytable_css_olss6m3cyohjmv0a24c8 { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_nhcrxt0tsnyscvslnpvh, .table th.tinytable_css_nhcrxt0tsnyscvslnpvh { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_mfwkoj78v3onf86fmpfj, .table th.tinytable_css_mfwkoj78v3onf86fmpfj { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_h4d99feoxulq5silb5js, .table th.tinytable_css_h4d99feoxulq5silb5js { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_gee367e1o5n6ytbu06ze, .table th.tinytable_css_gee367e1o5n6ytbu06ze { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_ewit9hy7d0y53hh1cwto, .table th.tinytable_css_ewit9hy7d0y53hh1cwto { text-align: left; text-align: left; }
-      .table td.tinytable_css_08gr7aq2z6d1koevfmpm, .table th.tinytable_css_08gr7aq2z6d1koevfmpm { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_zizvfhqx5rkw8fg982cv, .table th.tinytable_css_zizvfhqx5rkw8fg982cv { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_vl10d761zwci951pbf6m, .table th.tinytable_css_vl10d761zwci951pbf6m { text-align: center; }
+      .table td.tinytable_css_qnsv5urc5l08cl4zdysi, .table th.tinytable_css_qnsv5urc5l08cl4zdysi { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_p1lz7twigphe8knlioli, .table th.tinytable_css_p1lz7twigphe8knlioli { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_opqonoiatqtanch48zdt, .table th.tinytable_css_opqonoiatqtanch48zdt { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_nqpthn4opysxo0r1adz8, .table th.tinytable_css_nqpthn4opysxo0r1adz8 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_gl2at80iwz2vqrekuu8z, .table th.tinytable_css_gl2at80iwz2vqrekuu8z { text-align: left; text-align: left; }
+      .table td.tinytable_css_d7c4uqvbjdqknmijqpn0, .table th.tinytable_css_d7c4uqvbjdqknmijqpn0 { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_1fqgvcg7colfv1pxm9v6, .table th.tinytable_css_1fqgvcg7colfv1pxm9v6 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_1655ni91laa5l6i2hbei, .table th.tinytable_css_1655ni91laa5l6i2hbei { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_t5e19osrwvo8i2etl126" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_lvy0v9zkkwzowdgr9qsk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -8049,8 +8049,8 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <script>
 
-      function styleCell_wzuvpuhtejvjodt3t08m(i, j, css_id) {
-          var table = document.getElementById("tinytable_wzuvpuhtejvjodt3t08m");
+      function styleCell_hsgl862xhe82swv8upwh(i, j, css_id) {
+          var table = document.getElementById("tinytable_hsgl862xhe82swv8upwh");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -8060,7 +8060,7 @@ The experience gained between the first and seventh year causes an increase of 0
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_wzuvpuhtejvjodt3t08m');
+        var table = document.getElementById('tinytable_hsgl862xhe82swv8upwh');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -8068,8 +8068,8 @@ The experience gained between the first and seventh year causes an increase of 0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_wzuvpuhtejvjodt3t08m(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_wzuvpuhtejvjodt3t08m");
+      function spanCell_hsgl862xhe82swv8upwh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_hsgl862xhe82swv8upwh");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -8099,22 +8099,22 @@ The experience gained between the first and seventh year causes an increase of 0
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 }, { i: 31, j: 0 }, { i: 28, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 32, j: 0 },  ], css_id: 'tinytable_css_zymqx381hydkfrbnyry0',}, 
-          { positions: [ { i: 33, j: 3 }, { i: 33, j: 2 }, { i: 33, j: 1 }, { i: 33, j: 4 },  ], css_id: 'tinytable_css_ycb0ktqt7atc3rob0ved',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_vfp5a35ul9cdiu84k4a3',}, 
-          { positions: [ { i: 27, j: 0 },  ], css_id: 'tinytable_css_gprx4ev52wl6n0z6m6an',}, 
-          { positions: [ { i: 33, j: 0 },  ], css_id: 'tinytable_css_g9hsk8hcdxfl4uik9irp',}, 
-          { positions: [ { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 17, j: 1 }, { i: 14, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 8, j: 1 }, { i: 18, j: 1 }, { i: 10, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 5, j: 4 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 5, j: 3 }, { i: 21, j: 1 }, { i: 9, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 6, j: 3 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 12, j: 3 }, { i: 28, j: 1 }, { i: 29, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 11, j: 4 }, { i: 19, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 32, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 4, j: 4 }, { i: 26, j: 3 }, { i: 6, j: 4 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 30, j: 3 }, { i: 31, j: 3 }, { i: 24, j: 4 }, { i: 12, j: 4 }, { i: 28, j: 2 }, { i: 29, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 14, j: 4 }, { i: 32, j: 4 }, { i: 16, j: 4 }, { i: 30, j: 4 }, { i: 31, j: 4 }, { i: 23, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_fskzdjmo5uxbtcvv2l6w',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_dmqkfsbi9yg5vu1eeyyo',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_926qsc467i1zhzfhcg2f',}, 
-          { positions: [ { i: 27, j: 2 }, { i: 27, j: 4 }, { i: 27, j: 3 }, { i: 27, j: 1 },  ], css_id: 'tinytable_css_3doe1oyjfl65hmt3l4wa',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_31bbkc5y9a71oopuek35',}, 
+          { positions: [ { i: 33, j: 0 },  ], css_id: 'tinytable_css_ybe43cia2jdhjx91bbp4',}, 
+          { positions: [ { i: 27, j: 0 },  ], css_id: 'tinytable_css_ul9jafg2ijho7uywzkmx',}, 
+          { positions: [ { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 17, j: 1 }, { i: 14, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 8, j: 1 }, { i: 18, j: 1 }, { i: 10, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 5, j: 4 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 5, j: 3 }, { i: 21, j: 1 }, { i: 9, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 6, j: 3 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 12, j: 3 }, { i: 28, j: 1 }, { i: 29, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 11, j: 4 }, { i: 19, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 32, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 4, j: 4 }, { i: 26, j: 3 }, { i: 6, j: 4 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 30, j: 3 }, { i: 31, j: 3 }, { i: 24, j: 4 }, { i: 12, j: 4 }, { i: 28, j: 2 }, { i: 29, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 14, j: 4 }, { i: 32, j: 4 }, { i: 16, j: 4 }, { i: 30, j: 4 }, { i: 31, j: 4 }, { i: 23, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_q50cy00y3v8d2wyj8ah9',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_pd5gnrai9jxk5vftn9ot',}, 
+          { positions: [ { i: 27, j: 2 }, { i: 27, j: 4 }, { i: 27, j: 3 }, { i: 27, j: 1 },  ], css_id: 'tinytable_css_ohji6qj5ezj10moy3jvl',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_nlq2ufpwz9nboeq152oh',}, 
+          { positions: [ { i: 33, j: 3 }, { i: 33, j: 2 }, { i: 33, j: 1 }, { i: 33, j: 4 },  ], css_id: 'tinytable_css_j3tzuwecohuwqknl2iu3',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 }, { i: 31, j: 0 }, { i: 28, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 32, j: 0 },  ], css_id: 'tinytable_css_fk6i8y9lqs99pr95do8y',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_cmu8ptokt0at3nz6wxmu',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_ay2077byn6w2feercgg5',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_wzuvpuhtejvjodt3t08m(cell.i, cell.j, group.css_id);
+                  styleCell_hsgl862xhe82swv8upwh(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -8122,19 +8122,19 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_zymqx381hydkfrbnyry0, .table th.tinytable_css_zymqx381hydkfrbnyry0 { text-align: left; text-align: left; }
-      .table td.tinytable_css_ycb0ktqt7atc3rob0ved, .table th.tinytable_css_ycb0ktqt7atc3rob0ved { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_vfp5a35ul9cdiu84k4a3, .table th.tinytable_css_vfp5a35ul9cdiu84k4a3 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_gprx4ev52wl6n0z6m6an, .table th.tinytable_css_gprx4ev52wl6n0z6m6an { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_g9hsk8hcdxfl4uik9irp, .table th.tinytable_css_g9hsk8hcdxfl4uik9irp { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_fskzdjmo5uxbtcvv2l6w, .table th.tinytable_css_fskzdjmo5uxbtcvv2l6w { text-align: center; }
-      .table td.tinytable_css_dmqkfsbi9yg5vu1eeyyo, .table th.tinytable_css_dmqkfsbi9yg5vu1eeyyo { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_926qsc467i1zhzfhcg2f, .table th.tinytable_css_926qsc467i1zhzfhcg2f { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_3doe1oyjfl65hmt3l4wa, .table th.tinytable_css_3doe1oyjfl65hmt3l4wa { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_31bbkc5y9a71oopuek35, .table th.tinytable_css_31bbkc5y9a71oopuek35 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ybe43cia2jdhjx91bbp4, .table th.tinytable_css_ybe43cia2jdhjx91bbp4 { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ul9jafg2ijho7uywzkmx, .table th.tinytable_css_ul9jafg2ijho7uywzkmx { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_q50cy00y3v8d2wyj8ah9, .table th.tinytable_css_q50cy00y3v8d2wyj8ah9 { text-align: center; }
+      .table td.tinytable_css_pd5gnrai9jxk5vftn9ot, .table th.tinytable_css_pd5gnrai9jxk5vftn9ot { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ohji6qj5ezj10moy3jvl, .table th.tinytable_css_ohji6qj5ezj10moy3jvl { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_nlq2ufpwz9nboeq152oh, .table th.tinytable_css_nlq2ufpwz9nboeq152oh { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_j3tzuwecohuwqknl2iu3, .table th.tinytable_css_j3tzuwecohuwqknl2iu3 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_fk6i8y9lqs99pr95do8y, .table th.tinytable_css_fk6i8y9lqs99pr95do8y { text-align: left; text-align: left; }
+      .table td.tinytable_css_cmu8ptokt0at3nz6wxmu, .table th.tinytable_css_cmu8ptokt0at3nz6wxmu { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_ay2077byn6w2feercgg5, .table th.tinytable_css_ay2077byn6w2feercgg5 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_wzuvpuhtejvjodt3t08m" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_hsgl862xhe82swv8upwh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -8814,91 +8814,83 @@ The experience gained between the first and seventh year causes an increase of 0
 </ol>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modify var names for presentation </span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>dcounts_per_district <span class="sc">%&lt;&gt;%</span> </span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">same_party =</span> <span class="fu">as.numeric</span>(same_party),</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Legislator =</span> icpsr,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">District =</span> state_dist,</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year) <span class="sc">%&gt;%</span> </span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;</span><span class="dv">2006</span> <span class="sc">&amp;</span> year <span class="sc">&lt;</span> <span class="dv">2021</span>)</span>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>m_district_con_cross <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> Year,</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(m_district_con_cross)}</span>
 <span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>m_district_con_cross <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> </span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> Year,</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(m_district_con_cross)}</span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_cross, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_cross, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>m_district_con_cross_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> Year,</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(m_district_con_cross)}</span>
 <span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>m_district_con_cross_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> Year,</span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district)</span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(testing){modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(m_district_con_cross)}</span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_cross_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_cross_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
 <span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
-<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_dnd, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_dnd, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
 <span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
-<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district )</span>
-<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_dnd_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
-<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a><span class="fu">coefplot</span>(m_district_con_dnd_party, <span class="at">horiz =</span> T, <span class="at">drop =</span> <span class="st">"(Intercept)"</span>, <span class="at">sub =</span> <span class="st">"Reference = A member serving &gt;6 years"</span>) </span>
+<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_house <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
+<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
 <span id="cb58-52"><a href="#cb58-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-53"><a href="#cb58-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb58-54"><a href="#cb58-54" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_house <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-55"><a href="#cb58-55" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb58-56"><a href="#cb58-56" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb58-57"><a href="#cb58-57" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb58-58"><a href="#cb58-58" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-59"><a href="#cb58-59" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
-<span id="cb58-60"><a href="#cb58-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-53"><a href="#cb58-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-54"><a href="#cb58-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
+<span id="cb58-55"><a href="#cb58-55" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_house_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-56"><a href="#cb58-56" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb58-57"><a href="#cb58-57" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb58-58"><a href="#cb58-58" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb58-59"><a href="#cb58-59" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-60"><a href="#cb58-60" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
 <span id="cb58-61"><a href="#cb58-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-62"><a href="#cb58-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
-<span id="cb58-63"><a href="#cb58-63" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_house_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-64"><a href="#cb58-64" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb58-65"><a href="#cb58-65" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb58-62"><a href="#cb58-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
+<span id="cb58-63"><a href="#cb58-63" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_senate <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-64"><a href="#cb58-64" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
+<span id="cb58-65"><a href="#cb58-65" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
 <span id="cb58-66"><a href="#cb58-66" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
 <span id="cb58-67"><a href="#cb58-67" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-68"><a href="#cb58-68" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"House"</span>))</span>
+<span id="cb58-68"><a href="#cb58-68" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span>
 <span id="cb58-69"><a href="#cb58-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-70"><a href="#cb58-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff</span></span>
-<span id="cb58-71"><a href="#cb58-71" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_senate <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-72"><a href="#cb58-72" aria-hidden="true" tabindex="-1"></a>  new_member <span class="sc">+</span> <span class="co">#same_party + </span></span>
-<span id="cb58-73"><a href="#cb58-73" aria-hidden="true" tabindex="-1"></a>  second_year <span class="sc">+</span> third_year <span class="sc">+</span> fourth_year <span class="sc">+</span> fifth_year <span class="sc">+</span> sixth_year <span class="sc">|</span> </span>
-<span id="cb58-74"><a href="#cb58-74" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb58-75"><a href="#cb58-75" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-76"><a href="#cb58-76" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span>
-<span id="cb58-77"><a href="#cb58-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-78"><a href="#cb58-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-79"><a href="#cb58-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
-<span id="cb58-80"><a href="#cb58-80" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_senate_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear <span class="sc">~</span></span>
-<span id="cb58-81"><a href="#cb58-81" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
-<span id="cb58-82"><a href="#cb58-82" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
-<span id="cb58-83"><a href="#cb58-83" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
-<span id="cb58-84"><a href="#cb58-84" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
-<span id="cb58-85"><a href="#cb58-85" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-70"><a href="#cb58-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-71"><a href="#cb58-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Diff in diff + party change var </span></span>
+<span id="cb58-72"><a href="#cb58-72" aria-hidden="true" tabindex="-1"></a>m_district_con_dnd_senate_party <span class="ot">&lt;-</span> <span class="fu">feglm</span>(perYear_con <span class="sc">~</span></span>
+<span id="cb58-73"><a href="#cb58-73" aria-hidden="true" tabindex="-1"></a>  new_member<span class="sc">*</span>same_party <span class="sc">+</span> </span>
+<span id="cb58-74"><a href="#cb58-74" aria-hidden="true" tabindex="-1"></a>  second_year<span class="sc">*</span>same_party <span class="sc">+</span> third_year<span class="sc">*</span>same_party <span class="sc">+</span> fourth_year<span class="sc">*</span>same_party <span class="sc">+</span> fifth_year<span class="sc">*</span>same_party <span class="sc">+</span> sixth_year<span class="sc">*</span>same_party <span class="sc">|</span> </span>
+<span id="cb58-75"><a href="#cb58-75" aria-hidden="true" tabindex="-1"></a>    District <span class="sc">+</span> Year,</span>
+<span id="cb58-76"><a href="#cb58-76" aria-hidden="true" tabindex="-1"></a><span class="at">cluster =</span> <span class="st">"District"</span>,</span>
+<span id="cb58-77"><a href="#cb58-77" aria-hidden="true" tabindex="-1"></a><span class="at">data =</span> dcounts_per_district <span class="sc">|&gt;</span> <span class="fu">filter</span>(chamber <span class="sc">==</span> <span class="st">"Senate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
@@ -8999,8 +8991,8 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <script>
 
-      function styleCell_dpbggg74plar57u5asqp(i, j, css_id) {
-          var table = document.getElementById("tinytable_dpbggg74plar57u5asqp");
+      function styleCell_wpep0f2j4o082ckocven(i, j, css_id) {
+          var table = document.getElementById("tinytable_wpep0f2j4o082ckocven");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -9010,7 +9002,7 @@ The experience gained between the first and seventh year causes an increase of 0
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_dpbggg74plar57u5asqp');
+        var table = document.getElementById('tinytable_wpep0f2j4o082ckocven');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -9018,8 +9010,8 @@ The experience gained between the first and seventh year causes an increase of 0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_dpbggg74plar57u5asqp(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_dpbggg74plar57u5asqp");
+      function spanCell_wpep0f2j4o082ckocven(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_wpep0f2j4o082ckocven");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -9049,22 +9041,22 @@ The experience gained between the first and seventh year causes an increase of 0
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 19, j: 0 },  ], css_id: 'tinytable_css_qrzlshv1yx3wpj0tkxbc',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_pk350j59ci2q2pnt02f7',}, 
-          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 5, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 6, j: 2 }, { i: 18, j: 1 }, { i: 12, j: 2 }, { i: 7, j: 1 }, { i: 17, j: 1 }, { i: 9, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 12, j: 3 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 1 }, { i: 2, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 5, j: 4 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 18, j: 3 }, { i: 12, j: 4 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 11, j: 4 }, { i: 3, j: 4 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 4, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 8, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 16, j: 4 },  ], css_id: 'tinytable_css_pex5jww37p0bbveku2m5',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 4 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_nsc7z2huo69z8j21h5kf',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_gcru4gqym18ttycq3mja',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_g18ke6e2peb7yr6v3frk',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 17, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 18, j: 0 },  ], css_id: 'tinytable_css_dr6glqfxrl784ulx4eve',}, 
-          { positions: [ { i: 13, j: 0 },  ], css_id: 'tinytable_css_damzhoy0v29c83xfpunt',}, 
-          { positions: [ { i: 13, j: 2 }, { i: 13, j: 1 }, { i: 13, j: 3 }, { i: 13, j: 4 },  ], css_id: 'tinytable_css_c9o172qy0oueb12ycks0',}, 
-          { positions: [ { i: 19, j: 1 }, { i: 19, j: 3 }, { i: 19, j: 2 }, { i: 19, j: 4 },  ], css_id: 'tinytable_css_14peqpnnxccod41vigsc',}, 
+          { positions: [ { i: 19, j: 0 },  ], css_id: 'tinytable_css_yr56ygo4ggv1sy8r5syk',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 17, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 18, j: 0 },  ], css_id: 'tinytable_css_wm5bsw1ims5mti59fs69',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_v10xs1c8t19nb5j3ijhp',}, 
+          { positions: [ { i: 13, j: 2 }, { i: 13, j: 1 }, { i: 13, j: 3 }, { i: 13, j: 4 },  ], css_id: 'tinytable_css_sbsxo643rxs1flh7dhdy',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_psp3fzkk8r4f94v8isq2',}, 
+          { positions: [ { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 6, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 5, j: 1 }, { i: 10, j: 1 }, { i: 2, j: 1 }, { i: 16, j: 1 }, { i: 6, j: 2 }, { i: 18, j: 1 }, { i: 12, j: 2 }, { i: 7, j: 1 }, { i: 17, j: 1 }, { i: 9, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 12, j: 3 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 1 }, { i: 2, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 5, j: 4 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 18, j: 3 }, { i: 12, j: 4 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 18, j: 4 }, { i: 6, j: 4 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 11, j: 4 }, { i: 3, j: 4 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 4, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 8, j: 4 }, { i: 17, j: 4 }, { i: 14, j: 4 }, { i: 16, j: 4 },  ], css_id: 'tinytable_css_o5logibfl2oms0ssmgkc',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 4 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_hv81z0aghil3omi2u2ry',}, 
+          { positions: [ { i: 13, j: 0 },  ], css_id: 'tinytable_css_hldsfxe6rhc51r6hs38h',}, 
+          { positions: [ { i: 19, j: 1 }, { i: 19, j: 3 }, { i: 19, j: 2 }, { i: 19, j: 4 },  ], css_id: 'tinytable_css_9sb8oklm8xbdds8gf3f5',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_72g0vaz8d91umnl9tqpz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_dpbggg74plar57u5asqp(cell.i, cell.j, group.css_id);
+                  styleCell_wpep0f2j4o082ckocven(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -9072,19 +9064,19 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_qrzlshv1yx3wpj0tkxbc, .table th.tinytable_css_qrzlshv1yx3wpj0tkxbc { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_pk350j59ci2q2pnt02f7, .table th.tinytable_css_pk350j59ci2q2pnt02f7 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_pex5jww37p0bbveku2m5, .table th.tinytable_css_pex5jww37p0bbveku2m5 { text-align: center; }
-      .table td.tinytable_css_nsc7z2huo69z8j21h5kf, .table th.tinytable_css_nsc7z2huo69z8j21h5kf { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_gcru4gqym18ttycq3mja, .table th.tinytable_css_gcru4gqym18ttycq3mja { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_g18ke6e2peb7yr6v3frk, .table th.tinytable_css_g18ke6e2peb7yr6v3frk { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_dr6glqfxrl784ulx4eve, .table th.tinytable_css_dr6glqfxrl784ulx4eve { text-align: left; text-align: left; }
-      .table td.tinytable_css_damzhoy0v29c83xfpunt, .table th.tinytable_css_damzhoy0v29c83xfpunt { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_c9o172qy0oueb12ycks0, .table th.tinytable_css_c9o172qy0oueb12ycks0 { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_14peqpnnxccod41vigsc, .table th.tinytable_css_14peqpnnxccod41vigsc { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_yr56ygo4ggv1sy8r5syk, .table th.tinytable_css_yr56ygo4ggv1sy8r5syk { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_wm5bsw1ims5mti59fs69, .table th.tinytable_css_wm5bsw1ims5mti59fs69 { text-align: left; text-align: left; }
+      .table td.tinytable_css_v10xs1c8t19nb5j3ijhp, .table th.tinytable_css_v10xs1c8t19nb5j3ijhp { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_sbsxo643rxs1flh7dhdy, .table th.tinytable_css_sbsxo643rxs1flh7dhdy { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_psp3fzkk8r4f94v8isq2, .table th.tinytable_css_psp3fzkk8r4f94v8isq2 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_o5logibfl2oms0ssmgkc, .table th.tinytable_css_o5logibfl2oms0ssmgkc { text-align: center; }
+      .table td.tinytable_css_hv81z0aghil3omi2u2ry, .table th.tinytable_css_hv81z0aghil3omi2u2ry { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_hldsfxe6rhc51r6hs38h, .table th.tinytable_css_hldsfxe6rhc51r6hs38h { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_9sb8oklm8xbdds8gf3f5, .table th.tinytable_css_9sb8oklm8xbdds8gf3f5 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_72g0vaz8d91umnl9tqpz, .table th.tinytable_css_72g0vaz8d91umnl9tqpz { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_dpbggg74plar57u5asqp" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_wpep0f2j4o082ckocven" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -9103,133 +9095,133 @@ The experience gained between the first and seventh year causes an increase of 0
                   <td>Per year </td>
                   <td>Per year </td>
                   <td>Per year</td>
-                  <td>Per year  </td>
+                  <td>Per year </td>
                 </tr>
                 <tr>
                   <td>Second year           </td>
-                  <td>-29.326**</td>
-                  <td>-19.896**</td>
-                  <td>-4.286  </td>
-                  <td>-87.888** </td>
+                  <td>-17.512**</td>
+                  <td>-10.730* </td>
+                  <td>0.045   </td>
+                  <td>-54.752* </td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(5.438)  </td>
-                  <td>(5.171)  </td>
-                  <td>(3.435) </td>
-                  <td>(21.255)  </td>
+                  <td>(4.607)  </td>
+                  <td>(4.603)  </td>
+                  <td>(3.273) </td>
+                  <td>(20.781) </td>
                 </tr>
                 <tr>
                   <td>Third year            </td>
-                  <td>-13.738**</td>
-                  <td>-4.277   </td>
-                  <td>6.560*  </td>
-                  <td>-48.481** </td>
+                  <td>-3.534   </td>
+                  <td>3.172    </td>
+                  <td>9.662** </td>
+                  <td>-24.813† </td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(4.423)  </td>
-                  <td>(4.511)  </td>
-                  <td>(2.556) </td>
-                  <td>(15.199)  </td>
+                  <td>(3.225)  </td>
+                  <td>(3.634)  </td>
+                  <td>(2.227) </td>
+                  <td>(12.505) </td>
                 </tr>
                 <tr>
                   <td>Fourth year           </td>
-                  <td>-14.083* </td>
-                  <td>-4.621   </td>
-                  <td>9.168*  </td>
-                  <td>-35.868†  </td>
+                  <td>-5.983   </td>
+                  <td>0.723    </td>
+                  <td>11.145* </td>
+                  <td>-21.089  </td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(6.528)  </td>
-                  <td>(5.979)  </td>
-                  <td>(4.584) </td>
-                  <td>(20.817)  </td>
+                  <td>(5.650)  </td>
+                  <td>(5.464)  </td>
+                  <td>(4.440) </td>
+                  <td>(18.494) </td>
                 </tr>
                 <tr>
                   <td>Fifth year            </td>
-                  <td>-13.466**</td>
-                  <td>-5.065   </td>
-                  <td>2.607   </td>
-                  <td>-32.207*  </td>
+                  <td>-5.073†  </td>
+                  <td>0.294    </td>
+                  <td>5.601** </td>
+                  <td>-20.874† </td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(3.828)  </td>
-                  <td>(3.817)  </td>
-                  <td>(2.301) </td>
-                  <td>(12.984)  </td>
+                  <td>(2.814)  </td>
+                  <td>(3.118)  </td>
+                  <td>(1.997) </td>
+                  <td>(10.622) </td>
                 </tr>
                 <tr>
                   <td>Sixth year            </td>
-                  <td>-10.773  </td>
-                  <td>-2.372   </td>
-                  <td>5.586   </td>
-                  <td>-5.331    </td>
+                  <td>-4.026   </td>
+                  <td>1.341    </td>
+                  <td>7.776   </td>
+                  <td>0.807    </td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(7.815)  </td>
-                  <td>(7.516)  </td>
-                  <td>(6.012) </td>
-                  <td>(26.680)  </td>
+                  <td>(7.051)  </td>
+                  <td>(6.993)  </td>
+                  <td>(5.925) </td>
+                  <td>(23.806) </td>
                 </tr>
                 <tr>
                   <td> New member           </td>
-                  <td>-34.718**</td>
-                  <td>-25.287**</td>
-                  <td>-8.914**</td>
-                  <td>-123.581**</td>
+                  <td>-18.207**</td>
+                  <td>-11.425**</td>
+                  <td>-1.298  </td>
+                  <td>-77.638**</td>
                 </tr>
                 <tr>
                   <td>                      </td>
-                  <td>(4.188)  </td>
-                  <td>(4.598)  </td>
-                  <td>(2.465) </td>
-                  <td>(16.309)  </td>
+                  <td>(2.996)  </td>
+                  <td>(3.502)  </td>
+                  <td>(2.076) </td>
+                  <td>(12.617) </td>
                 </tr>
                 <tr>
                   <td>All districts         </td>
                   <td>✓        </td>
                   <td>✓        </td>
                   <td>        </td>
-                  <td>          </td>
+                  <td>         </td>
                 </tr>
                 <tr>
                   <td>House only            </td>
                   <td>         </td>
                   <td>         </td>
                   <td>✓       </td>
-                  <td>          </td>
+                  <td>         </td>
                 </tr>
                 <tr>
                   <td>Senate only           </td>
                   <td>         </td>
                   <td>         </td>
                   <td>        </td>
-                  <td>✓         </td>
+                  <td>✓        </td>
                 </tr>
                 <tr>
                   <td>Observations          </td>
                   <td>7,666    </td>
                   <td>7,666    </td>
                   <td>6,224   </td>
-                  <td>1,442     </td>
+                  <td>1,442    </td>
                 </tr>
                 <tr>
                   <td>District fixed effects</td>
                   <td>         </td>
                   <td>X        </td>
                   <td>X       </td>
-                  <td>X         </td>
+                  <td>X        </td>
                 </tr>
                 <tr>
                   <td>Year fixed effects    </td>
                   <td>X        </td>
                   <td>X        </td>
                   <td>X       </td>
-                  <td>X         </td>
+                  <td>X        </td>
                 </tr>
         </tbody>
       </table>
@@ -9287,8 +9279,8 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <script>
 
-      function styleCell_d31pdoutgm5ef3v6nvlx(i, j, css_id) {
-          var table = document.getElementById("tinytable_d31pdoutgm5ef3v6nvlx");
+      function styleCell_gsvkofhtnao05nza9x0u(i, j, css_id) {
+          var table = document.getElementById("tinytable_gsvkofhtnao05nza9x0u");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -9298,7 +9290,7 @@ The experience gained between the first and seventh year causes an increase of 0
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_d31pdoutgm5ef3v6nvlx');
+        var table = document.getElementById('tinytable_gsvkofhtnao05nza9x0u');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -9306,8 +9298,8 @@ The experience gained between the first and seventh year causes an increase of 0
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_d31pdoutgm5ef3v6nvlx(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_d31pdoutgm5ef3v6nvlx");
+      function spanCell_gsvkofhtnao05nza9x0u(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_gsvkofhtnao05nza9x0u");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -9337,22 +9329,22 @@ The experience gained between the first and seventh year causes an increase of 0
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 }, { i: 31, j: 0 }, { i: 28, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 32, j: 0 },  ], css_id: 'tinytable_css_zegpz2hqew0oppfdlaxm',}, 
-          { positions: [ { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 17, j: 1 }, { i: 14, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 8, j: 1 }, { i: 18, j: 1 }, { i: 10, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 5, j: 4 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 5, j: 3 }, { i: 21, j: 1 }, { i: 9, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 6, j: 3 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 12, j: 3 }, { i: 28, j: 1 }, { i: 29, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 11, j: 4 }, { i: 19, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 32, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 4, j: 4 }, { i: 26, j: 3 }, { i: 6, j: 4 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 30, j: 3 }, { i: 31, j: 3 }, { i: 24, j: 4 }, { i: 12, j: 4 }, { i: 28, j: 2 }, { i: 29, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 14, j: 4 }, { i: 32, j: 4 }, { i: 16, j: 4 }, { i: 30, j: 4 }, { i: 31, j: 4 }, { i: 23, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_zcovl3ucytl4d9yjxw96',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_z5dnlawtswq9dzag4e1g',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_pjycmoepmi6dbxgovmea',}, 
-          { positions: [ { i: 33, j: 3 }, { i: 33, j: 2 }, { i: 33, j: 1 }, { i: 33, j: 4 },  ], css_id: 'tinytable_css_chkp954ll5q72056vrnx',}, 
-          { positions: [ { i: 27, j: 0 },  ], css_id: 'tinytable_css_c41cei15gfe9o5fibyjq',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_bbbwkn4e597qfb8yfwiw',}, 
-          { positions: [ { i: 33, j: 0 },  ], css_id: 'tinytable_css_6wfh37binvmsn5bw2byg',}, 
-          { positions: [ { i: 27, j: 2 }, { i: 27, j: 4 }, { i: 27, j: 3 }, { i: 27, j: 1 },  ], css_id: 'tinytable_css_5yfjpihwr5szmmnl1lem',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_0wga9ozl8puj1kkmhl2h',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 24, j: 0 }, { i: 25, j: 0 }, { i: 26, j: 0 }, { i: 31, j: 0 }, { i: 28, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 32, j: 0 },  ], css_id: 'tinytable_css_w68b96s6dq86fnjwgy6t',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 3 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_smo8ifzo4tw7gfitztlc',}, 
+          { positions: [ { i: 33, j: 3 }, { i: 33, j: 2 }, { i: 33, j: 1 }, { i: 33, j: 4 },  ], css_id: 'tinytable_css_q10gmwkmghmdlvda40ja',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_ksvfmx9r0nouhmdouem3',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_iwd7t5fxsfia4b6yyd21',}, 
+          { positions: [ { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 17, j: 1 }, { i: 14, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 8, j: 1 }, { i: 18, j: 1 }, { i: 10, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 5, j: 4 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 5, j: 3 }, { i: 21, j: 1 }, { i: 9, j: 1 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 6, j: 3 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 12, j: 3 }, { i: 28, j: 1 }, { i: 29, j: 1 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 11, j: 4 }, { i: 19, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 25, j: 3 }, { i: 13, j: 3 }, { i: 14, j: 3 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 32, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 4, j: 4 }, { i: 26, j: 3 }, { i: 6, j: 4 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 30, j: 3 }, { i: 31, j: 3 }, { i: 24, j: 4 }, { i: 12, j: 4 }, { i: 28, j: 2 }, { i: 29, j: 2 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 15, j: 4 }, { i: 25, j: 4 }, { i: 13, j: 4 }, { i: 14, j: 4 }, { i: 32, j: 4 }, { i: 16, j: 4 }, { i: 30, j: 4 }, { i: 31, j: 4 }, { i: 23, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 26, j: 4 },  ], css_id: 'tinytable_css_f42rpks84gp1ms4defve',}, 
+          { positions: [ { i: 27, j: 2 }, { i: 27, j: 4 }, { i: 27, j: 3 }, { i: 27, j: 1 },  ], css_id: 'tinytable_css_d8zfd0mbs46ulj8fl15m',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 4 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_cbj2a3odu8vrek02tfyu',}, 
+          { positions: [ { i: 27, j: 0 },  ], css_id: 'tinytable_css_9sqlufcgta5rkcq9c8f1',}, 
+          { positions: [ { i: 33, j: 0 },  ], css_id: 'tinytable_css_56yb5ezdfj6f8g3sg0a9',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_d31pdoutgm5ef3v6nvlx(cell.i, cell.j, group.css_id);
+                  styleCell_gsvkofhtnao05nza9x0u(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -9360,19 +9352,19 @@ The experience gained between the first and seventh year causes an increase of 0
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_zegpz2hqew0oppfdlaxm, .table th.tinytable_css_zegpz2hqew0oppfdlaxm { text-align: left; text-align: left; }
-      .table td.tinytable_css_zcovl3ucytl4d9yjxw96, .table th.tinytable_css_zcovl3ucytl4d9yjxw96 { text-align: center; }
-      .table td.tinytable_css_z5dnlawtswq9dzag4e1g, .table th.tinytable_css_z5dnlawtswq9dzag4e1g { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_pjycmoepmi6dbxgovmea, .table th.tinytable_css_pjycmoepmi6dbxgovmea { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_chkp954ll5q72056vrnx, .table th.tinytable_css_chkp954ll5q72056vrnx { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_c41cei15gfe9o5fibyjq, .table th.tinytable_css_c41cei15gfe9o5fibyjq { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_bbbwkn4e597qfb8yfwiw, .table th.tinytable_css_bbbwkn4e597qfb8yfwiw { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_6wfh37binvmsn5bw2byg, .table th.tinytable_css_6wfh37binvmsn5bw2byg { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_5yfjpihwr5szmmnl1lem, .table th.tinytable_css_5yfjpihwr5szmmnl1lem { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_0wga9ozl8puj1kkmhl2h, .table th.tinytable_css_0wga9ozl8puj1kkmhl2h { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_w68b96s6dq86fnjwgy6t, .table th.tinytable_css_w68b96s6dq86fnjwgy6t { text-align: left; text-align: left; }
+      .table td.tinytable_css_smo8ifzo4tw7gfitztlc, .table th.tinytable_css_smo8ifzo4tw7gfitztlc { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_q10gmwkmghmdlvda40ja, .table th.tinytable_css_q10gmwkmghmdlvda40ja { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ksvfmx9r0nouhmdouem3, .table th.tinytable_css_ksvfmx9r0nouhmdouem3 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_iwd7t5fxsfia4b6yyd21, .table th.tinytable_css_iwd7t5fxsfia4b6yyd21 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_f42rpks84gp1ms4defve, .table th.tinytable_css_f42rpks84gp1ms4defve { text-align: center; }
+      .table td.tinytable_css_d8zfd0mbs46ulj8fl15m, .table th.tinytable_css_d8zfd0mbs46ulj8fl15m { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_cbj2a3odu8vrek02tfyu, .table th.tinytable_css_cbj2a3odu8vrek02tfyu { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_9sqlufcgta5rkcq9c8f1, .table th.tinytable_css_9sqlufcgta5rkcq9c8f1 { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_56yb5ezdfj6f8g3sg0a9, .table th.tinytable_css_56yb5ezdfj6f8g3sg0a9 { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_d31pdoutgm5ef3v6nvlx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_gsvkofhtnao05nza9x0u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -9389,231 +9381,231 @@ The experience gained between the first and seventh year causes an increase of 0
                 <tr>
                   <td>Dependent variable      </td>
                   <td>Per year </td>
-                  <td>Per year </td>
+                  <td>Per year</td>
                   <td>Per year</td>
                   <td>Per year </td>
                 </tr>
                 <tr>
                   <td>Second year             </td>
-                  <td>-41.123**</td>
-                  <td>-33.328**</td>
-                  <td>1.379   </td>
-                  <td>-52.690  </td>
+                  <td>-27.620**</td>
+                  <td>-20.719*</td>
+                  <td>-0.780  </td>
+                  <td>-40.364  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(10.249) </td>
-                  <td>(10.294) </td>
-                  <td>(8.956) </td>
-                  <td>(40.786) </td>
+                  <td>(7.466)  </td>
+                  <td>(8.912) </td>
+                  <td>(8.153) </td>
+                  <td>(37.637) </td>
                 </tr>
                 <tr>
                   <td>Third year              </td>
-                  <td>-18.206† </td>
-                  <td>-5.033   </td>
-                  <td>-3.751  </td>
-                  <td>29.607   </td>
+                  <td>-3.812   </td>
+                  <td>6.232   </td>
+                  <td>-3.130  </td>
+                  <td>29.328   </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(9.727)  </td>
-                  <td>(9.800)  </td>
-                  <td>(9.074) </td>
-                  <td>(31.396) </td>
+                  <td>(6.981)  </td>
+                  <td>(8.468) </td>
+                  <td>(8.304) </td>
+                  <td>(24.426) </td>
                 </tr>
                 <tr>
                   <td>Fourth year             </td>
-                  <td>-37.726**</td>
-                  <td>-25.572* </td>
-                  <td>4.696   </td>
-                  <td>13.417   </td>
+                  <td>-26.369* </td>
+                  <td>-18.655 </td>
+                  <td>2.596   </td>
+                  <td>10.018   </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(14.523) </td>
-                  <td>(12.738) </td>
-                  <td>(10.487)</td>
-                  <td>(24.070) </td>
+                  <td>(12.373) </td>
+                  <td>(11.490)</td>
+                  <td>(10.076)</td>
+                  <td>(18.998) </td>
                 </tr>
                 <tr>
                   <td>Fifth year              </td>
-                  <td>-18.291† </td>
-                  <td>-3.752   </td>
-                  <td>-8.770  </td>
-                  <td>0.389    </td>
+                  <td>-5.137   </td>
+                  <td>1.302   </td>
+                  <td>-7.351  </td>
+                  <td>-5.625   </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(10.058) </td>
-                  <td>(9.228)  </td>
-                  <td>(7.620) </td>
-                  <td>(26.500) </td>
+                  <td>(7.712)  </td>
+                  <td>(7.497) </td>
+                  <td>(6.346) </td>
+                  <td>(16.159) </td>
                 </tr>
                 <tr>
                   <td>Sixth year              </td>
-                  <td>-22.096  </td>
-                  <td>-14.893  </td>
-                  <td>2.948   </td>
-                  <td>124.675  </td>
+                  <td>-15.095  </td>
+                  <td>-15.916 </td>
+                  <td>2.359   </td>
+                  <td>108.724  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(20.622) </td>
-                  <td>(22.419) </td>
-                  <td>(15.016)</td>
-                  <td>(133.240)</td>
+                  <td>(19.766) </td>
+                  <td>(21.713)</td>
+                  <td>(14.568)</td>
+                  <td>(131.281)</td>
                 </tr>
                 <tr>
                   <td>Second year x same party</td>
-                  <td>-36.526* </td>
-                  <td>-18.444  </td>
-                  <td>14.090  </td>
-                  <td>-29.556  </td>
+                  <td>-28.676* </td>
+                  <td>-10.194 </td>
+                  <td>13.883† </td>
+                  <td>-3.383   </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(15.953) </td>
-                  <td>(14.182) </td>
-                  <td>(8.983) </td>
-                  <td>(50.085) </td>
+                  <td>(12.869) </td>
+                  <td>(11.705)</td>
+                  <td>(8.190) </td>
+                  <td>(44.550) </td>
                 </tr>
                 <tr>
                   <td>Third year x same party </td>
-                  <td>-33.954* </td>
-                  <td>-11.203  </td>
-                  <td>19.439* </td>
-                  <td>-86.545* </td>
+                  <td>-24.877* </td>
+                  <td>-3.566  </td>
+                  <td>18.440**</td>
+                  <td>-52.500  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(15.495) </td>
-                  <td>(13.601) </td>
-                  <td>(7.544) </td>
-                  <td>(40.226) </td>
+                  <td>(12.169) </td>
+                  <td>(10.905)</td>
+                  <td>(6.733) </td>
+                  <td>(32.196) </td>
                 </tr>
                 <tr>
                   <td>Fourth year x same party</td>
-                  <td>-13.224  </td>
-                  <td>1.006    </td>
-                  <td>23.998* </td>
-                  <td>-48.411  </td>
+                  <td>-9.885   </td>
+                  <td>5.236   </td>
+                  <td>22.392* </td>
+                  <td>-26.028  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(19.039) </td>
-                  <td>(15.502) </td>
-                  <td>(11.532)</td>
-                  <td>(33.482) </td>
+                  <td>(16.174) </td>
+                  <td>(13.343)</td>
+                  <td>(11.101)</td>
+                  <td>(26.881) </td>
                 </tr>
                 <tr>
                   <td>Fifth year x same party </td>
-                  <td>-26.459† </td>
-                  <td>-9.640   </td>
-                  <td>15.723* </td>
-                  <td>-39.963  </td>
+                  <td>-21.982† </td>
+                  <td>-3.957  </td>
+                  <td>14.767* </td>
+                  <td>-17.254  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(14.837) </td>
-                  <td>(12.300) </td>
-                  <td>(7.260) </td>
-                  <td>(29.368) </td>
+                  <td>(12.161) </td>
+                  <td>(9.661) </td>
+                  <td>(5.843) </td>
+                  <td>(19.408) </td>
                 </tr>
                 <tr>
                   <td>Sixth year x same party </td>
-                  <td>-18.618  </td>
-                  <td>-0.551   </td>
-                  <td>23.053  </td>
-                  <td>-145.393 </td>
+                  <td>-14.705  </td>
+                  <td>4.677   </td>
+                  <td>20.796  </td>
+                  <td>-118.523 </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(25.228) </td>
-                  <td>(25.891) </td>
-                  <td>(20.152)</td>
-                  <td>(134.628)</td>
+                  <td>(23.348) </td>
+                  <td>(24.586)</td>
+                  <td>(19.865)</td>
+                  <td>(132.338)</td>
                 </tr>
                 <tr>
                   <td> New member             </td>
-                  <td>-33.904**</td>
-                  <td>-19.900* </td>
-                  <td>-5.000  </td>
-                  <td>-46.514† </td>
+                  <td>-13.534* </td>
+                  <td>-0.678  </td>
+                  <td>-3.023  </td>
+                  <td>-14.036  </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(9.236)  </td>
-                  <td>(8.718)  </td>
-                  <td>(10.323)</td>
-                  <td>(23.454) </td>
+                  <td>(6.518)  </td>
+                  <td>(7.839) </td>
+                  <td>(9.502) </td>
+                  <td>(19.697) </td>
                 </tr>
                 <tr>
                   <td> New member x same party</td>
-                  <td>-47.030**</td>
-                  <td>-28.046* </td>
-                  <td>8.317   </td>
-                  <td>-82.478* </td>
+                  <td>-36.097**</td>
+                  <td>-16.871†</td>
+                  <td>9.501   </td>
+                  <td>-59.970* </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(15.774) </td>
-                  <td>(12.717) </td>
-                  <td>(7.610) </td>
-                  <td>(32.239) </td>
+                  <td>(12.257) </td>
+                  <td>(9.818) </td>
+                  <td>(6.845) </td>
+                  <td>(25.934) </td>
                 </tr>
                 <tr>
                   <td>Same party              </td>
-                  <td>28.635†  </td>
-                  <td>-1.487   </td>
-                  <td>-11.022 </td>
-                  <td>29.302   </td>
+                  <td>22.301†  </td>
+                  <td>-3.435  </td>
+                  <td>-12.431 </td>
+                  <td>18.180   </td>
                 </tr>
                 <tr>
                   <td>                        </td>
-                  <td>(15.911) </td>
-                  <td>(11.328) </td>
-                  <td>(11.935)</td>
-                  <td>(17.992) </td>
+                  <td>(12.143) </td>
+                  <td>(8.316) </td>
+                  <td>(10.913)</td>
+                  <td>(12.517) </td>
                 </tr>
                 <tr>
                   <td>All districts           </td>
                   <td>✓        </td>
-                  <td>✓        </td>
+                  <td>✓       </td>
                   <td>        </td>
                   <td>         </td>
                 </tr>
                 <tr>
                   <td>House only              </td>
                   <td>         </td>
-                  <td>         </td>
+                  <td>        </td>
                   <td>✓       </td>
                   <td>         </td>
                 </tr>
                 <tr>
                   <td>Senate only             </td>
                   <td>         </td>
-                  <td>         </td>
+                  <td>        </td>
                   <td>        </td>
                   <td>✓        </td>
                 </tr>
                 <tr>
                   <td>Observations            </td>
                   <td>2,929    </td>
-                  <td>2,929    </td>
+                  <td>2,929   </td>
                   <td>2,098   </td>
                   <td>831      </td>
                 </tr>
                 <tr>
                   <td>District fixed effects  </td>
                   <td>         </td>
-                  <td>X        </td>
+                  <td>X       </td>
                   <td>X       </td>
                   <td>X        </td>
                 </tr>
                 <tr>
                   <td>Year fixed effects      </td>
                   <td>X        </td>
-                  <td>X        </td>
+                  <td>X       </td>
                   <td>X       </td>
                   <td>X        </td>
                 </tr>
@@ -9643,7 +9635,7 @@ The experience gained between the first and seventh year causes an increase of 0
 </section>
 <section id="constituency-service-per-district-narrative" class="level3">
 <h3 class="anchored" data-anchor-id="constituency-service-per-district-narrative">Constituency Service Per District Narrative</h3>
-<p>To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table <code>@tbl-models_district</code> provides the estimated effects from the difference-in-differences specification from Equation <code>@eq-district1</code>. In this specification, we see a large causal effect of a new member taking over: Electing a new member causes a district’s constituency service to decrease by about 40%, or 25.29 letters per year (95-percent confidence interval [-16.27, -34.3 ]).</p>
+<p>To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table <code>@tbl-models_district</code> provides the estimated effects from the difference-in-differences specification from Equation <code>@eq-district1</code>. In this specification, we see a large causal effect of a new member taking over: Electing a new member causes a district’s constituency service to decrease by about 40%, or 11.43 letters per year (95-percent confidence interval [-4.56, -18.29 ]).</p>
 <p>The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon–new legislators providing substantially fewer requests–persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.</p>
 </section>
 <section id="constituency-service-per-district-predictions" class="level3">
@@ -9752,7 +9744,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb63-97"><a href="#cb63-97" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdistrict</span>() <span class="sc">+</span></span>
 <span id="cb63-98"><a href="#cb63-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
 <span id="cb63-99"><a href="#cb63-99" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in congress"</span>,</span>
-<span id="cb63-100"><a href="#cb63-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb63-100"><a href="#cb63-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb63-101"><a href="#cb63-101" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb63-102"><a href="#cb63-102" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
 <span id="cb63-103"><a href="#cb63-103" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>) </span>
@@ -9773,7 +9765,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb63-118"><a href="#cb63-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdistrict</span>(<span class="at">party =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
 <span id="cb63-119"><a href="#cb63-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Cross-Sectional)"</span>,</span>
 <span id="cb63-120"><a href="#cb63-120" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb63-121"><a href="#cb63-121" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb63-121"><a href="#cb63-121" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb63-122"><a href="#cb63-122" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb63-123"><a href="#cb63-123" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
 <span id="cb63-124"><a href="#cb63-124" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>) </span>
@@ -9797,7 +9789,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb63-142"><a href="#cb63-142" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb63-143"><a href="#cb63-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
 <span id="cb63-144"><a href="#cb63-144" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb63-145"><a href="#cb63-145" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb63-145"><a href="#cb63-145" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb63-146"><a href="#cb63-146" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb63-147"><a href="#cb63-147" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
 <span id="cb63-148"><a href="#cb63-148" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>)</span>
@@ -9820,7 +9812,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb63-165"><a href="#cb63-165" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb63-166"><a href="#cb63-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per District</span><span class="sc">\n</span><span class="st">(Difference-in-differences)"</span>,</span>
 <span id="cb63-167"><a href="#cb63-167" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb63-168"><a href="#cb63-168" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb63-168"><a href="#cb63-168" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb63-169"><a href="#cb63-169" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb63-170"><a href="#cb63-170" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
 <span id="cb63-171"><a href="#cb63-171" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -9892,7 +9884,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per House District</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
 <span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb64-17"><a href="#cb64-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb64-18"><a href="#cb64-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb64-19"><a href="#cb64-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
 <span id="cb64-20"><a href="#cb64-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>)</span>
@@ -9915,7 +9907,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb64-37"><a href="#cb64-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb64-38"><a href="#cb64-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per House District</span><span class="sc">\n</span><span class="st">(Difference-in-differences)"</span>,</span>
 <span id="cb64-39"><a href="#cb64-39" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb64-40"><a href="#cb64-40" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb64-40"><a href="#cb64-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb64-41"><a href="#cb64-41" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb64-42"><a href="#cb64-42" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
 <span id="cb64-43"><a href="#cb64-43" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -9984,7 +9976,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb65-29"><a href="#cb65-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb65-30"><a href="#cb65-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per Senator</span><span class="sc">\n</span><span class="st">(Difference-in-differneces)"</span>,</span>
 <span id="cb65-31"><a href="#cb65-31" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb65-33"><a href="#cb65-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb65-34"><a href="#cb65-34" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>,</span>
 <span id="cb65-35"><a href="#cb65-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">""</span>)</span>
@@ -10007,7 +9999,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb65-52"><a href="#cb65-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(year_in_congress <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">" N"</span>, <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">str_sub</span>(<span class="dv">1</span>,<span class="dv">1</span>) ))) <span class="sc">+</span> </span>
 <span id="cb65-53"><a href="#cb65-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Letters Per Senator</span><span class="sc">\n</span><span class="st">(Difference-in-differences)"</span>,</span>
 <span id="cb65-54"><a href="#cb65-54" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Years in Congress"</span>,</span>
-<span id="cb65-55"><a href="#cb65-55" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted letters per year"</span>,</span>
+<span id="cb65-55"><a href="#cb65-55" aria-hidden="true" tabindex="-1"></a>              <span class="at">y =</span> <span class="st">"Predicted letters per year</span><span class="sc">\n</span><span class="st">(Constituency Service Only)"</span>,</span>
 <span id="cb65-56"><a href="#cb65-56" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>,</span>
 <span id="cb65-57"><a href="#cb65-57" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Same Party"</span>,</span>
 <span id="cb65-58"><a href="#cb65-58" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Same Party"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -10071,7 +10063,7 @@ The experience gained between the first and seventh year causes an increase of 0
 <span id="cb66-23"><a href="#cb66-23" aria-hidden="true" tabindex="-1"></a>dcounts_spillover <span class="sc">%&lt;&gt;%</span>   <span class="fu">filter</span>(new_member <span class="sc">==</span> <span class="dv">0</span>)  </span>
 <span id="cb66-24"><a href="#cb66-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb66-25"><a href="#cb66-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-26"><a href="#cb66-26" aria-hidden="true" tabindex="-1"></a><span class="co"># # inspect </span></span>
+<span id="cb66-26"><a href="#cb66-26" aria-hidden="true" tabindex="-1"></a><span class="co"># # inspect data </span></span>
 <span id="cb66-27"><a href="#cb66-27" aria-hidden="true" tabindex="-1"></a><span class="co"># dcounts_spillover |&gt; select(Year, state, chamber, new_member, new_one, new_senator, new_proportion, perYear) |&gt; ungroup() |&gt;</span></span>
 <span id="cb66-28"><a href="#cb66-28" aria-hidden="true" tabindex="-1"></a><span class="co">#   #filter(new_senator ==1) |&gt;  </span></span>
 <span id="cb66-29"><a href="#cb66-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   #count(new_senator, new_member) |&gt; </span></span>
@@ -10165,8 +10157,8 @@ Figures: `figs/m-spillover-[1:3].png`
 
     <script>
 
-      function styleCell_dh0pamchsxfcvwk5nl2j(i, j, css_id) {
-          var table = document.getElementById("tinytable_dh0pamchsxfcvwk5nl2j");
+      function styleCell_pxyttquzqbzoh6o8jryx(i, j, css_id) {
+          var table = document.getElementById("tinytable_pxyttquzqbzoh6o8jryx");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -10176,7 +10168,7 @@ Figures: `figs/m-spillover-[1:3].png`
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_dh0pamchsxfcvwk5nl2j');
+        var table = document.getElementById('tinytable_pxyttquzqbzoh6o8jryx');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -10184,8 +10176,8 @@ Figures: `figs/m-spillover-[1:3].png`
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_dh0pamchsxfcvwk5nl2j(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_dh0pamchsxfcvwk5nl2j");
+      function spanCell_pxyttquzqbzoh6o8jryx(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_pxyttquzqbzoh6o8jryx");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -10215,22 +10207,22 @@ Figures: `figs/m-spillover-[1:3].png`
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 7, j: 0 },  ], css_id: 'tinytable_css_zyw3bwtbhwyrnzyj9wmo',}, 
-          { positions: [ { i: 12, j: 1 }, { i: 12, j: 2 }, { i: 12, j: 3 },  ], css_id: 'tinytable_css_w9gh5ju0rbstchis633x',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_uk332c5j2f343yml50uy',}, 
-          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_qhy1m37b7gy3u4ayfq8z',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_mrzs0avz7ft5tnabdp51',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 11, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_aunbji7jplsug9aqnclc',}, 
-          { positions: [ { i: 12, j: 0 },  ], css_id: 'tinytable_css_8igk87b62x4chzoi8tie',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_8grjrowq1b107sfbzw90',}, 
-          { positions: [ { i: 4, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 5, j: 1 }, { i: 2, j: 1 }, { i: 11, j: 1 }, { i: 3, j: 2 }, { i: 9, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 2 }, { i: 11, j: 2 }, { i: 4, j: 2 }, { i: 10, j: 1 }, { i: 6, j: 2 }, { i: 2, j: 3 }, { i: 8, j: 2 }, { i: 5, j: 2 }, { i: 10, j: 2 }, { i: 6, j: 3 }, { i: 3, j: 3 }, { i: 9, j: 2 }, { i: 5, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 4, j: 3 }, { i: 9, j: 3 }, { i: 8, j: 3 },  ], css_id: 'tinytable_css_5vkrkqb2wx1fi2dnb2f4',}, 
-          { positions: [ { i: 7, j: 2 }, { i: 7, j: 3 }, { i: 7, j: 1 },  ], css_id: 'tinytable_css_3v4lhk4rp18s5euadyk6',}, 
+          { positions: [ { i: 1, j: 3 }, { i: 1, j: 1 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_yhglw5yi7s5a2ke5kmlv',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_xb3541o6kqmnxa0c75yb',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_wjatz6yepspnlui9hokt',}, 
+          { positions: [ { i: 4, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 5, j: 1 }, { i: 2, j: 1 }, { i: 11, j: 1 }, { i: 3, j: 2 }, { i: 9, j: 1 }, { i: 6, j: 1 }, { i: 2, j: 2 }, { i: 11, j: 2 }, { i: 4, j: 2 }, { i: 10, j: 1 }, { i: 6, j: 2 }, { i: 2, j: 3 }, { i: 8, j: 2 }, { i: 5, j: 2 }, { i: 10, j: 2 }, { i: 6, j: 3 }, { i: 3, j: 3 }, { i: 9, j: 2 }, { i: 5, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 4, j: 3 }, { i: 9, j: 3 }, { i: 8, j: 3 },  ], css_id: 'tinytable_css_u2iayd9ttezbu4cptep1',}, 
+          { positions: [ { i: 12, j: 0 },  ], css_id: 'tinytable_css_mkoj5bufpijuo0y829up',}, 
+          { positions: [ { i: 7, j: 0 },  ], css_id: 'tinytable_css_kokgl6e5shoyooejm1dr',}, 
+          { positions: [ { i: 7, j: 2 }, { i: 7, j: 3 }, { i: 7, j: 1 },  ], css_id: 'tinytable_css_e9kx8pe6ew1aj0l3wn7b',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_cy7t581gskco758k8nsf',}, 
+          { positions: [ { i: 12, j: 1 }, { i: 12, j: 2 }, { i: 12, j: 3 },  ], css_id: 'tinytable_css_b9dz0ngfbrj4581uqvpr',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 11, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_6a13eq3446cmkvws3gsd',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_dh0pamchsxfcvwk5nl2j(cell.i, cell.j, group.css_id);
+                  styleCell_pxyttquzqbzoh6o8jryx(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -10238,19 +10230,19 @@ Figures: `figs/m-spillover-[1:3].png`
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_zyw3bwtbhwyrnzyj9wmo, .table th.tinytable_css_zyw3bwtbhwyrnzyj9wmo { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
-      .table td.tinytable_css_w9gh5ju0rbstchis633x, .table th.tinytable_css_w9gh5ju0rbstchis633x { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_uk332c5j2f343yml50uy, .table th.tinytable_css_uk332c5j2f343yml50uy { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
-      .table td.tinytable_css_qhy1m37b7gy3u4ayfq8z, .table th.tinytable_css_qhy1m37b7gy3u4ayfq8z { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
-      .table td.tinytable_css_mrzs0avz7ft5tnabdp51, .table th.tinytable_css_mrzs0avz7ft5tnabdp51 { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_aunbji7jplsug9aqnclc, .table th.tinytable_css_aunbji7jplsug9aqnclc { text-align: left; text-align: left; }
-      .table td.tinytable_css_8igk87b62x4chzoi8tie, .table th.tinytable_css_8igk87b62x4chzoi8tie { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_8grjrowq1b107sfbzw90, .table th.tinytable_css_8grjrowq1b107sfbzw90 { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_5vkrkqb2wx1fi2dnb2f4, .table th.tinytable_css_5vkrkqb2wx1fi2dnb2f4 { text-align: center; }
-      .table td.tinytable_css_3v4lhk4rp18s5euadyk6, .table th.tinytable_css_3v4lhk4rp18s5euadyk6 { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_yhglw5yi7s5a2ke5kmlv, .table th.tinytable_css_yhglw5yi7s5a2ke5kmlv { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; }
+      .table td.tinytable_css_xb3541o6kqmnxa0c75yb, .table th.tinytable_css_xb3541o6kqmnxa0c75yb { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_wjatz6yepspnlui9hokt, .table th.tinytable_css_wjatz6yepspnlui9hokt { text-align: center; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_u2iayd9ttezbu4cptep1, .table th.tinytable_css_u2iayd9ttezbu4cptep1 { text-align: center; }
+      .table td.tinytable_css_mkoj5bufpijuo0y829up, .table th.tinytable_css_mkoj5bufpijuo0y829up { text-align: left; text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_kokgl6e5shoyooejm1dr, .table th.tinytable_css_kokgl6e5shoyooejm1dr { text-align: left; border-bottom: solid black 0.05em; text-align: left; }
+      .table td.tinytable_css_e9kx8pe6ew1aj0l3wn7b, .table th.tinytable_css_e9kx8pe6ew1aj0l3wn7b { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_cy7t581gskco758k8nsf, .table th.tinytable_css_cy7t581gskco758k8nsf { text-align: left; font-weight: bold; text-align: center; border-bottom: solid black 0.1em; text-align: center; text-align: left; }
+      .table td.tinytable_css_b9dz0ngfbrj4581uqvpr, .table th.tinytable_css_b9dz0ngfbrj4581uqvpr { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_6a13eq3446cmkvws3gsd, .table th.tinytable_css_6a13eq3446cmkvws3gsd { text-align: left; text-align: left; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_dh0pamchsxfcvwk5nl2j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_pxyttquzqbzoh6o8jryx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>

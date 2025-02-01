@@ -2564,15 +2564,9 @@ Figures: `figs/m-district-con-[1:4].png`
 #| label: "m-district-con"
 #| fig-show: "hold"
 
-# modify var names for presentation 
-dcounts_per_district %<>% 
-  mutate(same_party = as.numeric(same_party),
-         Legislator = icpsr,
-         District = state_dist,
-         Year = year) %>% 
-  filter(year >2006 & year < 2021)
 
-m_district_con_cross <- feglm(perYear ~
+
+m_district_con_cross <- feglm(perYear_con ~
   new_member + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
 cluster = "District",
@@ -2583,7 +2577,7 @@ if(testing){modelsummary::modelsummary(m_district_con_cross)}
 coefplot(m_district_con_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
 
-m_district_con_cross_party <- feglm(perYear ~
+m_district_con_cross_party <- feglm(perYear_con ~
   new_member*same_party + 
   second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | Year,
 cluster = "District",
@@ -2595,7 +2589,7 @@ coefplot(m_district_con_cross_party, horiz = T, drop = "(Intercept)", sub = "Ref
 
 
 # Diff in diff
-m_district_con_dnd <- feglm(perYear ~
+m_district_con_dnd <- feglm(perYear_con ~
   new_member + #same_party + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | 
     District + Year,
@@ -2605,7 +2599,7 @@ data = dcounts_per_district )
 coefplot(m_district_con_dnd, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
 # Diff in diff
-m_district_con_dnd_party <- feglm(perYear ~
+m_district_con_dnd_party <- feglm(perYear_con ~
   new_member*same_party + 
   second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
     District + Year,
@@ -2617,7 +2611,7 @@ coefplot(m_district_con_dnd_party, horiz = T, drop = "(Intercept)", sub = "Refer
 
 
 # Diff in diff
-m_district_con_dnd_house <- feglm(perYear ~
+m_district_con_dnd_house <- feglm(perYear_con ~
   new_member + #same_party + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | 
     District + Year,
@@ -2626,7 +2620,7 @@ data = dcounts_per_district |> filter(chamber == "House"))
 
 
 # Diff in diff + party change var 
-m_district_con_dnd_house_party <- feglm(perYear ~
+m_district_con_dnd_house_party <- feglm(perYear_con ~
   new_member*same_party + 
   second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
     District + Year,
@@ -2634,7 +2628,7 @@ cluster = "District",
 data = dcounts_per_district |> filter(chamber == "House"))
 
 # Diff in diff
-m_district_con_dnd_senate <- feglm(perYear ~
+m_district_con_dnd_senate <- feglm(perYear_con ~
   new_member + #same_party + 
   second_year + third_year + fourth_year + fifth_year + sixth_year | 
     District + Year,
@@ -2643,7 +2637,7 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 
 # Diff in diff + party change var 
-m_district_con_dnd_senate_party <- feglm(perYear ~
+m_district_con_dnd_senate_party <- feglm(perYear_con ~
   new_member*same_party + 
   second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
     District + Year,
@@ -2884,7 +2878,7 @@ predicted %>%
 ggdistrict() +
   labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in congress",
-       y = "Predicted letters per year",
+       y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "",
        shape = "") 
@@ -2905,7 +2899,7 @@ predicted %>%
   ggdistrict(party = TRUE) + 
   labs(title = "Letters Per District\n(Cross-Sectional)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "Same Party",
        shape = "Same Party") 
@@ -2929,7 +2923,7 @@ ggdistrict() +
       geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "",
        shape = "")
@@ -2952,7 +2946,7 @@ predicted %>%
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -2997,7 +2991,7 @@ ggdistrict() +
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per House District\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "",
        shape = "")
@@ -3020,7 +3014,7 @@ predicted %>%
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per House District\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -3079,7 +3073,7 @@ ggdistrict() +
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per Senator\n(Difference-in-differneces)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "",
        shape = "")
@@ -3102,7 +3096,7 @@ predicted %>%
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
   labs(title = "Letters Per Senator\n(Difference-in-differences)",
        x = "Years in Congress",
-       y = "Predicted letters per year",
+              y = "Predicted letters per year\n(Constituency Service Only)",
        fill = "",
        color = "Same Party",
        shape = "Same Party")
@@ -3144,7 +3138,7 @@ dcounts_spillover <- dcounts_per_district %>%
 dcounts_spillover %<>%   filter(new_member == 0)  
 
 
-# # inspect 
+# # inspect data 
 # dcounts_spillover |> select(Year, state, chamber, new_member, new_one, new_senator, new_proportion, perYear) |> ungroup() |>
 #   #filter(new_senator ==1) |>  
 #   #count(new_senator, new_member) |> 
