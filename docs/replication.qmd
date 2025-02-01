@@ -21,16 +21,16 @@ library(kableExtra)
 library(here)
 library(ggrepel)
 
-knitr::opts_chunk$set(echo = TRUE, 
-                      cache =F, # CACHE 
+knitr::opts_chunk$set(echo = T, # code is folded 
+                      cache = F, # CACHE 
                       fig.width=4.5, 
                       fig.height = 3.5,
                       split = T,
                       fig.align = 'center', 
                       fig.path='figs/',
                       fig.retina = 6,
-                      warning=FALSE, 
-                      message=FALSE)
+                      warning=F, 
+                      message=F)
 
 # inline numbers round to 2
 knit_hooks$set(inline = function(x) {
@@ -110,7 +110,7 @@ capacity <- tibble::tibble(
            arrow = arrow(type = "closed", length = unit(.1, "in")),
            color = "blue") + 
   annotate("text", 
-          label = "50% increase in capacity while maintaining\na 80:20 ratio of constituency service to\npolicy work (80% constitunecy service)", 
+          label = "50% increase in capacity while maintaining\na 80:20 ratio of constituency service to\npolicy work (80% constituency service)", 
            x = 150*.2, 
            y = 150*.8,
           hjust = -.01,
@@ -174,7 +174,7 @@ priority <- tibble::tibble(
           size = 3) +
   geom_label(aes(x = 150*c(.24, .66),
                  y = 150 ),
-             label = c("80:20", "60:40") ,
+             label = c("80:20", "60:40"),
           size = 3) + 
   scale_y_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
   scale_x_continuous(breaks = seq(0, 140, by = 20), limits = c(0, 150)) + 
@@ -210,7 +210,7 @@ both <- tibble::tibble(
    stat_function(fun =  ~ 1.5*.x , geom = "line", linetype = 2, alpha = 1) +
   geom_label(aes(x = 150*c(.24, .66),
                  y = 150 ),
-             label = c("80:20", "60:40") ,
+             label = c("80:20", "60:40"),
           size = 3) + 
     geom_point(alpha = c(.5,1) ) +
   geom_segment(x = 100*.2, 
@@ -867,7 +867,7 @@ format_table <- . %>%
 # for testing table formatting
 if(F){
 # raw   
- modelsummary(models)
+ modelsummary::modelsummary(models)
   
   load(here::here("models", "models_total.Rdata"))
 
@@ -878,18 +878,18 @@ modelsummary::modelsummary(models_total,
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "html",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
     tinytable::style_tt(i = 1, bold = T, line = "b")
 
   
 # TeX 
-modelsummary(models_total,  # stars = T, 
+modelsummary::modelsummary(models_total,  # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "latex",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
     tinytable::format_tt(
@@ -898,6 +898,27 @@ modelsummary(models_total,  # stars = T,
     num_mark_big = ",") |>
   format_table()  
 }
+
+
+# manuscript
+# AJPS regression table formatting
+modelsummary <- function(models, notes = "", center_rows = 1){
+  modelsummary::modelsummary(models,  
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             align = paste0("l", paste0(rep("d", length(models)), collapse = "")), # Align coefficients by decimal for AJPS 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             notes = notes) |>
+  # bold header, hline bottom, aligned center
+    tinytable::style_tt(i = 0:1, bold = T, line = "b",  align = "c") |>
+     # stats aligned center 
+    tinytable::style_tt(i = center_rows, align = "c") |> 
+  # row labels left
+      tinytable::style_tt(j = 1, align = "l")
+} 
+
 ```
 
 
@@ -936,7 +957,7 @@ m_total_cross <-feglm (perYear ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_total_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_total_cross)}
 
 coefplot(m_total_cross, horiz = T, drop = "(Intercept)") 
 
@@ -951,7 +972,7 @@ m_total_dnd <-feglm (perYear ~
                     # ALT vcov = hetero ~ ssc(cluster.adj = TRUE),
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_total_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_total_dnd)}
 
 coefplot(m_total_dnd, horiz = T) 
 
@@ -964,7 +985,7 @@ m_total_2nd <-feglm (perYear ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_total_2nd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_total_2nd)}
 coefplot(m_total_2nd, horiz = T) 
 
 
@@ -976,7 +997,7 @@ m_logtotal_dnd <-feglm (log(perYear + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logtotal_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_logtotal_dnd)}
 
 coefplot(m_logtotal_dnd, horiz = T) 
 
@@ -1032,26 +1053,21 @@ modelsummary::modelsummary(models_total,
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "tinytable",
              notes = list("Robust standard errors in parentheses, clustered by legislator.",
-                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator per year effects are simply these coefficients times the number of agencies in the data.")) |>  
-  # header alignment
-    tinytable::style_tt(i = 1, align = "lcccc") |>
-# coef alignment by decimal
-    tinytable::style_tt(j = 2:4, i = 3:25, align = "d") |>
-  # bold header 
+                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator, per year effects are simply these coefficients times the number of agencies in the data.")) |>  
     tinytable::style_tt(i = 1, bold = T, line = "b") 
 
 
 
 # TeX 
-modelsummary(models_total,
+modelsummary::modelsummary(models_total,
              stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "latex",
              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
   format_table()  %>% 
@@ -1133,7 +1149,7 @@ predicted <- predictions(m_total_dnd,
                          newdata = values)
 
 
-# Predictions by chair and President's party
+# Predictions by Chair and President's Party
 predicted %>%
     mutate(estimate = estimate*n_agency, #predicted*n_agency,
          conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% # std.error = std.error*n_agency)) %>%
@@ -1193,7 +1209,7 @@ m_con_cross <-feglm (perYear_con ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_con_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_con_cross)}
 
 coefplot(m_con_cross, horiz = T, drop = "(Intercept)") 
 
@@ -1207,7 +1223,7 @@ m_con_dnd <-feglm (perYear_con ~
                     cluster = "Legislator",
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_con_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_con_dnd)}
 coefplot(m_con_dnd, horiz = T) 
 
 
@@ -1219,7 +1235,7 @@ m_con_2nd <-feglm (perYear_con ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_con_2nd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_con_2nd)}
 coefplot(m_con_2nd, horiz = T) 
 
 
@@ -1231,7 +1247,7 @@ m_logcon_dnd <-feglm (log(perYear_con + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logcon_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_logcon_dnd)}
 
 coefplot(m_logcon_dnd, horiz = T) 
 ```
@@ -1249,18 +1265,13 @@ models_con <- list(
 )
 
 
-modelsummary(models_con, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit) %>% 
+modelsummary(models_con) %>% 
   tinytable::style_tt(i = 1, bold = T, line = "b")
 
-modelsummary(models_con, # stars = T, 
+modelsummary::modelsummary(models_con, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
   format_table() %>%
@@ -1399,7 +1410,7 @@ m_policy_cross <-feglm (perYear_policy ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_policy_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_policy_cross)}
 
 coefplot(m_policy_cross, horiz = T, drop = "(Intercept)") 
 
@@ -1413,7 +1424,7 @@ m_policy_dnd <-feglm (perYear_policy ~
                     cluster = "Legislator",
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_policy_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_policy_dnd)}
 coefplot(m_policy_dnd, horiz = T) 
 
 
@@ -1425,7 +1436,7 @@ m_policy_2nd <-feglm (perYear_policy ~
                     cluster = "Legislator", 
            data = dcounts_tenure %>% filter(survive == 1))
 
-if(testing){modelsummary(m_tenure_2nd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_tenure_2nd)}
 coefplot(m_policy_2nd, horiz = T) 
 
 
@@ -1437,7 +1448,7 @@ m_logcon_dnd <-feglm (log(perYear_policy + 1) ~
                     cluster = "Legislator", 
            data = dcounts_tenure)
 
-if(testing){modelsummary(m_logcon_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_logcon_dnd)}
 
 coefplot(m_logcon_dnd, horiz = T) 
 ```
@@ -1455,19 +1466,10 @@ models_policy <- list(
 )
 
 
-modelsummary(models_policy, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator." )) %>% 
-  tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_policy,
+             notes = list("Robust standard errors in parentheses, clustered by legislator." )) 
 
-modelsummary(models_policy, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             coef_omit = coef_omit,
+modelsummary::modelsummary(models_policy,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
   format_table() %>%
@@ -1598,12 +1600,7 @@ rows <- tibble(
 
 attr(rows, 'position') <- c(0)
 
-modelsummary::modelsummary(models_total_con, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit) %>% 
-  tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_total_con)
 
 beta_total <- m_total_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -1620,8 +1617,8 @@ save(models_total_con, rows, cm, gm, beta_total, se_total, beta_con, se_con,
 
 ### Total + Constituency Service Narrative 
 
- `@tab-models_total_con` shows the effects of institutional power and expierence on overall requests to federal agencies (Models 1 and 1) and constituency service requests (Models 3 and 4). Models 3 and 4 are identical to models 1 and 2 except that we subset the data to only legislator requests hand-coded as constituency service. 
-Columns 2 and 4 of `@tab-models_total_con` provides the estimated effects from the difference-in-differences specification in `@eq-diff1`. 
+ `@tab-models_total_con` shows the effects of institutional power and experience on overall requests to federal agencies (Models 1 and 1) and constituency service requests (Models 3 and 4). Models 3 and 4 are identical to models 1 and 2 except that we subset the data to only legislator requests hand-coded as constituency service. 
+Columns 2 and 4 of `@tab-models_total_con` provide the estimated effects from the difference-in-differences specification in `@eq-diff1`. 
 More experience and receiving a committee chairship increases the total requests to federal agencies.
 More experience increases the level of constituency service that legislators provide. 
 The effect of being a committee chair is positive but not significant at the .05 level. 
@@ -1679,7 +1676,7 @@ m_ratio_cross <- feglm(ratio ~
 cluster = "Legislator",
 data = dcounts_ratio)
 
-if(testing){modelsummary(m_ratio_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_ratio_cross)}
 
 coefplot(m_ratio_cross, horiz = T, drop = "(Intercept)") 
 
@@ -1693,7 +1690,7 @@ m_ratio_dnd <- feglm(ratio ~
 cluster = "Legislator",
 data = dcounts_ratio)
 
-if(testing){modelsummary(m_ratio_dnd, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_ratio_dnd)}
 
 coefplot(m_ratio_dnd, horiz = T) 
 ```
@@ -1734,18 +1731,14 @@ attr(rows, 'position') <- c(0, 20,21)
 attr(rows, 'position') <- c(0)
 
 
-modelsummary(models_ratio, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by legislator.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_ratio,
+             notes = list("Robust standard errors in parentheses, clustered by legislator.") )
 
-modelsummary(models_ratio, # stars = T, 
+modelsummary::modelsummary(models_ratio, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
   # format to match stata output (sort of)
@@ -1865,7 +1858,7 @@ The main district-level models in the paper focus on estimating the effect of le
 
 ### `Same party` lookup table 
 
-As a robustness check, we replicate our within-district results using a subset of district-year-count observations where turnover in a district allows us to assess the partisanship of the prior member holding that seat. We interact an indicator of whether the prior member was of the `same party` with all other indicators (i.e., whether the member is new, serving in years 1-6, or serving longer than 6 years). We compare the service that a district receives before and after electing a new legislator and in the following years, accounting for whether that member is of the same party. However, a structural constraint of the data means that this robustness check is limited to observations where turnover *within* a redistricting cycle gives us a measure of whether the legislator replaced a member of the same party or of another party. 
+As a robustness check, we replicate our within-district results using a subset of district-year-count observations where turnover in a district allows us to assess the partisanship of the prior member holding that seat. We interact an indicator of whether the prior member was of the `same party` with all other indicators (i.e., whether the member is new, serving in years 1-6, or serving longer than 6 years). We compare the service that a district receives before and after electing a new legislator and, in the following years, accounting for whether that member is of the same party. However, a structural constraint of the data means that this robustness check is limited to observations where turnover *within* a redistricting cycle gives us a measure of whether the legislator replaced a member of the same party or of another party. 
 
 The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do NOT count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
 
@@ -1944,11 +1937,9 @@ party_crosswalk <- members  %>%
 #party_crosswalk |> ungroup() |> filter(is.na(state_dist), congress > 109)
 
 
-party_crosswalk  |>  #filter(chamber == "House") |> 
-  select(year, state_dist, state_dist_party, lag_p, same_party, new_member#, new_member2, icpsr, lag_icpsr
-         )  |> kablebox_long()
-
-
+party_crosswalk  |>  
+  select(year, state_dist, state_dist_party, lag_p, same_party, new_member)  |> 
+  kablebox_long()
 
 ```
 
@@ -1974,13 +1965,13 @@ dcounts_per_district %<>% mutate(same_party = as.numeric(same_party))
 ```
 
 
-## Results
+## Total Letters per District
 
 The main results showing that replacing a more experienced legislator with a new legislator yields a substantial decrease in service to the district are robust to interacting all variables with the `same_party` variable. 
 Cross-sectional effects get larger but more uncertain when data are subset to district years after turnover (as required for the `same_party` variable). Within-district effects become more uncertain, likely due to the much smaller number of observations where `same_party` can be observed. 
 
 
-### District-level Coefficient Plots
+### Total District-level Coefficient Plots
 
 Figures: `figs/m-district-[1:4].png`
 
@@ -2016,7 +2007,7 @@ m_district_cross <- feglm(perYear ~
 cluster = "District",
 data = dcounts_per_district)
 
-if(testing){modelsummary(m_district_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_district_cross)}
 
 coefplot(m_district_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
@@ -2027,7 +2018,7 @@ m_district_cross_party <- feglm(perYear ~
 cluster = "District",
 data = dcounts_per_district)
 
-if(testing){modelsummary(m_district_cross, coef_omit = coef_omit)}
+if(testing){modelsummary::modelsummary(m_district_cross)}
 
 coefplot(m_district_cross_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
 
@@ -2090,7 +2081,7 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ```
 
-### Per District Tables
+### Total Per District Tables
 
 - Table: `tables/models_district.tex` (sans stars)
 
@@ -2134,20 +2125,13 @@ attr(rows, 'position') <- c(0, 14:16)
 
 
 
-modelsummary(models_district, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit,
-             output = "tinytable",
-             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% 
-  tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_district,
+             notes = list("Robust standard errors in parentheses, clustered by district.") )
 
-modelsummary(models_district, # stars = T, 
+modelsummary::modelsummary(models_district, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
@@ -2155,6 +2139,9 @@ modelsummary(models_district, # stars = T,
    write_lines(file = here::here("docs", "tables", "models_district.tex") )
 
 beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+beta_cross <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
 
 se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
@@ -2180,18 +2167,13 @@ attr(rows, 'position') <- c(0, 28:31)
 
 
 
-modelsummary(models_district_party, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_district_party, 
+             notes = list("Robust standard errors in parentheses, clustered by district.") )
 
-modelsummary(models_district_party, # stars = T, 
+modelsummary::modelsummary(models_district_party, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
@@ -2203,17 +2185,16 @@ save(models_district_party, rows, cm, gm, coef_omit, beta, se,
      file = here::here("models", "models_district_party.Rdata"))
 ```
 
-### Per District Narrative 
+### Total Per District Narrative 
 
-To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification  from Equation `@eq-district1`.
-In this specification, we see a large causal effect of a new member taking over: 
-electing a new member  causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
+In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
 The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.  
 
 
 
-### Per District Predictions 
+### Total Per District Predictions 
 
 - Figures: `figs/m-district-predicted-[1:4].png`
 
@@ -2407,7 +2388,7 @@ predicted %>%
 
 
 
-### Per District Predictions (House only)
+### Total Per District Predictions (House only)
 
 - Figures: `figs/m-district-predicted-house-[1:2].png`
 
@@ -2476,7 +2457,7 @@ predicted %>%
 
 
 
-### Per District Predictions (Senate only)
+### Total Per District Predictions (Senate only)
 
 - Figures: `figs/m-district-predicted-senate-[1:2].png`
 
@@ -2494,7 +2475,7 @@ predicted %>%
 #| fig-show: "hold"
 
 
-#  values for senate seats 
+# Values for Senate seats 
 values <- tidyr::expand(dcounts_per_district,
                         new_member = new_member,
                         second_year = second_year,
@@ -2546,7 +2527,7 @@ predicted <- predictions(m_district_dnd_senate_party,
 predicted %>%
   ggdistrict(party = TRUE) +
         geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
-  labs(title = "Letters Per Senator\n(Difference-in-differneces)",
+  labs(title = "Letters Per Senator\n(Difference-in-differences)",
        x = "Years in Congress",
        y = "Predicted letters per year",
        fill = "",
@@ -2555,9 +2536,583 @@ predicted %>%
 ```
 
 
+## Constituency Service Letters per District
+
+The main results showing that replacing a more experienced legislator with a new legislator yields a substantial decrease in service to the district are robust to interacting all variables with the `same_party` variable. 
+Cross-sectional effects get larger but more uncertain when data are subset to district years after turnover (as required for the `same_party` variable). Within-district effects become more uncertain, likely due to the much smaller number of observations where `same_party` can be observed. 
+
+
+### Constituency Service District-level Coefficient Plots
+
+Figures: `figs/m-district-con-[1:4].png`
+
+1. cross-sectional 
+2. cross-sectional with same-party variable 
+3. diff-in-diff
+4. diff-in-diff with same party variable
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-cap: "figs/m-district-con-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-con"
+#| fig-show: "hold"
+
+# modify var names for presentation 
+dcounts_per_district %<>% 
+  mutate(same_party = as.numeric(same_party),
+         Legislator = icpsr,
+         District = state_dist,
+         Year = year) %>% 
+  filter(year >2006 & year < 2021)
+
+m_district_con_cross <- feglm(perYear ~
+  new_member + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
+cluster = "District",
+data = dcounts_per_district)
+
+if(testing){modelsummary::modelsummary(m_district_con_cross)}
+
+coefplot(m_district_con_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+m_district_con_cross_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | Year,
+cluster = "District",
+data = dcounts_per_district)
+
+if(testing){modelsummary::modelsummary(m_district_con_cross)}
+
+coefplot(m_district_con_cross_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+# Diff in diff
+m_district_con_dnd <- feglm(perYear ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
+
+coefplot(m_district_con_dnd, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+# Diff in diff
+m_district_con_dnd_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
+
+coefplot(m_district_con_dnd_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+
+# Diff in diff
+m_district_con_dnd_house <- feglm(perYear ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
+
+# Diff in diff + party change var 
+m_district_con_dnd_house_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
+# Diff in diff
+m_district_con_dnd_senate <- feglm(perYear ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
+
+
+# Diff in diff + party change var 
+m_district_con_dnd_senate_party <- feglm(perYear ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
+
+```
+
+### Constituency Service Per District Tables
+
+- Table: `tables/models_district.tex` (sans stars)
+
+```{r models_district_con}
+models_district <- list(
+  "(1)" = m_district_con_cross,
+  "(2)" = m_district_con_dnd,
+  "(3)" = m_district_con_dnd_house,
+  "(4)" = m_district_con_dnd_senate
+)
+
+
+rows <- tibble(
+  term = c("Dependent variable", 
+           "All districts",
+           "House only",
+           "Senate only"),
+  `(1)` = c("Per year", 
+            "✓", 
+            "", 
+            ""),
+  `(2)` =c("Per year", 
+           "✓", 
+            "", 
+            ""),
+    `(3)` = c("Per year", 
+            "", 
+            "✓", 
+            ""),
+  `(4)` =c("Per year", 
+           #"✓", 
+           "", 
+            "", 
+            "✓")
+)
+
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 14:16)
+
+
+
+modelsummary(models_district, 
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) 
+
+modelsummary::modelsummary(models_district, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+
+beta <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+beta_cross <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+
+se <- m_district_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_district, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district.Rdata"))
+```
+
+
+- Table: `tables/models_district_party.tex` (sans stars)
+
+```{r models_district_con_party}
+
+models_district_party <- list(
+  "(1)" = m_district_con_cross_party,
+  "(2)" = m_district_con_dnd_party,
+  "(3)" = m_district_con_dnd_house_party,
+  "(4)" = m_district_con_dnd_senate_party
+)
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 28:31)
+
+
+
+modelsummary(models_district_party, 
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) 
+
+modelsummary::modelsummary(models_district_party, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+
+
+save(models_district_party, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_party.Rdata"))
+```
+
+### Constituency Service Per District Narrative 
+
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
+In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+
+The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.  
+
+
+
+### Constituency Service Per District Predictions 
+
+- Figures: `figs/m-district-con-predicted-[1:4].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-con-predicted-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-con-predicted"
+#| fig-show: "hold"
+
+
+ggdistrict <- function(predicted = predicted, party = FALSE) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, 
+               #predicted, std.error, 
+               estimate, conf.low, conf.high,
+               same_party) %>% 
+  mutate(sum = sum(new_member, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("new_member", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_congress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("new_member", " New\nmember") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+
+
+
+p <- predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  # geom_line() + # requires numeric...look to see how I did this on the other ones
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+
+if(party){
+p <- predicted %>%  
+  mutate(same_party = as.logical(same_party)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_congress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      shape = same_party,
+      color = same_party) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+}
+
+return(p)
+  
+}
+
+
+# dcounts_per_district %>% filter(District == "tennessee_1_1") |> View()
+# dcounts_per_district %>% filter(District == "alabama_1_1") |> View()
+
+
+# by year 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "21376",
+                        Year = "2016",
+                        District = "alabama_1_1",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
+predicted <- predictions(m_district_con_cross,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+
+# Cross-sectional predictions
+predicted %>%
+ggdistrict() +
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+
+# Predictions with the party of the prior representative
+
+predicted <- predictions(m_district_con_cross_party,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+predicted %>%
+  ggdistrict(party = TRUE) + 
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party") 
+
+
+
+
+# diff in diff plot
+
+predicted <- predictions(m_district_con_dnd,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+      geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_con_dnd_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per District\n(Difference-in-differences)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+
+### Constituency Service Per District Predictions (House only)
+
+- Figures: `figs/m-district-con-predicted-house-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-con-predicted-house-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-con-predicted-house"
+#| fig-show: "hold"
+
+
+
+
+# diff in diff plot
+
+predicted <- predictions(m_district_con_dnd_house,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per House District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_con_dnd_house_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per House District\n(Difference-in-differences)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+
+
+### Constituency Service Per District Predictions (Senate only)
+
+- Figures: `figs/m-district-con-predicted-senate-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-con-predicted-senate-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-con-predicted-senate"
+#| fig-show: "hold"
+
+
+# Values for Senate seats 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "49700",
+                        Year = "2017",
+                        District = "alabama_0",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
+# diff in diff plot
+
+predicted <- predictions(m_district_con_dnd_senate,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per Senator\n(Difference-in-differneces)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+
+predicted <- predictions(m_district_con_dnd_senate_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_congress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per Senator\n(Difference-in-differences)",
+       x = "Years in Congress",
+       y = "Predicted letters per year",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
 # Spillover 
 
-This is a robustness check for an observable implication of demand-driven behavior. If variation in constituent demand drives variation in legislator behavior (specifically a preference for more senior members), then we should observe spillover effects on the rest of a delegation when an experience member is replaced with a new member. That is, if people demand more from expiernced members, people should redirect demand to the next most experienced member who represents them.
+This is a robustness check for an observable implication of demand-driven behavior. If variation in constituent demand drives variation in legislator behavior (specifically a preference for more senior members), then we should observe spillover effects on the rest of a delegation when an experienced member is replaced with a new member. That is, if people demand more from experienced members, people should redirect demand to the next most experienced member who represents them.
 
 
 
@@ -2569,7 +3124,7 @@ This is a robustness check for an observable implication of demand-driven behavi
 dcounts_spillover <- dcounts_per_district %>% 
   # FIRST, identify districts with new members 
   group_by(state, Year) %>% 
-  # size of delegation 
+  # size of the delegation 
   add_count(name = "n_delegation") %>% 
   mutate(
     # new IVs:
@@ -2682,18 +3237,14 @@ attr(rows, 'position') <- c(0, 9:11)
 
 
 
-modelsummary(models_spillover, stars = T, 
-             add_rows = rows, 
-             coef_map = cm,
-             gof_map = gm, 
-             coef_omit = coef_omit,
-             notes = list("Robust standard errors in parentheses, clustered by district.") ) %>% tinytable::style_tt(i = 1, bold = T, line = "b")
+modelsummary(models_spillover,
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary(models_spillover, # stars = T, 
+modelsummary::modelsummary(models_spillover, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             coef_omit = coef_omit,
+             
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
