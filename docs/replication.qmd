@@ -310,13 +310,16 @@ regions
 
 # Replication data
 
-From `code/replication.R`, which starts with the main replication data file (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
+From `code/replication_data.R`, which starts with the main replication data file of annual member-agency-year level counts (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
 
-1. counts per member-year (dcounts_tenure.Rdata/AgencyComm.dta)
-2. ratio per member-year (dcounts_ratio.Rdata/ProportionContact.dta)
-3. counts per district-year (dcounts_per_district.Rdata, DistrictLevel.dta)
+1. counts per member-agency-year (dcounts_tenure.Rdata) <!--/AgencyComm.dta--> 
+2. ratio per member-year (dcounts_ratio.Rdata) <!--/ProportionContact.dta)-->
+3. counts per district-year (dcounts_per_district.Rdata) <!--, DistrictLevel.dta)--> 
 
-The same three datasets are used in Replication.do
+(The spillover models use #3)
+
+<!--The same three datasets are used in Replication.do--> 
+
 ```{r data}
 load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
@@ -336,7 +339,16 @@ save(mean_total, mean_con, mean_pol,
 ```
 
 
-## Defining Prestige Committees
+# Defining Prestige Committees
+
+All of these findings replicate with various interpretations of "prestige" committees. To measure committee prestige, we use a revealed preference
+    approach--what do members think is most valuable--using party
+    rules/norms that limit members to serving on only one of a small
+    number of desirable committees. For House members, the "exclusive"
+    committees are: Appropriations, Energy & Commerce, Financial
+    Services, Rules, and Ways & Means (CRS 2022). For Senators, the
+    exclusive (also called "Super A") Committees are: Appropriations,
+    Armed Services, Finance, and Foreign Relations (CRS 2024).
 
 ```{r prestige}
 prestige_houseOLD <- c(
@@ -468,7 +480,7 @@ dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige,  pr
 n_agency <- dcounts_tenure$agency |> unique() |> length()
 ```
 
-## Descriptives
+# Descriptives
 
 ```{r}
 # check N
@@ -565,7 +577,7 @@ gini2 |>
   geom_smooth(method = "lm")
 ```
 
-In 2023, Columbia had the highest Gini coefficient at .55. 
+In 2023, Columbia had the highest income inequality Gini coefficient at .55. 
 
 https://ourworldindata.org/what-is-the-gini-coefficient
 
@@ -770,8 +782,8 @@ Clustering standard errors at the legislator level:
 
 ["Clustering on the panel variable produces an estimator of the VCE that is robust to cross-sectional heteroskedasticity and within-panel (serial) correlation that is asymptotically equivalent to that proposed by Arellano (1987)"](https://www.stata.com/manuals13/xtxtreg.pdf)
 
-Replicated using `fixest::feglm` here and `xtreg` in Replication.do.
-See more about robust (clustered) standard errors with fixed effects are calculated by `fixest` [here](https://lrberge.github.io/fixest/articles/standard_errors.html) and by  `xtreg` [here](https://www.stata.com/manuals13/xtxtreg.pdf).
+We use `fixest::feglm` here and replicated the main models using `xtreg` in Replication.do.
+See more about how robust (clustered) standard errors with fixed effects are calculated by `fixest` [here](https://lrberge.github.io/fixest/articles/standard_errors.html) and by  `xtreg` [here](https://www.stata.com/manuals13/xtxtreg.pdf).
 
 ```{r cm}
 # Coef Map
@@ -806,7 +818,7 @@ cm = c("chair" = "Committee Chair",
        "presidents_party" = "President's party",
        "Legislator" = "Legislator", 
        "Agency" = "Agency",
-       # FIXED EFFECTS FORMATTED BY GM ? 
+       # FIXED EFFECTS FORMATTED BY GM
        # "FE: icpsr_agency" = "Legislator-agency fixed effects",
        # "FE: District" = "District fixed effects",
        # "FE: Year" = "Year fixed effects",
@@ -827,8 +839,8 @@ coef_omit = "none"
 setFixest_dict(cm)
 
 
-format_n <- function(x) format(round(x, 3), big.mark=",")
-f <- function(x) stringr::str_replace(x, "[A-z]", "✓")
+format_n <- function(x) format(round(x, 3), big.mark=",") # this works
+f <- function(x) stringr::str_replace(x, "[A-z]", "✓") #FIXME not sure why this is not working
 
 gm <- list(
   list("raw" = "nobs", "clean" = "Observations", "fmt" = format_n),
@@ -844,6 +856,7 @@ gm <- list(
 
 
 # table formatting to match stata (sort of)
+# The manuscript now just imports the model objects, so writing the .tex tables is vestigial (keeping it just in case)
 format_table <- . %>% 
   # OLD modelsummary based on kableExtra package (broken): https://stackoverflow.com/questions/78422275/argument-is-of-length-zero-from-kableextra-after-updating-rstudio
   #kableExtra::kable_styling(font_size = 11) %>% 
@@ -1006,7 +1019,8 @@ coefplot(m_logtotal_dnd, horiz = T)
 
 ### Total Letters Table 
 
-- Table: `tables/models_total.tex` (sans stars)
+- Table: `tables/models_total.tex` 
+- Models: `models/models_total.Rdata` 
 
 
 ```{r models_total}
@@ -1254,7 +1268,9 @@ coefplot(m_logcon_dnd, horiz = T)
 
 ### Constituency Service Table
 
-- Table: `tables/models_con.tex` (sans stars)
+- Table: `tables/models_con.tex` 
+- Models: `models/models_con.Rdata` 
+
 
 ```{r models_con}
 models_con <- list(
@@ -1455,7 +1471,8 @@ coefplot(m_logcon_dnd, horiz = T)
 
 ### Policy Work Table
 
-- Table: `tables/models_policy.tex` (sans stars)
+- Table: `tables/models_policy.tex` 
+- Models: `models/models_policy.Rdata` 
 
 ```{r models_policy}
 models_policy <- list(
@@ -1579,7 +1596,8 @@ Column 2 of Table `@tbl-models_policy` provides the estimated effects from the d
 
 ### Total + Constituency Service Table
 
-- Table: `tables/models_total_con.tex` (sans stars)
+- Table: `tables/models_total_con.tex` 
+- Models: `models/models_total_con.Rdata` 
 
 ```{r models_total_con}
 models_total_con <- list(
@@ -1697,7 +1715,8 @@ coefplot(m_ratio_dnd, horiz = T)
 
 ### Ratio Table
 
-- Table: `tables/models_ratio.tex` (sans stars)
+- Table: `tables/models_ratio.tex` 
+- Models:  `tables/models_ratio.Rdata` 
 
 ```{r models_ratio}
 models_ratio <- list(
@@ -2083,7 +2102,8 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Total Per District Tables
 
-- Table: `tables/models_district.tex` (sans stars)
+- Table: `tables/models_district.tex` 
+- Models: `models/models_district.Rdata` 
 
 ```{r models_district}
 models_district <- list(
@@ -2150,7 +2170,8 @@ save(models_district, rows, cm, gm, coef_omit, beta, se,
 ```
 
 
-- Table: `tables/models_district_party.tex` (sans stars)
+- Table: `tables/models_district_party.tex` 
+- Models: `models/models_district_party.Rdata` 
 
 ```{r models_district_party}
 
@@ -2648,10 +2669,11 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Constituency Service Per District Tables
 
-- Table: `tables/models_district.tex` (sans stars)
+- Table: `tables/models_district_con.tex` 
+- Models: `models/models_district_con.Rdata` 
 
 ```{r models_district_con}
-models_district <- list(
+models_district_con <- list(
   "(1)" = m_district_con_cross,
   "(2)" = m_district_con_dnd,
   "(3)" = m_district_con_dnd_house,
@@ -2711,16 +2733,17 @@ beta_cross <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames
 
 se <- m_district_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district, rows, cm, gm, coef_omit, beta, se,
-     file = here::here("models", "models_district.Rdata"))
+save(models_district_con, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_con.Rdata"))
 ```
 
 
-- Table: `tables/models_district_party.tex` (sans stars)
+- Table: `tables/models_district_party.tex` 
+- Models: `models/models_district_con_party.Rdata` 
 
 ```{r models_district_con_party}
 
-models_district_party <- list(
+models_district_con_party <- list(
   "(1)" = m_district_con_cross_party,
   "(2)" = m_district_con_dnd_party,
   "(3)" = m_district_con_dnd_house_party,
@@ -2748,16 +2771,16 @@ modelsummary::modelsummary(models_district_party, # stars = T,
    write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
 
 
-save(models_district_party, rows, cm, gm, coef_omit, beta, se,
-     file = here::here("models", "models_district_party.Rdata"))
+save(models_district_con_party, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_con_party.Rdata"))
 ```
 
 ### Constituency Service Per District Narrative 
 
 To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
-In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's constituency service to decrease by about 40\%, or `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's constituency service to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
-The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer contacts for their constituents than established legislators.  
+The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the Senate (Column 4) separately. When examining the House separately, the pattern is similar but slightly different; members make few constituency service requests in their first two years before increasing to a higher level in years 3-6 and then possibly decreasing after that (since seven or more years in office is the reference category, we don't have uncertainty bounds around this estimate).  In short, new legislators make fewer contacts for their constituents than established legislators.  
 
 
 
@@ -3104,14 +3127,575 @@ predicted %>%
 
 
 
-# Spillover 
+
+## Policy Letters per District
+
+The main results showing that replacing a more experienced legislator with a new legislator yields a substantial decrease in policy work to the district are robust to interacting all variables with the `same_party` variable. 
+Cross-sectional effects get larger but more uncertain when data are subset to district years after turnover (as required for the `same_party` variable). Within-district effects become more uncertain, likely due to the much smaller number of observations where `same_party` can be observed. 
+
+
+### Policy District-level Coefficient Plots
+
+Figures: `figs/m-district-policy-[1:4].png`
+
+1. cross-sectional 
+2. cross-sectional with same-party variable 
+3. diff-in-diff
+4. diff-in-diff with same party variable
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 4.5
+#| fig-cap: "figs/m-district-policy-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-policy"
+#| fig-show: "hold"
+
+
+
+m_district_policy_cross <- feglm(perYear_policy ~
+  new_member + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | Year,
+cluster = "District",
+data = dcounts_per_district)
+
+if(testing){modelsummary::modelsummary(m_district_policy_cross)}
+
+coefplot(m_district_policy_cross, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+m_district_policy_cross_party <- feglm(perYear_policy ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | Year,
+cluster = "District",
+data = dcounts_per_district)
+
+if(testing){modelsummary::modelsummary(m_district_policy_cross)}
+
+coefplot(m_district_policy_cross_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+# Diff in diff
+m_district_policy_dnd <- feglm(perYear_policy ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
+
+coefplot(m_district_policy_dnd, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+# Diff in diff
+m_district_policy_dnd_party <- feglm(perYear_policy ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district )
+
+coefplot(m_district_policy_dnd_party, horiz = T, drop = "(Intercept)", sub = "Reference = A member serving >6 years") 
+
+
+
+# Diff in diff
+m_district_policy_dnd_house <- feglm(perYear_policy ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
+
+# Diff in diff + party change var 
+m_district_policy_dnd_house_party <- feglm(perYear_policy ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "House"))
+
+# Diff in diff
+m_district_policy_dnd_senate <- feglm(perYear_policy ~
+  new_member + #same_party + 
+  second_year + third_year + fourth_year + fifth_year + sixth_year | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
+
+
+# Diff in diff + party change var 
+m_district_policy_dnd_senate_party <- feglm(perYear_policy ~
+  new_member*same_party + 
+  second_year*same_party + third_year*same_party + fourth_year*same_party + fifth_year*same_party + sixth_year*same_party | 
+    District + Year,
+cluster = "District",
+data = dcounts_per_district |> filter(chamber == "Senate"))
+
+```
+
+### Policy Per District Tables
+
+- Table: `tables/models_district.tex` 
+- Models: `models/models_district_policy.Rdata` 
+
+```{r models_district_policy}
+models_district_policy <- list(
+  "(1)" = m_district_policy_cross,
+  "(2)" = m_district_policy_dnd,
+  "(3)" = m_district_policy_dnd_house,
+  "(4)" = m_district_policy_dnd_senate
+)
+
+
+rows <- tibble(
+  term = c("Dependent variable", 
+           "All districts",
+           "House only",
+           "Senate only"),
+  `(1)` = c("Per year", 
+            "✓", 
+            "", 
+            ""),
+  `(2)` =c("Per year", 
+           "✓", 
+            "", 
+            ""),
+    `(3)` = c("Per year", 
+            "", 
+            "✓", 
+            ""),
+  `(4)` =c("Per year", 
+           #"✓", 
+           "", 
+            "", 
+            "✓")
+)
+
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 14:16)
+
+
+
+modelsummary(models_district, 
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) 
+
+modelsummary::modelsummary(models_district, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+
+beta <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+beta_cross <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+
+
+se <- m_district_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
+
+save(models_district, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_policy.Rdata"))
+```
+
+
+- Table: `tables/models_district_policy_party.tex` 
+- Models: `models/models_district_policy_party.Rdata` 
+
+```{r models_district_policy_party}
+
+models_district_policy_party <- list(
+  "(1)" = m_district_policy_cross_party,
+  "(2)" = m_district_policy_dnd_party,
+  "(3)" = m_district_policy_dnd_house_party,
+  "(4)" = m_district_policy_dnd_senate_party
+)
+
+
+# Checkmarks for controls 
+attr(rows, 'position') <- c(0, 28:31)
+
+
+
+modelsummary(models_district_party, 
+             notes = list("Robust standard errors in parentheses, clustered by district.") ) 
+
+modelsummary::modelsummary(models_district_party, # stars = T, 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             
+             output = "latex",
+             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+  # format to match stata output (sort of)
+  format_table() %>%
+   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+
+
+save(models_district_policy_party, rows, cm, gm, coef_omit, beta, se,
+     file = here::here("models", "models_district_policy_party.Rdata"))
+```
+
+### Policy Per District Narrative 
+
+To account for differences in district size, demographics, and demand for Policy, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
+In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's Policy to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
+
+The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer policy-related contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer policy-related contacts than established legislators.  
+
+
+
+### Policy Per District Predictions 
+
+- Figures: `figs/m-district-policy-predicted-[1:4].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-policy-predicted-[1:4].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-policy-predicted"
+#| fig-show: "hold"
+
+
+ggdistrict <- function(predicted = predicted, party = FALSE) {
+  
+predicted %<>%
+  # drop estimates from impossible values
+      group_by(rowid, 
+               #predicted, std.error, 
+               estimate, conf.low, conf.high,
+               same_party) %>% 
+  mutate(sum = sum(new_member, second, third, fourth, fifth, sixth),
+         more = ifelse(sum == 0, 1,0)) %>% 
+    filter(sum < 2) %>% 
+    pivot_longer(cols = c("new_member", "second", "third", "fourth", "fifth", "sixth", "more")) %>% 
+    select(name, value) %>% 
+    filter(value == 1) %>% 
+    # clean up for presentation
+    mutate(year_in_policygress = name %>% 
+             str_replace("more", "7\nor more") %>% 
+             str_replace("sixth", "6") %>% 
+             str_replace("fifth", "5") %>% 
+             str_replace("fourth", "4") %>% 
+             str_replace("third", "3") %>% 
+             str_replace("second", "2") %>% 
+             str_replace("new_member", " New\nmember") 
+             ) %>% 
+    ungroup()
+  
+# Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
+# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
+  
+
+
+
+p <- predicted %>%  
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_policygress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  # geom_line() + # requires numeric...look to see how I did this on the other ones
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+
+if(party){
+p <- predicted %>%  
+  mutate(same_party = as.logical(same_party)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  aes(x = year_in_policygress, 
+            y = estimate, # predicted, 
+      ymin = conf.low,# predicted - 1.96*std.error,
+      ymax = conf.high, #predicted + 1.96*std.error,
+      shape = same_party,
+      color = same_party) + 
+  geom_pointrange(position =  position_dodge(width = -.3)  )  + 
+  scale_fill_viridis_d(begin = 0, end = .6, option = "cividis") +
+  scale_color_viridis_d(begin = 0, end = .6, option = "cividis") 
+}
+
+return(p)
+  
+}
+
+
+# dcounts_per_district %>% filter(District == "tennessee_1_1") |> View()
+# dcounts_per_district %>% filter(District == "alabama_1_1") |> View()
+
+
+# by year 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "21376",
+                        Year = "2016",
+                        District = "alabama_1_1",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
+predicted <- predictions(m_district_policy_cross,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+
+# Cross-sectional predictions
+predicted %>%
+ggdistrict() +
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in congress",
+       y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "",
+       shape = "") 
+
+
+
+# Predictions with the party of the prior representative
+predicted <- predictions(m_district_policy_cross_party,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+predicted %>%
+  ggdistrict(party = TRUE) + 
+  labs(title = "Letters Per District\n(Cross-Sectional)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party") 
+
+
+
+
+# diff in diff plot
+predicted <- predictions(m_district_policy_dnd,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+      geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+predicted <- predictions(m_district_policy_dnd_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per District\n(Difference-in-differences)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+
+### Policy Per District Predictions (House only)
+
+- Figures: `figs/m-district-policy-predicted-house-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-policy-predicted-house-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-policy-predicted-house"
+#| fig-show: "hold"
+
+
+
+
+# diff in diff plot
+predicted <- predictions(m_district_policy_dnd_house,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per House District\n(Difference-in-differneces)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+predicted <- predictions(m_district_policy_dnd_house_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per House District\n(Difference-in-differences)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+
+
+### Policy Per District Predictions (Senate only)
+
+- Figures: `figs/m-district-policy-predicted-senate-[1:2].png`
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 3
+#| fig-cap: "figs/m-district-policy-predicted-senate-[1:2].png"
+#| fig-subcap: 
+#|   - "1"
+#|   - "2"
+#|   - "3"
+#|   - "4"
+#| out-width: "100%"
+#| label: "m-district-policy-predicted-senate"
+#| fig-show: "hold"
+
+
+# Values for Senate seats 
+values <- tidyr::expand(dcounts_per_district,
+                        new_member = new_member,
+                        second_year = second_year,
+                        third_year = third_year,
+                        fourth_year = fourth_year,
+                        fifth_year = fifth_year, 
+                        sixth_year = sixth_year,
+                        Legislator = "49700",
+                        Year = "2017",
+                        District = "alabama_0",
+                        same_party = same_party
+                   ) %>% 
+  drop_na(same_party)
+
+# diff in diff plot
+predicted <- predictions(m_district_policy_dnd_senate,
+                         newdata = values) %>% 
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+
+predicted %>%
+ggdistrict() +
+        geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per Senator\n(Difference-in-differneces)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "",
+       shape = "")
+
+
+
+# Predictions with the same party  
+predicted <- predictions(m_district_policy_dnd_senate_party,
+                         newdata = values) %>% #View()
+  rename(second = second_year,
+         third = third_year,
+         fourth = fourth_year,
+         fifth = fifth_year,
+         sixth = sixth_year)
+
+# diff in diff plot
+predicted %>%
+  ggdistrict(party = TRUE) +
+        geom_line(aes(x = as.numeric(year_in_policygress %>% str_replace(" N", "1") %>% str_sub(1,1) ))) + 
+  labs(title = "Letters Per Senator\n(Difference-in-differences)",
+       x = "Years in Congress",
+              y = "Predicted letters per year\n(Policy Only)",
+       fill = "",
+       color = "Same Party",
+       shape = "Same Party")
+```
+
+
+
+# Spillover Effects Robustness Check
 
 This is a robustness check for an observable implication of demand-driven behavior. If variation in constituent demand drives variation in legislator behavior (specifically a preference for more senior members), then we should observe spillover effects on the rest of a delegation when an experienced member is replaced with a new member. That is, if people demand more from experienced members, people should redirect demand to the next most experienced member who represents them.
 
-
-
-
-```{r}
+```{r spillover-data}
 
 # new IVs: new_senator, new_proportion, new_one
 
@@ -3147,7 +3731,6 @@ dcounts_spillover %<>%   filter(new_member == 0)
 
 ```
 
-## Results
 
 <!-- NOT WORTH PLOTTING 
 ### Spillover Coefficient Plots
@@ -3170,9 +3753,6 @@ Figures: `figs/m-spillover-[1:3].png`
 #| out-width: "100%"
 #| label: "m-spillover"
 #| fig-show: "hold"
-
-
-
 
 m_spillover <- feglm(perYear ~
   new_senator  | Year + District,
@@ -3199,7 +3779,8 @@ data = dcounts_spillover |> filter(chamber == "Senate"))
 
 ### Spillover Effect Tables
 
-- Table: `tables/models_spillover.tex` (sans stars)
+- Table: `tables/models_spillover.tex` 
+- Models: `models/models_spillover.Rdata`
 
 ```{r models_spillover}
 models_spillover <- list(
@@ -3238,7 +3819,6 @@ modelsummary::modelsummary(models_spillover, # stars = T,
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
-             
              output = "latex",
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
@@ -3247,7 +3827,7 @@ modelsummary::modelsummary(models_spillover, # stars = T,
 
 
 
-save(models_spillover, rows, cm, gm, coef_omit, beta, se,
+save(models_spillover, rows, cm, gm, coef_omit, #beta, se,
      file = here::here("models", "models_spillover.Rdata"))
 ```
 

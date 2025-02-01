@@ -1,4 +1,5 @@
-# This script takes the minimal master data file and creates member and district level yearly count and ratio data files used to estimate the models in replication.qmd
+# This script takes the minimal master data file and creates member and district-level yearly count and ratio data files 
+# These data files are then used to estimate the models in replication.qmd
 # the key DVs are
 # - perYear = counts per year (member level and district level)
 # - ratio = ratio of policy work to constituency service 
@@ -6,7 +7,23 @@
 library(dplyr)
 library(ggplot2)
 library(here)
+
+# The main replication file
 load(here::here("data", "dcounts_min.Rdata"))
+
+## The data on agencies and members 
+load(here::here("data", "agency_vars.Rdata"))
+load(here::here("data", "members.Rdata"))
+
+congress_years<- function(congress){
+  years<- c(congress*2 + 1787, congress*2 + 1788 )
+  return(years)
+}
+
+year_congress<- function(year){
+  return(floor((year - 1787)/2))
+}
+
 
 ##creating the member-level aggregate count variable
 d<- dcounts_min %>% group_by(agency, icpsr, chamber, year) %>% summarise(perYear = sum(per_icpsr_chamber_year_agency_type))
@@ -17,19 +34,6 @@ d_sub2<- dcounts_min %>% subset(TYPE %in% c(4, 5)) %>%  group_by(agency, icpsr, 
 d$perYear_con<- d_sub$perYear_con
 d$perYear_policy<- d_sub2$perYear_pol
 
-## loading the data on agencies and members 
-load(here::here("data", "agency_vars.Rdata"))
-
-load(here::here("data", "members.Rdata"))
-
-congress_years<- function(congress){
-		years<- c(congress*2 + 1787, congress*2 + 1788 )
-		return(years)
-}
-
-year_congress<- function(year){
-	return(floor((year - 1787)/2))
-}
 
 
 d$congress<- year_congress(d$year)
