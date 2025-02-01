@@ -266,10 +266,13 @@ regions <- more_p %>%
   mutate(mean_x = mean(x),
          mean_y = mean(y),
          name = label %>% 
-           str_replace("B", "c_{i1}p_{i1} > c_{i2}p_{i2}") %>% # "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work.") %>% 
-           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service"),
-           #expression("$c_{i1}p_{i1} > c_{i2}p_{i2}$")
-           ) %>% 
+           str_replace("B", #"c_{i1}p_{i1} > c_{i2}p_{i2}" #FIXME 
+                       "The effect of increasing capacity is large\nenough that levels of constituency service\nare maintained or increase, even as\nelected officials prioritize policy work."
+                       ) %>% 
+           str_replace("C", "Shifting priorities toward policy\ncauses less constituency service"
+           #expression("$c_{i1}p_{i1} > c_{i2}p_{i2}$" #FIXME 
+           )
+         ) %>% 
   ungroup() %>% 
 ggplot() +
   aes(x = x,
