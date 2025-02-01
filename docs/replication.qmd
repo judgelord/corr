@@ -2702,7 +2702,6 @@ rows <- tibble(
             "✓", 
             ""),
   `(4)` =c("Per year", 
-           #"✓", 
            "", 
             "", 
             "✓")
@@ -2715,10 +2714,10 @@ attr(rows, 'position') <- c(0, 14:16)
 
 
 
-modelsummary(models_district, 
+modelsummary(models_district_con, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district, # stars = T, 
+modelsummary::modelsummary(models_district_con, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
@@ -2727,7 +2726,7 @@ modelsummary::modelsummary(models_district, # stars = T,
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+   write_lines(file = here::here("docs", "tables", "models_district_con.tex") )
 
 beta <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -2741,7 +2740,7 @@ save(models_district_con, rows, cm, gm, coef_omit, beta, se,
 ```
 
 
-- Table: `tables/models_district_party.tex` 
+- Table: `tables/models_district_con_party.tex` 
 - Models: `models/models_district_con_party.Rdata` 
 
 ```{r models_district_con_party}
@@ -2759,10 +2758,10 @@ attr(rows, 'position') <- c(0, 28:31)
 
 
 
-modelsummary(models_district_party, 
+modelsummary(models_district_con_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district_party, # stars = T, 
+modelsummary::modelsummary(models_district_con_party, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
@@ -2771,7 +2770,7 @@ modelsummary::modelsummary(models_district_party, # stars = T,
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+   write_lines(file = here::here("docs", "tables", "models_district_con_party.tex") )
 
 
 save(models_district_con_party, rows, cm, gm, coef_omit, beta, se,
@@ -2780,7 +2779,7 @@ save(models_district_con_party, rows, cm, gm, coef_omit, beta, se,
 
 ### Constituency Service Per District Narrative 
 
-To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
+To account for differences in district size, demographics, and demand for constituency service, Column 2 of Table `@tbl-models_district_con` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
 In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's constituency service to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
 The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the Senate (Column 4) separately. When examining the House separately, the pattern is similar but slightly different; members make few constituency service requests in their first two years before increasing to a higher level in years 3-6 and then possibly decreasing after that (since seven or more years in office is the reference category, we don't have uncertainty bounds around this estimate).  In short, new legislators make fewer contacts for their constituents than established legislators.  
@@ -3243,7 +3242,7 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Policy Per District Tables
 
-- Table: `tables/models_district.tex` 
+- Table: `tables/models_district_policy.tex` 
 - Models: `models/models_district_policy.Rdata` 
 
 ```{r models_district_policy}
@@ -3286,10 +3285,10 @@ attr(rows, 'position') <- c(0, 14:16)
 
 
 
-modelsummary(models_district, 
+modelsummary(models_district_policy, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district, # stars = T, 
+modelsummary::modelsummary(models_district_policy, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
@@ -3298,7 +3297,7 @@ modelsummary::modelsummary(models_district, # stars = T,
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+   write_lines(file = here::here("docs", "tables", "models_district_policy.tex") )
 
 beta <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -3307,7 +3306,7 @@ beta_cross <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rowna
 
 se <- m_district_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district, rows, cm, gm, coef_omit, beta, se,
+save(models_district_policy, rows, cm, gm, coef_omit, beta, se,
      file = here::here("models", "models_district_policy.Rdata"))
 ```
 
@@ -3330,10 +3329,10 @@ attr(rows, 'position') <- c(0, 28:31)
 
 
 
-modelsummary(models_district_party, 
+modelsummary(models_district_policy_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district_party, # stars = T, 
+modelsummary::modelsummary(models_district_policy_party, # stars = T, 
              add_rows = rows,               
              coef_map = cm, 
              gof_map = gm, 
@@ -3342,7 +3341,7 @@ modelsummary::modelsummary(models_district_party, # stars = T,
              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
   # format to match stata output (sort of)
   format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+   write_lines(file = here::here("docs", "tables", "models_district_policy_party.tex") )
 
 
 save(models_district_policy_party, rows, cm, gm, coef_omit, beta, se,
@@ -3351,7 +3350,7 @@ save(models_district_policy_party, rows, cm, gm, coef_omit, beta, se,
 
 ### Policy Per District Narrative 
 
-To account for differences in district size, demographics, and demand for Policy, Column 2 of Table `@tbl-models_district` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
+To account for differences in district size, demographics, and demand for Policy, Column 2 of Table `@tbl-models_district_policy` provides the estimated effects from the difference-in-differences specification from Equation `@eq-district1`.
 In this specification, we see a large causal effect of a new member taking over:  Electing a new member causes a district's Policy to decrease by `r -beta$new_member` letters per year (95-percent confidence interval [`r beta$new_member + se$new_member*1.96`, `r beta$new_member - se$new_member*1.96` ]). 
 
 The effect of electing a new representative, however, dissipates quickly. Districts represented by a legislator in their second year of service receive significantly fewer policy-related contacts with federal agencies, but not as drastic as the difference observed in the first year. After the second year, the differences are smaller. This phenomenon--new legislators providing substantially fewer requests--persists when examining the House (Column 3) and the Senate (Column 4) separately. In short, new legislators make fewer policy-related contacts than established legislators.  
