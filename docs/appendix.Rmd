@@ -627,7 +627,7 @@ dcounts %>%
     scale_fill_viridis_d(begin = 0, end = .6, option = "cividis", direction = -1) 
   
 ggsave(str_c("figs/districts/", cq, ".png"), 
-       width = 5.3,
+       width = 5.7,
   height = 2.5,
   dpi = 1000)
 } 
@@ -653,6 +653,7 @@ Between February 2017 and February 2021, we received data on `r as.integer(sum(t
 ```{r percentiles, fig.height=3.4, fig.width=6, cache=TRUE}
 
 percentiles <- dcounts %>% 
+  filter(year > 2006, year < 2021) %>% 
     group_by(member_state, chamber, year) %>% summarise(n = sum(per_icpsr_chamber_year_agency_type)) %>%
   group_by(member_state, chamber) %>% 
   summarise(mean = mean(n)) %>% 
@@ -666,6 +667,8 @@ percentiles <- dcounts %>%
 
 percentiles |> arrange(rank) |> kablebox()
 
+percentiles |> group_by(chamber) |> summarise(chamber_average = mean(mean)) |> kablebox()
+
 percentiles %>% 
     ggplot() + 
     geom_col(aes(x = Percentile, y = mean), 
@@ -674,8 +677,11 @@ percentiles %>%
              fill = "black",
              position = "dodge") + 
   geom_point(aes(x = Percentile, y = mean), color = "light blue") + 
-  geom_text(aes(x = Percentile, y = mean, label = ifelse(rank <14 | Percentile < 30, member_state, "")), check_overlap = T, 
-                  size = 2,
+  geom_text(aes(x = Percentile, y = mean, 
+                label = ifelse(rank <24 | Percentile < 50,
+                               member_state, "")), 
+            check_overlap = T, 
+                  size = 3,
                   hjust = "inward") + 
   # theme_minimal() + 
   labs(#title = "Average Legislator Requests per Year by Percentile",
@@ -688,7 +694,7 @@ percentiles %>%
 
 ## Requests by year
 
-```{r counts-per-year, fig.height=4, fig.width=6, cache=TRUE, eval=TRUE}
+```{r counts-per-year, fig.height=3, fig.width=5.7, cache=TRUE, eval=TRUE}
 dcounts %<>% 
   group_by(bioname, year) %>% 
   mutate(per_bioname_year = sum(per_icpsr_chamber_year_agency_type)) %>%
@@ -748,13 +754,13 @@ p +
         # AJPS formatting 
         legend.position = "inside",
         #legend.position.inside = c(1, 1),
-        # legend.justification.inside = c(1, 1),
+        legend.justification.inside = c(1, 1),
         axis.ticks = element_blank(),
         axis.text.x = element_text(angle = 30, vjust = 0)) 
 
 
 
-ggsave(here::here("figs/counts-per-year.pdf"), p, height=3, width=6)
+ggsave(here::here("figs/counts-per-year.pdf"), p, height=3.5, width=5.7)
 ```   
 
 ## Requests by state population

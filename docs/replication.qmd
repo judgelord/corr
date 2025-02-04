@@ -708,7 +708,7 @@ predicted %>%
       color = chair,
       label = chair,
       ) + 
-      geom_text_repel(direction = "y", 
+      geom_text_repel(direction = "y", size = 3, 
                       hjust= -.25, 
                       min.segment.length = Inf, 
                       force = 2,
@@ -765,7 +765,7 @@ predicted %>%
       shape = chair,
       color = chair,
       label = ifelse(year_in_congress == "6", chair, NA) ) + 
-    geom_text_repel(direction = "y", 
+    geom_text_repel(direction = "y", size = 3,
                     min.segment.length = Inf,
                     hjust= -.15, 
                     check_overlap = T) + 
@@ -811,7 +811,7 @@ cm = c("chair" = "Committee Chair",
         "fourth_year" = "Fourth Year",
         "fifth_year" = "Fifth Year",
         "sixth_year" = "Sixth Year",
-       "new_member" = " New Member", 
+       "new_member" = "New Member", 
        "new_senator" = " New Senator in Delegation",
        "new_one" = " New Member in Delegation",
               "new_proportion" = " New Proportion in Delegation",

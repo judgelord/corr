@@ -26,6 +26,11 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 # Data  
+
+NOTE TO SELF, important metadata 
+agency_vars
+members 
+
 ```{r, eval=TRUE}
 FOIA <- read_csv(here("data/_FOIA_response_table.csv")) %>% select(-ends_with("1")) %>% 
   mutate(Department = Department %>% str_remove_all("Department of the|Department of ")) 
