@@ -26,7 +26,8 @@ year_congress<- function(year){
 
 
 ##creating the member-level aggregate count variable
-d<- dcounts_min %>% group_by(agency, icpsr, chamber, year) %>% summarise(perYear = sum(per_icpsr_chamber_year_agency_type))
+d<- dcounts_min %>% group_by(agency, icpsr, chamber, year) %>% 
+  summarise(perYear = sum(per_icpsr_chamber_year_agency_type))
 
 d_sub<- dcounts_min %>% subset(TYPE %in% c(1, 2, 3)) %>%  group_by(agency, icpsr, chamber, year) %>% summarise(perYear_con = sum(per_icpsr_chamber_year_agency_type))
 d_sub2<- dcounts_min %>% subset(TYPE %in% c(4, 5)) %>%  group_by(agency, icpsr, chamber, year) %>% summarise(perYear_pol = sum(per_icpsr_chamber_year_agency_type))
@@ -46,7 +47,6 @@ d<- left_join(d, members %>% select(congress, icpsr, party,party_code, state_abb
                                     yearelected, state), 
               by = c('congress', 'icpsr'))
 
-load(here::here("data", "members.Rdata"))
 
 nom2<- members %>% group_by(icpsr) %>% summarise(first_cong = min(congress))
 
@@ -101,7 +101,7 @@ df2<- df %>% filter(n == 1)
 
 dcounts_tenure <- df2
 
-write.dta(dcounts_tenure, file= here::here('data', 'dcounts_tenure.dta'))
+# write.dta(dcounts_tenure, file= here::here('data', 'dcounts_tenure.dta'))
 
 save(dcounts_tenure, file = here::here("data", "dcounts_tenure.Rdata"))
 
