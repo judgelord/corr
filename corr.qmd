@@ -143,7 +143,7 @@ executive branch.
 
 To assess absolute and relative shifts in legislator contacts to
 agencies, we hand code the content of
-`{r} readLines(here::here("docs", "tables", "n2007-2020coded"))`
+`{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` (of our total  `{r} readLines(here::here("docs", "tables", "n2007-2020"))`)
 requests as policy work or constituency service. Doing so also yields
 many illuminating descriptives about modern legislator behavior. For example, over 80% of contacts are made on behalf of
 constituents, and less than 20% are focused on policy work.
@@ -829,7 +829,7 @@ year, 21.3% of the average requests per year in our data.
 ```{r}
 #| fig-cap: "Predicted Number of Total Letters (Within Legislator Difference in Differences) 2007-2020"
 #| label: fig-m-total-predicted
-#| out-width: 70%
+#| out-width: "60%"
 
 knitr::include_graphics("docs/figs/m-total-predicted-3.png")
 ```
@@ -1078,13 +1078,29 @@ significant difference.
 
 Taken together, these findings about how the ratio of policy work to constituency service varies across legislators show that as legislators acquire more experience and power their contacts with the bureaucracy become more policy focused. 
 
-## Experienced and Powerful Legislators Maintain the Same Level of Constituency Service, While Also Performing a Higher Proportion of Policy Work
+## Experienced and Powerful Legislators Maintain or Increase Levels of Constituency Service, While Also Performing a Higher Proportion of Policy Work
 
-When legislators acquire capacity they make more requests of federal agencies.  At the same time, higher capacity legislators allocate a relatively larger share of their efforts towards policy work.  The result is the total number of constituency service requests do not decrease, even if legislators are allocating a relatively share of their attention towards policy.    
+When legislators acquire capacity they make more requests of federal agencies.  At the same time, higher capacity legislators allocate a relatively larger share of their efforts towards policy work.  In this section we show that net result of these two simultaneous effects for in our time period (2007-2020) is that the total number of constituency service requests did not decrease, even as legislators allocated a relatively larger share of their attention towards policy.    
 
-To make this assessment, in Table 3 of the Supplementary Information we use our hand-coding of agency contacts to assess how legislators' level of constituency service requests changes as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of Table 2, we find that legislators who become committee chairperson make an additional 0.036 contacts per-agency per year, an increase that is not statistically significant at standard levels of confidence (95 percent confidence interval [-0.09, 0.16]).  In contrast in Table 4 of the Supplementary Information we find using the same difference-in-difference model that becoming a committee chairperson causes a 0.174 additional policy contacts per-agency year (95 percent confidence interval [0.11, 0.24]), a statistically significant difference compared to the constituency service increase ([-0.00, 0.28]).^[We fail to detect an effect of becoming a ranking member or joining a prestige committee for constituency letter, while detecting an effect for policy letters.  That said, we fail to reject the null of a difference in the change in rates of constituency service and policy work for legislators who join prestige committees or become a ranking member.  We find first year legislators make fewer constituency service and policy work requests.]  DEVIN DESCRIBE DISTRICT LEVEL RESULT HERE. 
+```{r}
+load(here::here("models", "models_con.Rdata"))
+```
 
-In other words, the "shifting priorities" effects that we find are insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease constituency service among longer serving or more powerful legislators.<!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2) we found that becoming a committee chair causes an increase of 0.29 requests per agency (95-percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.--> <!--TODO INSERT EVIDENCE FOR THIS --> 
+To make this assessment, in Table 3 of the Supplementary Information we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests changes as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chairperson makes an additional `r beta$chair` constituency service contacts per-agency per year, an increase that is not statistically significant at standard levels of confidence (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  
+
+```{r}
+load(here::here("models", "models_policy.Rdata"))
+```
+
+In contrast in Table 4 of the Supplementary Information we find using the same difference-in-difference model that becoming a committee chairperson causes a  `r beta$chair`  additional policy contacts per-agency year (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]), a statistically significant difference compared to the constituency service increase ([-0.00, 0.28]).^[We fail to detect an effect of becoming a ranking member or joining a prestige committee for constituency letter, while detecting an effect for policy letters.  That said, we fail to reject the null of a difference in the change in rates of constituency service and policy work for legislators who join prestige committees or become a ranking member.  We find first year legislators make fewer constituency service and policy work requests.]  
+
+```{r}
+load(here::here("models", "models_district_con.Rdata"))
+```
+
+Similarly, in Table 5 of the Supplementary Information, we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces and experienced member with a new legislator, we estimate `r -beta$new_member` fewer constituency service contacts per year, an increase that is not statistically significant at standard levels of confidence (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]
+
+In short, the "shifting priorities" effects that we find are insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease constituency service among longer serving or more powerful legislators. Indeed, districts that replace an experienced legislator with a new legislator see a significant decrease in **both** policy work and constituency service for several years. Longer-serving legislators do more constituency service, not less. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2) we found that becoming a committee chair causes an increase of 0.29 requests per agency (95-percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.--> <!--TODO INSERT EVIDENCE FOR THIS --> 
 
 <!--However, as we discuss further in @sec-discussion, the total number of constituency service requests do not drop, even as the proportion of requests that are constituency service related decreases. -->
 
