@@ -23,14 +23,14 @@ library(ggrepel)
 
 knitr::opts_chunk$set(echo = T, # code is folded 
                       cache = F, # CACHE 
-                      fig.width=4.5, 
+                      fig.width = 4.5, 
                       fig.height = 3.5,
                       split = T,
                       fig.align = 'center', 
                       fig.path='figs/',
                       fig.retina = 6,
-                      warning=F, 
-                      message=F)
+                      warning = F, 
+                      message = F)
 
 # inline numbers round to 2
 knit_hooks$set(inline = function(x) {
@@ -39,7 +39,6 @@ knit_hooks$set(inline = function(x) {
     } else
         return(as.numeric(x) |> round(2))
 })
-
 
 # plot defaults 
 library(ggplot2); theme_set(
@@ -77,8 +76,6 @@ kablebox_long <- . %>%
 
 
 # Theory 
-
-
 
 ```{r 2x2-fig, fig.show="hold", echo=FALSE}
 #| label: 2x2-fig
@@ -313,21 +310,232 @@ regions
 
 # Replication data
 
+<!--OLD 
 From `code/replication_data.R`, which starts with the main replication data file of annual member-agency-year level counts (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
 
-1. counts per member-agency-year (dcounts_tenure.Rdata) <!--/AgencyComm.dta--> 
-2. ratio per member-year (dcounts_ratio.Rdata) <!--/ProportionContact.dta)-->
-3. counts per district-year (dcounts_per_district.Rdata) <!--, DistrictLevel.dta)--> 
+1. counts per member-agency-year (dcounts_tenure.Rdata) <!--/AgencyComm.dta-- 
+2. ratio per member-year (dcounts_ratio.Rdata) <!--/ProportionContact.dta)--
+3. counts per district-year (dcounts_per_district.Rdata) <!--, DistrictLevel.dta)-- 
 
 (The spillover models use #3)
 
 <!--The same three datasets are used in Replication.do--> 
 
-```{r data}
+```{r data-old, eval=FALSE}
 load(here::here("data", "dcounts_tenure.Rdata"))
 load(here::here("data", "dcounts_ratio.Rdata"))
 load(here::here("data", "dcounts_per_district.Rdata"))
 load(here::here("data", "members.Rdata"))
+```
+
+
+```{r data}
+load(here::here("data", "corr_counts.Rdata"))
+load(here::here("data", "members.Rdata"))
+
+member_data <- members |>
+  ungroup() |> 
+  distinct( congress, chamber,
+           bioname, last_name, 
+           icpsr, cqlabel, district_code,
+           state_abbrev, state, district_code, pop2010, 
+           committees, chair, ranking_minority, 
+           majority, presidents_party, party,
+           yearelected) |>
+  group_by(icpsr) |>
+  mutate(first_cong = min(congress),
+         first_year = 1787 + 2*first_cong)
+
+
+#FIXME two names for the same data in this script 
+members <- member_data
+```
+
+
+```{r data-transformations}
+# This chunk takes the minimal master data files and creates member and district-level yearly count and ratio data 
+# These data files are then used to estimate the models in replication.qmd
+# the key DVs are
+# - perYear = counts per year (member level and district level)
+# - ratio = ratio of policy work to constituency service 
+
+testing = F
+
+## just in case it was saved as grouped data 
+corr_counts %<>% ungroup()
+
+corr_counts %<>% mutate( icpsr_year = paste(icpsr, year, sep='_') )
+
+## chamber switchers  in original data (party switchers are not an issue because they net new ICPSR ids)
+chamber_switchers <- corr_counts |> 
+  distinct(icpsr_year, agency, chamber) |>
+  add_count(icpsr_year, agency,  #party, 
+            name = "n") |>
+  filter(n > 1) |> 
+  distinct(icpsr_year, chamber) |> 
+  arrange(icpsr_year)
+
+# DROP CHAMBER SWITCHERS
+corr_counts %<>% filter(!icpsr_year %in% chamber_switchers$icpsr_year)
+
+############################
+# CREATE COUNTS for models #
+############################
+
+##creating the member-level aggregate count variables
+
+# TOTAL counts 
+d <- corr_counts |>
+  group_by(agency, icpsr, chamber,
+           year) |>
+  summarise(perYear = sum(per_icpsr_chamber_year_agency_type)) |> 
+  ungroup()
+
+# names(d)
+
+# Constituent counts 
+d_con <- corr_counts |>
+  subset(TYPE %in% c(1, 2, 3)) |> 
+  group_by(agency, icpsr, chamber, year) |>
+  summarise(perYear_con = sum(per_icpsr_chamber_year_agency_type))
+
+# Policy counts 
+d_policy <- corr_counts |>
+  subset(TYPE %in% c(4, 5)) |> 
+  group_by(agency, icpsr, chamber, year) |>
+  summarise(perYear_pol = sum(per_icpsr_chamber_year_agency_type))
+
+d$perYear_con <- d_con$perYear_con
+d$perYear_policy<- d_policy$perYear_pol
+
+# congress year converters 
+congress_years<- function(congress){
+  years<- c(congress*2 + 1787, congress*2 + 1788 )
+  return(years)
+}
+
+year_congress<- function(year){
+  return(floor((year - 1787)/2))
+}
+
+# make congress to merge with member data 
+d$congress<- year_congress(d$year)
+
+# inspect duplicates 
+d <- d |> 
+  ungroup() |>
+  distinct() |>
+  add_count(icpsr, year, agency,  #party, 
+            name = "n") 
+
+if(testing){
+d |>filter(n > 1) |> distinct(icpsr, year) 
+} 
+
+# LEFT join in member data 
+d <- d |>  
+  ungroup() |> 
+  left_join(member_data, 
+            by = c('congress', 'icpsr', "chamber") ) 
+
+
+## count or repeated values (chamber and party switchers)
+# note that in the full data, we use the dates of letters to attribute them to the proper party or chamber at the time
+# but in yearly counts, we lose this level of detail, leading to undercounts for switchers
+d <- d |> 
+  ungroup() |>
+  distinct() |>
+  add_count(icpsr, year, agency,  #party, 
+            name = "n") 
+
+# # inspect for duplicates 
+if(testing){
+d |>filter(n > 1) |> distinct(icpsr, year) 
+}
+
+
+####################
+# TRANSFORMATIONS #  
+###################
+
+# tenure for experience tests 
+d <- d |> 
+  group_by(icpsr) |>
+  mutate(
+    tenure = year - first_year,
+    first = ifelse(tenure==0, 1, 0),
+    second = ifelse(tenure==1, 1, 0),
+    third = ifelse(tenure==2, 1, 0),
+    fourth = ifelse(tenure==3, 1, 0),
+    fifth = ifelse(tenure==4, 1, 0),
+    sixth = ifelse(tenure==5, 1, 0),
+    max_year = max(tenure)
+  ) 
+
+# fixed effects 
+d <- d |> 
+  ungroup() |> 
+  mutate(
+    icpsr_agency = paste(agency, icpsr, sep='_'),
+    agency_year = paste(agency, year, sep='_')
+  )
+
+# indicator for whether they survived their first election 
+d <- d |> 
+  mutate(survive = ifelse(
+    chamber =='House' & max_year>1 | chamber=='Senate' & max_year>5,
+    1, 0)
+  )
+
+dcounts_tenure <- d
+
+#########
+# RATIO # 
+#########  
+
+##  the ratio variable - at the legislator-year level 
+## (not the legislator-year-agency level like above)
+dcounts_ratio  <- d |>
+  ungroup() |> 
+  # variables for ratio models 
+  group_by(year, icpsr, chamber,
+           chair, ranking_minority,  
+           majority, presidents_party,
+           first, second, third, fourth, fifth, sixth)  |>
+  summarise(perCon = sum(perYear_con), 
+            perPol = sum(perYear_policy)) |>
+  mutate(ratio = perCon/(perCon + perPol))
+
+#### PER DISTRICT COUNTS ######################
+d %<>% mutate(decade = case_when(
+  year < 2011 ~ '0', 
+  year > 2010 ~ '1'))
+
+
+d %<>% mutate(state_dist = case_when(
+  chamber=='Senate'~ paste(state,district_code,  sep='_' ),
+  chamber =='House'~ paste(paste(state, district_code, sep='_'), decade, sep='_')
+))
+
+
+dcounts_per_district<- d |>
+  group_by(year, state_dist, icpsr, chamber, 
+           tenure, first, second, third, fourth, fifth, sixth,
+           state) |>
+  summarise(perYear = sum(perYear),
+            perYear_con = sum(perYear_con),
+            perYear_policy = sum(perYear_policy)) |>
+  distinct()
+
+# FIXME this can be simplified, in the models they really should be the same 
+dcounts_per_district %<>% 
+  mutate(new_member = first,
+         second_year = second,
+         third_year = third,
+         fourth_year = fourth,
+         fifth_year = fifth,
+         sixth_year = sixth
+  )
 ```
 
 
@@ -354,6 +562,7 @@ All of these findings replicate with various interpretations of "prestige" commi
     Armed Services, Finance, and Foreign Relations (CRS 2024).
 
 ```{r prestige}
+# Old version of prestige committee definition in original submission 
 prestige_houseOLD <- c(
   "APPROPRIATIONS", #
   "ARMED SERVICES", #
@@ -387,6 +596,7 @@ prestige_senateOLD <- c(
   # "INTELLIGENCE",
   "RULES") %>% paste(collapse  = "|")#
 
+# REVIEWER 2's Proposed Prestige Committees 
 prestige_houseR2 <- c(
   "APPROPRIATIONS", #
   "ARMED SERVICES", #
@@ -420,6 +630,7 @@ prestige_senateR2 <- c(
   # "INTELLIGENCE",
   #"RULES") #
 
+# THE BETTER DEFINITION WE USE IN THE FINAL PAPER 
 prestige_house <- c(
   "APPROPRIATIONS", #
   # "ARMED SERVICES", #
@@ -467,17 +678,13 @@ members %<>% ungroup() %>%
                       (chamber == "House" & str_detect(committees, prestige_house) ) | (chamber == "Senate" & str_detect(committees, prestige_senate)), 1, 0)
                     )
 
-# inspect 
-# members |> distinct(chamber, committees, prestigeOLD, prestigeR2, prestige) %>% kablebox_long()
-
-#members |> drop_na(prestigeOLD) |> count(prestigeOLD) |> kable()
-#members |> drop_na(prestigeR2) |> count(prestigeR2) |> kable()
+# INSPECT 
 members |> drop_na(prestige) |> count(prestige) |> kable()
 
+# Join prestige coding into main data 
+dcounts_tenure %<>% left_join(members %>% distinct(icpsr, congress, prestige))
 
-dcounts_tenure %<>% left_join(members %>% distinct(icpsr, congress, prestigeR2))
-
-dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige,  prestigeR2))
+dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige))
 
 
 n_agency <- dcounts_tenure$agency |> unique() |> length()
@@ -529,7 +736,7 @@ perYear_mean2 <- mean(perYear_mean2$perYearTotal) |> round()
 
 
 
-# var names for tables
+# Better variable names for tables
 dcounts_tenure %<>% 
   mutate(Legislator = icpsr,
          Legislator_x_Agency = icpsr_agency,
@@ -592,8 +799,17 @@ https://ourworldindata.org/what-is-the-gini-coefficient
 The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
 The average is  `r perYear_mean2` letters per legislator per year, `r perYear_mean1` letters per agency per year.
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally become a chair at some point in our data. 
 
-For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally become a chair at some point in our data. Of the modal legislators, John Barrasso meets this last criterion. The IRS is a fairly modal agency and one of the agencies to which John Barrasso submitted one letter in 2007, so predictions are at John Barrasso X IRS X 2007. Other legislators, years, and agencies are simply intercept shifts. 
+
+
+Of the modal legislators, 
+John Barrasso and
+Phil Roe 
+meet this last criterion. However, whereas Barrasso's seat was always held by a Republican, Roe's seat flipped, adding realism to our predictions from models that include whether a legislator is replacing a co-partisan or not. 
+Roe entered in 2009 and became a chair in 2017.
+The IRS is a fairly modal agency, so predictions are Phil Roe X Treasury IRS X 2015. 
+Other legislators, years, and agencies are simply intercept shifts. 
 
 
 ```{r values, fig.width=5, fig.height=3}
@@ -960,11 +1176,8 @@ modelsummary <- function(models, notes = "", center_rows = 1){
 #| out-width: "100%"
 #| fig-show: "hold"
 
-
-testing = F
-
-# paper table 
-# 1 
+# paper table 2
+# Model 1 
 # cross-sectional 
 m_total_cross <-feglm (perYear ~ 
                          chair + ranking_minority + prestige + 
@@ -979,7 +1192,7 @@ coefplot(m_total_cross, horiz = T, drop = "(Intercept)")
 
 
 
-# 2
+# Model 2
 m_total_dnd <-feglm (perYear ~ 
                        chair + ranking_minority + prestige + 
                     first + second + third + fourth + fifth + sixth + 
@@ -1930,12 +2143,12 @@ party_crosswalk <- members  %>%
          lag_icpsr = dplyr::lag(icpsr),
          new_member2 = icpsr != lag_icpsr,
          new_member =  coalesce(new_member, as.numeric(new_member2))) %>% 
-  distinct(year, congress, state_dist, state, district_code, party_name, new_member #, new_member2, icpsr, lag_icpsr        
+  distinct(year, congress, state_dist, state, district_code, party, new_member #, new_member2, icpsr, lag_icpsr        
            ) %>% #FIXME DROPPING OBS HERE
   # # for Senate, capture mixed delegations 
   group_by(state_dist, year) %>% 
-  arrange(party_name) %>% 
-  mutate(state_dist_party = unique(party_name) |> paste(collapse = ";")) %>% 
+  arrange(party) %>% 
+  mutate(state_dist_party = unique(party) |> paste(collapse = ";")) %>% 
   ungroup() %>% 
   # state_dist is missing for some obs in members, so here is a backup that does not account for redistricting. If we end up needing this, we should correct it to the districts accounting for redistricting
   mutate(state_dist2 = paste(state, district_code, sep = "_")) %>% 
