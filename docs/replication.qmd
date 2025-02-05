@@ -1005,6 +1005,10 @@ We use `fixest::feglm` here and replicated the main models using `xtreg` in Repl
 See more about how robust (clustered) standard errors with fixed effects are calculated by `fixest` [here](https://lrberge.github.io/fixest/articles/standard_errors.html) and by  `xtreg` [here](https://www.stata.com/manuals13/xtxtreg.pdf).
 
 ```{r cm}
+# directory to store model objects 
+if (!dir.exists(here::here("models"))) {dir.create(here::here("models"))}
+
+
 # Coef Map
 cm = c("chair" = "Committee Chair",
        "ranking_minority" = "Ranking Member",
@@ -1291,17 +1295,17 @@ modelsummary::modelsummary(models_total,
 
 
 
-# TeX 
-modelsummary::modelsummary(models_total,
-             stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-  format_table()  %>% 
-  write_lines(file = here::here("docs", "tables", "models_total.tex") )
+# # TeX 
+# modelsummary::modelsummary(models_total,
+#              stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              
+#              output = "latex",
+#              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
+#   format_table()  %>% 
+#   write_lines(file = here::here("docs", "tables", "models_total.tex") )
 
 
 beta <- m_total_dnd$coefficients %>%
@@ -1497,17 +1501,17 @@ models_con <- list(
 )
 
 
-modelsummary(models_con) %>% 
-  tinytable::style_tt(i = 1, bold = T, line = "b")
-
-modelsummary::modelsummary(models_con, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
-  format_table() %>%
-  write_lines(file = here::here("docs", "tables", "models_con.tex") )
+# modelsummary(models_con) %>% 
+#   tinytable::style_tt(i = 1, bold = T, line = "b")
+# 
+# modelsummary::modelsummary(models_con, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
+#   format_table() %>%
+#   write_lines(file = here::here("docs", "tables", "models_con.tex") )
 
 beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -1699,14 +1703,14 @@ models_policy <- list(
 )
 
 
-modelsummary(models_policy,
-             notes = list("Robust standard errors in parentheses, clustered by legislator." )) 
-
-modelsummary::modelsummary(models_policy,
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_policy.tex") )
+# modelsummary(models_policy,
+#              notes = list("Robust standard errors in parentheses, clustered by legislator." )) 
+# 
+# modelsummary::modelsummary(models_policy,
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_policy.tex") )
 
 
 beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
@@ -1969,16 +1973,16 @@ attr(rows, 'position') <- c(0)
 modelsummary(models_ratio,
              notes = list("Robust standard errors in parentheses, clustered by legislator.") )
 
-modelsummary::modelsummary(models_ratio, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_ratio.tex") )
+# modelsummary::modelsummary(models_ratio, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_ratio.tex") )
 
 beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -2364,15 +2368,15 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district,
              notes = list("Robust standard errors in parentheses, clustered by district.") )
 
-modelsummary::modelsummary(models_district, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district.tex") )
+# modelsummary::modelsummary(models_district, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district.tex") )
 
 beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -2406,16 +2410,16 @@ attr(rows, 'position') <- c(0, 28:31)
 
 modelsummary(models_district_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") )
-
-modelsummary::modelsummary(models_district_party, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
+# 
+# modelsummary::modelsummary(models_district_party, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
 
 
 save(models_district_party, rows, cm, gm, coef_omit, beta, se,
@@ -2930,15 +2934,15 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district_con, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district_con, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_con.tex") )
+# modelsummary::modelsummary(models_district_con, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district_con.tex") )
 
 beta <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -2972,17 +2976,17 @@ attr(rows, 'position') <- c(0, 28:31)
 
 modelsummary(models_district_con_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
-
-modelsummary::modelsummary(models_district_con_party, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_con_party.tex") )
+# 
+# modelsummary::modelsummary(models_district_con_party, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district_con_party.tex") )
 
 
 save(models_district_con_party, rows, cm, gm, coef_omit, beta, se,
@@ -3500,16 +3504,16 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district_policy, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district_policy, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_policy.tex") )
+# modelsummary::modelsummary(models_district_policy, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district_policy.tex") )
 
 beta <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
@@ -3544,16 +3548,16 @@ attr(rows, 'position') <- c(0, 28:31)
 modelsummary(models_district_policy_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_district_policy_party, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_district_policy_party.tex") )
+# modelsummary::modelsummary(models_district_policy_party, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_district_policy_party.tex") )
 
 
 save(models_district_policy_party, rows, cm, gm, coef_omit, beta, se,
@@ -4029,15 +4033,15 @@ attr(rows, 'position') <- c(0, 9:11)
 modelsummary(models_spillover,
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-modelsummary::modelsummary(models_spillover, # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "latex",
-             notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-  # format to match stata output (sort of)
-  format_table() %>%
-   write_lines(file = here::here("docs", "tables", "models_spillover.tex") )
+# modelsummary::modelsummary(models_spillover, # stars = T, 
+#              add_rows = rows,               
+#              coef_map = cm, 
+#              gof_map = gm, 
+#              output = "latex",
+#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
+#   # format to match stata output (sort of)
+#   format_table() %>%
+#    write_lines(file = here::here("docs", "tables", "models_spillover.tex") )
 
 
 
