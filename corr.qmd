@@ -1,7 +1,7 @@
 ---
 journal:
   blinded: false
-wordcount: 9964
+wordcount: 10017
 format:
   #html
   #docx
@@ -33,7 +33,7 @@ thanks: |
   Links to appendices and data: [judgelord.github.io/research/correspondence/](https://judgelord.github.io/research/correspondence/). We are grateful for research assistance from Rochelle Snyder, Anna Meier, Hope Karnopp, Jessie Munson, Fatima Ali, Dan Kojis, Aaron Gold, Julia Derzay, Maggie Nead, Lucy McNeil, and Sam Schutt. We are further grateful for the feedback from anonymous reviewers, the editors, Wendy Schiller, Steve Ansolabehere, Dan Carpenter, Jennifer Hochschild, Andy Hall, Nolan McCarty, Jonathan Mummolo, Dan Thompson, Danielle Thomsen, Leah Rosenstiel, Sean Westwood, seminar participants at Harvard University, Duke University, Princeton University, the University of California-Davis, the University of Chicago, the University of Illinois-Urbana-Champaign, the University of Wisconsin-Madison, Vanderbilt University, and the Women in Legislative Studies Research Seminar, and conference participants at the American Political Science Association and Midwest Political Science Association Annual Meetings. Support for this research was provided by the University of Wisconsin-Madison, Office of the Vice Chancellor for Research, with funding from the Wisconsin Alumni Research Foundation.
 date: today
 abstract: |
-  When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect legislator behavior.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of `{r} readLines(here::here("docs", "tables", "n2007-2020")) |> prettyNum(big.mark = ",", scientific = F)` legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
+  When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect legislator behavior.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of 626,093 legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
 dataverse: "https://doi.org/10.7910/DVN/LWOCWO"
 keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
 #linestretch: 1.5
@@ -82,11 +82,8 @@ modelsummary <- function(models, notes = "", center_rows = 1, ...){
     tinytable::style_tt(j = 1, align = "l")
 } 
 
-# means for use in inline code
+# Ns and means for use in inline code
 load(here::here("data", "means.Rdata"))
-
-# number of agencies for inline code
-n_agency <-  readLines(here::here("docs", "tables", "n_agencies")) |> as.numeric()
 ```
 
 \clearpage 
@@ -132,9 +129,10 @@ constituency service and policy work: a near census of legislator
 contacts with federal agencies from 2007 to 2020. Recent work using data
 on congressional correspondence has yielded important findings regarding
 the policy strategies of cross-pressured legislators [@Ritchie2017],
-distributive politics [@MillsKalafHuges2015], and the role of ideology
-in congressional oversight [@Lowande2018JOP]. Except for work by
-@LowandeRitchieLauterbach2018 on descriptive representation, this
+distributive politics [@MillsKalafHuges2015], 
+money in politics [@Powell2023FERC], <!-- legislators who receive more campaign donations from fossil fuel companies are more likely to intervene to support those companies --> 
+and the role of ideology in congressional oversight [@Lowande2018JOP].
+Except for work by @LowandeRitchieLauterbach2018 on descriptive representation, this
 emerging scholarship has focused on policy work (not constituency
 service). Adding to this work, our theory and research design focus on
 simultaneous shifts in constituency service and policy work.
@@ -146,12 +144,7 @@ how the behavior of legislators shifts as they gain institutional power
 and ensures that our conclusions are not limited to subsets of the
 executive branch.
 
-To assess absolute and relative shifts in legislator contacts to
-agencies, we hand-code the content of
-`{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` (of our total  `{r} readLines(here::here("docs", "tables", "n2007-2020"))`)
-requests as policy work or constituency service. Doing so also yields
-many illuminating descriptives about modern legislator behavior. For example, over 80% of contacts are made on behalf of
-constituents, and less than 20% are focused on policy work.
+To assess absolute and relative shifts in legislator contacts to agencies, we hand-code the content of `r n2007_2020coded` (of our total  `r n2007_2020`) requests as policy work or constituency service. Doing so also yields many illuminating descriptives about modern legislator behavior. For example, over 80% of contacts are made on behalf of constituents, and less than 20% are focused on policy work.
 
 We find evidence for both of the countervailing effects of institutional
 power that we theorize, supporting both the *increased capacity theory*
@@ -541,17 +534,17 @@ delegation.
 # Data: A Census of Legislator Requests to Federal Agencies {#sec-data}
 
 To assess how experience and power affect constituency service, we filed
-`{r} readLines(here::here("docs", "tables", "foia_requests"))` Freedom
+`r foia_requests` Freedom
 Of Information Act (FOIA) requests with all federal departments,
 agencies, and sub-agencies for all records of incoming communication
 from members of Congress between January 1, 2007, and the date of our
 request.[^2] Between February 2017 and February 2024, we received data
-on `{r} readLines(here::here("docs", "tables", "n2007-2020"))` instances of
+on `r n2007_2020` instances of
 members of Congress contacting
 `r n_agency` federal
 agencies from 2007 to 2020.[^3] These contacts include letters from individual legislators,
 committee chairs in their capacity as committee chairs, and groups of
-legislators. We were able to hand-code `{r} readLines(here::here("docs", "tables", "n2007-2020coded"))` for whether they focus on constituency service or policy. Models discussed in @sec-capacity and @sec-district use the full sample. Models discussed in @sec-priority and @sec-joint use the hand-coded sample. 
+legislators. We were able to hand-code `r n2007_2020coded` for whether they focus on constituency service or policy. Models discussed in @sec-capacity and @sec-district use the full sample. Models discussed in @sec-priority and @sec-joint use the hand-coded sample. 
 
 [^2]: In addition to our initial requests, collecting these data
     included over a thousand follow-up and clarification emails, dozens
@@ -578,7 +571,7 @@ legislators. We were able to hand-code `{r} readLines(here::here("docs", "tables
 ## Data processing and coding
 
 Upon receiving records of congressional requests, we extracted names
-matching variations of legislators' names. We then merged in data about
+matching variations of legislators' names using `legislators` R package [@legislators]. We then merged in data about
 members' districts, partisanship, institutional positions, and careers [@dwnominate2018], committee membership and leadership positions
 [@StewartWoon2017], and committee oversight [@LewisSelin2012]. The
 Online Supplemental Information provides procedures and replication code for converting the raw
