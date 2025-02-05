@@ -163,6 +163,8 @@ if(testing){
             dcounts_tenure |> select(any_of(vars)) )
 }
 
+dcounts_tenure <- d
+
 #########
 # RATIO # 
 #########  
