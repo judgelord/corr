@@ -545,7 +545,16 @@ mean_total <- mean(dcounts_tenure$perYear)
 mean_con <- mean(dcounts_tenure$perYear_con)
 mean_pol <- mean(dcounts_tenure$perYear_policy)
 
-save(mean_total, mean_con, mean_pol,
+# #TODO get this from github? hard code it? 
+# foia_requests <- readLines(here::here("tables", "foia_requests"))
+
+n2007_2020 <- dcounts_tenure$perYear |> sum()
+n2007_2020coded <- sum(dcounts_tenure$perYear_con, dcounts_tenure$perYear_policy)
+ 
+n_agency <- dcounts_tenure$agency |> unique() |> length()
+
+save(mean_total, mean_con, mean_pol, n_agency, #foia_requests, 
+     n2007_2020, n2007_2020coded, 
      file = here::here("data", "means.Rdata"))
 ```
 
@@ -685,9 +694,6 @@ members |> drop_na(prestige) |> count(prestige) |> kable()
 dcounts_tenure %<>% left_join(members %>% distinct(icpsr, congress, prestige))
 
 dcounts_ratio %<>% left_join(members %>% distinct(icpsr, congress, prestige))
-
-
-n_agency <- dcounts_tenure$agency |> unique() |> length()
 ```
 
 # Descriptives
@@ -1863,13 +1869,13 @@ The effect of being a committee chair is positive but not significant at the .05
 
 Becoming a committee chair causes an increase of `r beta_total$chair` requests *per agency*
 (95-percent confidence interval [`r beta_total$chair-1.96*se_total$chair`, `r beta_total$chair+1.96*se_total$chair`]). Across all
-`{r} readLines(here::here("docs", "tables", "n_agencies"))` agencies,
+`r n_agency` agencies,
 this represents an increase of approximately `r beta_total$chair*n_agency` additional requests per
 year,  `r ((-beta_total$second) / mean_total ) %>% round(2)*100`% of the average requests per year in our data.
 
 
 Subsetting to requests hand-coded as constituency service, we estimate that becoming a committee chair causes an increase of `r beta_con$chair` requests *per agency*, but this increase is not significant at the .05 level (95-percent confidence interval [`r beta_con$chair-1.96*se_con$chair`, `r beta_con$chair+1.96*se_con$chair`]). Across all
-`{r} readLines(here::here("docs", "tables", "n_agencies"))` agencies, this represents an increase of approximately `r beta_con$chair*n_agency` additional requests per
+`r n_agency` agencies, this represents an increase of approximately `r beta_con$chair*n_agency` additional requests per
 year,  `r ((-beta_con$second) / mean_con ) %>% round(2)*100`% of the average constituency service requests per year in our data.
 
 
