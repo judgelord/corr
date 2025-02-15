@@ -61,29 +61,11 @@ knitr::knit_hooks$set(inline = function(x) {
         )
 })
 
-
-# Regression table formatting
-modelsummary <- function(models, notes = "", center_rows = 1, ...){
-  modelsummary::modelsummary(models,  
-             # Custom sig stars for AJPS 
-             stars = c('†' = .1, '*' = .05, '**' = .01), 
-             # Align coefficients by decimal for AJPS 
-             align = paste0("l", paste0(rep("d", length(models)), collapse = "")), 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "tinytable",
-             notes = notes) |>
-    # bold header, hline bottom, aligned center
-    tinytable::style_tt(i = 0:1, bold = T, line = "b",  align = "c") |>
-    # stats aligned center 
-    tinytable::style_tt(i = center_rows, align = "c") |> 
-    # row labels left
-    tinytable::style_tt(j = 1, align = "l")
-} 
-
 # Ns and means for use in inline code
 load(here::here("data", "means.Rdata"))
+
+# regression table formatting function loaded with means.Rdata
+modelsummary <- modelsummary_AJPS
 ```
 
 \clearpage 
@@ -534,17 +516,15 @@ delegation.
 # Data: A Census of Legislator Requests to Federal Agencies {#sec-data}
 
 To assess how experience and power affect constituency service, we filed
-`r foia_requests` Freedom
+434 Freedom
 Of Information Act (FOIA) requests with all federal departments,
 agencies, and sub-agencies for all records of incoming communication
 from members of Congress between January 1, 2007, and the date of our
 request.[^2] Between February 2017 and February 2024, we received data
-on `r n2007_2020` instances of
-members of Congress contacting
-`r n_agency` federal
-agencies from 2007 to 2020.[^3] These contacts include letters from individual legislators,
+on `r n2007_2020` instances of members of Congress contacting
+`r n_agency` federal agencies from 2007 to 2020.[^3] These contacts include letters from individual legislators,
 committee chairs in their capacity as committee chairs, and groups of
-legislators. We were able to hand-code `r n2007_2020coded` for whether they focus on constituency service or policy. Models discussed in @sec-capacity and @sec-district use the full sample. Models discussed in @sec-priority and @sec-joint use the hand-coded sample. 
+legislators. We had sufficient information on `r n2007_2020coded` of these contacts to hand-code for whether they focus on constituency service or policy. Models discussed in @sec-capacity and @sec-district use the full sample. Models discussed in @sec-priority and @sec-joint use the hand-coded sample. 
 
 [^2]: In addition to our initial requests, collecting these data
     included over a thousand follow-up and clarification emails, dozens
@@ -787,14 +767,12 @@ of agencies).
 #| out-width: 100%
 
 load(here::here("models", "models_total.Rdata"))
+
 modelsummary(models_total,
              center_rows = 23:29,
              notes = list("Robust standard errors in parentheses, clustered by legislator.",
                           "This table shows how the number of requests changes as legislators acquire more experience and power. Column 1 shows the average differences across committee positions and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least three years. Column 4 takes the Log of the counts + 1 as the dependent variable.
-                          All coefficients represent the average additional requests per year per agency per legislator. Legislator per year effects are simply these coefficients times the number of agencies in the data.")) |> 
-  # bold new member line  
-    tinytable::style_tt(i = 2:3, #bold = T, 
-                        background = "yellow") 
+                          All coefficients represent the average additional requests per year per agency per legislator. Legislator per year effects are simply these coefficients times the number of agencies in the data.")) 
 ```
 
 Model 1 (the first column of @tbl-models-total shows a cross-sectional
@@ -807,19 +785,19 @@ their jobs or exert more effort to more prestigious committee positions,
 then the estimates from Model 1 confound legislators' overall ability
 with their institutional position.
 
-To address potential confounding, Model 2 (Column 2 of @tbl-models-total
+To address potential confounding, Model 2 (Column 2 of @tbl-models-total)
 shows the difference-in-differences specification in @eq-diff1. Across
 all measures of institutional power, we find that acquiring power
 increases the number of requests that a given legislator makes. Becoming
 a committee chair causes an increase of `r beta$chair` requests *per agency*
 (95-percent confidence interval [`r beta$chair-1.96*se$chair`, `r beta$chair+1.96*se$chair`]. Across all
 `r n_agency` agencies,
-this represents an increase of approximately `r beta$chair*n_agency` additional requests per
-year, 21.3% of the average requests per year in our data.
+this represents an increase of approximately `r round(beta$chair*n_agency)` additional requests per
+year, more than a 20% increase over the average requests per year in our data.
 
-Other measures of institutional power included in these models (ranking minority member and prestige committee member) are associated with similar increased levels of contact with federal agencies, but these effects are only significant at the .05 level in the cross-sectional and difference in differences design with the logged number of contacts as the dependent variable (Models 1 and 4). It is worth noting that because we estimate the effects of becoming a committee chair and being a member of a prestige committee in the same model, these effects are additive: prestige committee chairs may make more requests than non-prestige committee chairs. 
+Other measures of institutional power included in these models (ranking minority member and prestige committee member) are associated with similar increased levels of contact with federal agencies, but these effects are only significant at the .05 level in the cross-sectional and difference in differences design with the logged number of contacts as the dependent variable (Models 1 and 4). It is worth noting that because we estimate the effects of becoming a committee chair and being a member of a prestige committee in the same model, these effects are additive: prestige committee chairs may make more requests than non-prestige committee chairs who make more request than non-chairs. 
 
-Our evidence about the effects of majority party status or having a co-partisan president is less conclusive. Majority party status is negatively associated with contacting agencies only in Model 4, predicting the logged number of contacts. Having a co-partisan president is negatively associated with contacting agencies on average but has a positive effect in the within-member analysis, which is only significant at the .05 level in Model 4.
+Our evidence about the effects of majority party status or having a co-partisan president is less conclusive. Majority party status is negatively associated with contacting agencies only in Models 1 and 4. Having a co-partisan president is negatively associated with contacting agencies on average (Model 1), but positively associated with contacting agencies in the all models of within-legislator variation.
 
 ```{r}
 #| fig-cap: "Predicted Number of Total Requests to Agencies (Within Legislator Difference in Differences), 2007-2020"
@@ -833,9 +811,7 @@ knitr::include_graphics("docs/figs/m-total-predicted-3.png")
 year by whether a legislator is a member of the president's party and
 whether they are a chair (comparing predictions for counterfactuals
 where the same legislator did and did not receive a chair position in
-their sixth year).[^6] There is a significant increase when a legislator
-becomes a committee chair. There is no significant difference when a
-member has a co-partisan president.
+their sixth year).[^6] For an average member in our data, a chair position causes an increase from about 90 to about 115 requests per year, regardless of whether the president is a co-partisan. 
 
 [^6]: Predictions are based on a legislator-agency pair where (1) the
     legislators' average annual contacts equaled the overall average,
@@ -931,10 +907,7 @@ we estimate district-level differences for a legislator's second
 load(here::here("models", "models_district.Rdata"))
 modelsummary(models_district,
              center_rows = 14:26,
-             notes = list("Robust standard errors in parentheses, clustered by district", "This table shows how contacts on behalof of a district varies across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) |>
-  # bold new member line  
-    tinytable::style_tt(i = 12:13, #bold = T, 
-                        background = "yellow") 
+             notes = list("Robust standard errors in parentheses, clustered by district", "This table shows how contacts on behalof of a district varies across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) 
 ```
 
 The first column of @tbl-models-district provides cross-sectional
@@ -1023,10 +996,7 @@ load(here::here("models", "models_ratio.Rdata"))
 modelsummary(models_ratio,  
              center_rows = 24:26,
              notes = list("Robust standard errors in parentheses, clustered by legislator.",
-                          "This table shows how the proportion of contacts focused on constituency service changes as legislators acquire more experience and power in Congress. Column 1 shows average differences across committee assignments and years in Congress. Column 2 presents difference-in-differences estimates.")) |> 
-  # bold new member line  
-    tinytable::style_tt(i = 2:3, #bold = T, 
-                        background = "yellow") 
+                          "This table shows how the proportion of contacts focused on constituency service changes as legislators acquire more experience and power in Congress. Column 1 shows average differences across committee assignments and years in Congress. Column 2 presents difference-in-differences estimates.")) 
 ```
 
 @tbl-models-ratio shows that legislators increase the ratio of policy
