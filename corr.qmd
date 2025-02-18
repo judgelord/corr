@@ -210,7 +210,7 @@ increase an individual legislator's capacity in many ways. Because many
 of these mechanisms are observationally equivalent, we focus on capacity
 in general and three general mechanisms by which experience and
 institutional power may affect behavior: 1) increased resources, 2)
-increased organizational capacity, and 3) an increased likelihood of
+increased organizational efficiency, and 3) an increased likelihood of
 success when making a request.
 
 ### Mechanism 1: Increased Resources
@@ -673,10 +673,9 @@ knitr::include_graphics("docs/figs/counts-per-year-1.png")
 Using this dataset of requests to federal agencies, we estimate the
 effect of institutional power on legislator behavior. First, we test
 theories rooted in legislator capacity by modeling the effects of
-institutional power on a legislator's overall *level* of constituency
-service. Next, we test theories rooted in legislators' priorities by
+institutional power on a legislator's total number of requests to federal agencies. Next, we test theories rooted in legislators' priorities by
 modeling the effects of institutional power on a legislator's *ratio* of
-policy work to constituency service.
+policy work to constituency service before examining the impact on a legislator's *level* of constituency service.
 
 ## The Effects of Experience and Institutional Power  {#sec-capacity}
 
@@ -833,8 +832,7 @@ The results in Table 2 show that when legislators acquire more power, they make 
 
 ## The Effect of Electing a New Representative {#sec-district}
 
-We now turn to a related question: how does the level of constituency
-service to a district change after the election of a new representative?  As legislators acquire more power, they contact agencies more. In this section we show that legislators also increase their capacity as they gather experience in the institution.  Rather than examining changes in the number of requests by making
+We now turn to a related question: how does a district's overall representation (capacity in the form of total contacts with federal agencies) change after the election of a new representative? We found that as legislators acquire more power, they contact agencies more. In this section we show that legislators also increase their capacity as they gather experience in the institution.  Rather than examining changes in the number of requests by making
 within-legislator comparisons, we now make within-district comparisons
 to assess how electing a new legislator affects the total number of
 requests a district's representative makes. In other words,
@@ -978,7 +976,7 @@ experienced legislators deliver to their constituents.
 
 \clearpage
 
-## Experienced and Powerful Legislators Send Relatively Fewer Constituent Requests {#sec-priority}
+## Constituent Service Requests are a Smaller Proportion of the Work of Experienced and Powerful Legislators {#sec-priority}
 
 To assess legislators' ratio of policy work to constituency service, we
 use the hand-coded data described in @sec-data. The dependent variable
@@ -1221,7 +1219,7 @@ Further, our findings suggest that the mechanisms we
 identify---organizational efficiency, office resources, and likelihood
 of success---help explain legislator behavior. The dramatic decrease in
 requests when new legislators take office is consistent with the
-organizational efficiency mechanism. Becoming a com mittee chair
+organizational efficiency mechanism. Becoming a committee chair
 increases the resources available to a legislator and their volume of
 contact with federal agencies. Both results are consistent with
 legislators making more requests to federal agencies when they are
@@ -1232,7 +1230,7 @@ resources to constituency service well into their careers and after they
 have achieved high-status institutional positions is evidence that
 constituency service is a core function of congressional offices. This
 calls for renewed attention to the motivations for and effects of
-constituency service in modern U.S. democracy. As we collected and coded
+constituency service in contemporary American politics. As we collected and coded
 these data, we spoke to numerous staffers and agency officials. A
 recurring theme in the data and stories we heard was the interaction
 between constituency service casework and other activities, including
