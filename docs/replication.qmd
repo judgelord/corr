@@ -11,6 +11,8 @@ editor_options:
 
 
 ```{r global.options, include=FALSE}
+testing = F
+
 library(modelsummary)
 library(marginaleffects)
 library(fixest)
@@ -32,13 +34,18 @@ knitr::opts_chunk$set(echo = T, # code is folded
                       warning = F, 
                       message = F)
 
-# inline numbers round to 2
-knit_hooks$set(inline = function(x) {
+# inline numbers round to 2, comma at thousands
+inline <- function(x) {
   if (is.na(as.numeric(x))) {
-    return(x)
+    return (x)
     } else
-        return(as.numeric(x) |> round(2))
-})
+        return (as.numeric(x) |> 
+                 round(2) |>
+                 format(big.mark=",") 
+        )
+}
+
+knitr::knit_hooks$set(inline = inline)
 
 # plot defaults 
 library(ggplot2); theme_set(
@@ -310,27 +317,15 @@ regions
 
 # Replication data
 
-<!--OLD 
-From `code/replication_data.R`, which starts with the main replication data file of annual member-agency-year level counts (`dcounts_min.Rdata`) and makes transformations for three sets of models: 
-
-1. counts per member-agency-year (dcounts_tenure.Rdata) <!--/AgencyComm.dta-- 
-2. ratio per member-year (dcounts_ratio.Rdata) <!--/ProportionContact.dta)--
-3. counts per district-year (dcounts_per_district.Rdata) <!--, DistrictLevel.dta)-- 
-
-(The spillover models use #3)
-
-<!--The same three datasets are used in Replication.do--> 
-
-```{r data-old, eval=FALSE}
-load(here::here("data", "dcounts_tenure.Rdata"))
-load(here::here("data", "dcounts_ratio.Rdata"))
-load(here::here("data", "dcounts_per_district.Rdata"))
-load(here::here("data", "members.Rdata"))
-```
-
-
 ```{r data}
 load(here::here("data", "corr_counts.Rdata"))
+
+## just in case it was saved as grouped data 
+corr_counts %<>% ungroup()
+
+# subset to 2007-2020
+corr_counts  %<>% filter(year > 2006, year < 2021)
+
 load(here::here("data", "members.Rdata"))
 
 member_data <- members |>
@@ -352,46 +347,14 @@ members <- member_data
 ```
 
 
-```{r data-transformations}
-# This chunk takes the minimal master data files and creates member and district-level yearly count and ratio data 
-# These data files are then used to estimate the models in replication.qmd
-# the key DVs are
-# - perYear = counts per year (member level and district level)
-# - ratio = ratio of policy work to constituency service 
-
-testing = F
-
-## just in case it was saved as grouped data 
-corr_counts %<>% ungroup()
-
-corr_counts %<>% mutate( icpsr_year = paste(icpsr, year, sep='_') )
-
-## chamber switchers  in original data (party switchers are not an issue because they net new ICPSR ids)
-chamber_switchers <- corr_counts |> 
-  distinct(icpsr_year, agency, chamber) |>
-  add_count(icpsr_year, agency,  #party, 
-            name = "n") |>
-  filter(n > 1) |> 
-  distinct(icpsr_year, chamber) |> 
-  arrange(icpsr_year)
-
-# DROP CHAMBER SWITCHERS
-corr_counts %<>% filter(!icpsr_year %in% chamber_switchers$icpsr_year)
-
-############################
-# CREATE COUNTS for models #
-############################
-
+```{r means}
 ##creating the member-level aggregate count variables
 
 # TOTAL counts 
 d <- corr_counts |>
-  group_by(agency, icpsr, chamber,
-           year) |>
+  group_by(agency, icpsr, chamber, year) |>
   summarise(perYear = sum(per_icpsr_chamber_year_agency_type)) |> 
   ungroup()
-
-# names(d)
 
 # Constituent counts 
 d_con <- corr_counts |>
@@ -407,6 +370,68 @@ d_policy <- corr_counts |>
 
 d$perYear_con <- d_con$perYear_con
 d$perYear_policy<- d_policy$perYear_pol
+
+
+## Means for paper
+mean_total <- mean(d$perYear)
+mean_con <- mean(d$perYear_con)
+mean_pol <- mean(d$perYear_policy)
+
+## Ns
+n2007_2020 <- d$perYear |> sum()
+n2007_2020coded <- sum(d$perYear_con, d$perYear_policy)
+n_agency <- d$agency |> unique() |> length()
+
+
+
+# Regression table formatting for AJPS 
+modelsummary_AJPS <- function(models, notes = "", center_rows = 1, ...){
+  modelsummary::modelsummary(models,  
+             # Custom sig stars for AJPS 
+             stars = c('†' = .1, '*' = .05, '**' = .01), 
+             # Align coefficients by decimal for AJPS 
+             align = paste0("l", paste0(rep("d", length(models)), collapse = "")), 
+             add_rows = rows,               
+             coef_map = cm, 
+             gof_map = gm, 
+             output = "tinytable",
+             notes = notes) |>
+    # bold header, hline bottom, aligned center
+    tinytable::style_tt(i = 0:1, bold = T, line = "b",  align = "c") |>
+    # stats aligned center 
+    tinytable::style_tt(i = center_rows, align = "c") |> 
+    # row labels left
+    tinytable::style_tt(j = 1, align = "l")
+} 
+
+modelsummary <- modelsummary_AJPS
+
+save(mean_total, mean_con, mean_pol, 
+     n_agency, n2007_2020, n2007_2020coded, 
+     modelsummary_AJPS,
+     file = here::here("data", "means.Rdata"))
+```
+
+
+```{r drop-chamber-switchers}
+# make icpsr year variable 
+d %<>% mutate( icpsr_year = paste(icpsr, year, sep='_') )
+
+## chamber switchers  in original data (party switchers are not an issue because they net new ICPSR ids)
+chamber_switchers  <- d |> 
+  distinct(icpsr_year, agency, chamber) |>
+  add_count(icpsr_year, agency,  #party, 
+            name = "n") |>
+  filter(n > 1) |> 
+  distinct(icpsr_year, chamber) |> 
+  arrange(icpsr_year)
+
+# DROP CHAMBER SWITCHERS
+d %<>% filter(!icpsr_year %in% chamber_switchers$icpsr_year)
+
+############################
+# add covariates for models #
+############################
 
 # congress year converters 
 congress_years<- function(congress){
@@ -442,23 +467,35 @@ d <- d |>
 ## count or repeated values (chamber and party switchers)
 # note that in the full data, we use the dates of letters to attribute them to the proper party or chamber at the time
 # but in yearly counts, we lose this level of detail, leading to undercounts for switchers
+
+# # inspect for duplicates 
+if(testing){
 d <- d |> 
   ungroup() |>
   distinct() |>
   add_count(icpsr, year, agency,  #party, 
             name = "n") 
-
-# # inspect for duplicates 
-if(testing){
+  
 d |>filter(n > 1) |> distinct(icpsr, year) 
 }
+
+
+```
+
+
+```{r data-transformations}
+# This chunk takes the minimal count data and creates legislator-level and district-level yearly count and ratio data
+# These are then used to estimate the models
+# the key DVs are
+# - perYear = counts per year (member level and district level)
+# - ratio = ratio of policy work to constituency service
 
 
 ####################
 # TRANSFORMATIONS #  
 ###################
 
-# tenure for experience tests 
+# tenure in office for experience tests 
 d <- d |> 
   group_by(icpsr) |>
   mutate(
@@ -472,7 +509,7 @@ d <- d |>
     max_year = max(tenure)
   ) 
 
-# fixed effects 
+# two-way fixed effects 
 d <- d |> 
   ungroup() |> 
   mutate(
@@ -540,24 +577,6 @@ dcounts_per_district %<>%
 
 
 
-```{r means}
-mean_total <- mean(dcounts_tenure$perYear)
-mean_con <- mean(dcounts_tenure$perYear_con)
-mean_pol <- mean(dcounts_tenure$perYear_policy)
-
-# #TODO get this from github? hard code it? 
-# foia_requests <- readLines(here::here("tables", "foia_requests"))
-
-n2007_2020 <- dcounts_tenure$perYear |> sum()
-n2007_2020coded <- sum(dcounts_tenure$perYear_con, dcounts_tenure$perYear_policy)
- 
-n_agency <- dcounts_tenure$agency |> unique() |> length()
-
-save(mean_total, mean_con, mean_pol, n_agency, #foia_requests, 
-     n2007_2020, n2007_2020coded, 
-     file = here::here("data", "means.Rdata"))
-```
-
 
 # Defining Prestige Committees
 
@@ -571,74 +590,6 @@ All of these findings replicate with various interpretations of "prestige" commi
     Armed Services, Finance, and Foreign Relations (CRS 2024).
 
 ```{r prestige}
-# Old version of prestige committee definition in original submission 
-prestige_houseOLD <- c(
-  "APPROPRIATIONS", #
-  "ARMED SERVICES", #
-  "BUDGET", # 
-  # "COMMERCE", #
-  # "ENERGY", #
-  # "FINANCIAL SERVICES", # 
-    # "BANKING", # 
-  #"FOREIGN"
-    #"INTERNATIONAL RELATIONS", # 
-  # "JUDICIARY", # 
-    # "FINANCIAL SERVICES", # 
-    "RULES", #
-  "WAYS"
-  ) %>% paste(collapse  = "|")# 
-
-prestige_senateOLD <- c(
-   #"AGRICULTURE", 
-   "APPROPRIATIONS", #
-  "ARMED SERVICES", #
-  #  "BANKING", # 
-  "BUDGET", # 
-  "COMMERCE", #
-  #"ENERGY", #
-  #  "NATURAL RESOURCES", # 
-  #  "ENVIRONMENT", # 
-  #  "FINANCE", #
-  "FOREIGN RELATIONS", # 
-  #"HOMELAND SECURITY", #
-  #"JUDICIARY", # 
-  # "INTELLIGENCE",
-  "RULES") %>% paste(collapse  = "|")#
-
-# REVIEWER 2's Proposed Prestige Committees 
-prestige_houseR2 <- c(
-  "APPROPRIATIONS", #
-  "ARMED SERVICES", #
-  #"BUDGET", # 
-  # "COMMERCE", #
-  # "ENERGY", #
-  "FINANCIAL SERVICES", # 
-  "BANKING", # 
-  #"FOREIGN"
-    #"INTERNATIONAL RELATIONS", # 
-  "JUDICIARY", # 
-    # "FINANCIAL SERVICES", # 
-    "RULES", #
-  "WAYS"
-  ) %>% paste(collapse  = "|")# 
-
-prestige_senateR2 <- c(
-   #"AGRICULTURE", 
-   "APPROPRIATIONS", #
-  "ARMED SERVICES", #
-  #  "BANKING", # 
-  # "BUDGET", # 
-  "COMMERCE", #
-  #"ENERGY", #
-  #  "NATURAL RESOURCES", # 
-  #  "ENVIRONMENT", # 
-  #  "FINANCE", #
-  "FOREIGN RELATIONS", # 
-  #"HOMELAND SECURITY", #
-  "JUDICIARY") %>% paste(collapse  = "|")# 
-  # "INTELLIGENCE",
-  #"RULES") #
-
 # THE BETTER DEFINITION WE USE IN THE FINAL PAPER 
 prestige_house <- c(
   "APPROPRIATIONS", #
@@ -676,15 +627,9 @@ prestige_senate <- c(
 prestige_house |> str_split("\\|") |> kable(col.names = "House `Exclusive` Prestige Committees (CRS 2022, pg 3)")
 prestige_senate |> str_split("\\|") |> kable(col.names = "Senate `Super A` Prestige Committees  (CRS 2022, pg 3)")
 
-
-
 members %<>% ungroup() %>% 
-  mutate(prestigeOLD = ifelse(
-                      (chamber == "House" & str_detect(committees, prestige_houseOLD) ) | (chamber == "Senate" & str_detect(committees, prestige_senateOLD)), 1, 0),
-                    prestigeR2 = ifelse(
-                      (chamber == "House" & str_detect(committees, prestige_houseR2) ) | (chamber == "Senate" & str_detect(committees, prestige_senateR2)), 1, 0),
-                    prestige = ifelse(
-                      (chamber == "House" & str_detect(committees, prestige_house) ) | (chamber == "Senate" & str_detect(committees, prestige_senate)), 1, 0)
+  mutate(prestige = ifelse(
+    (chamber == "House" & str_detect(committees, prestige_house) ) | (chamber == "Senate" & str_detect(committees, prestige_senate)), 1, 0)
                     )
 
 # INSPECT 
@@ -1018,9 +963,14 @@ if (!dir.exists(here::here("models"))) {dir.create(here::here("models"))}
 # Coef Map
 cm = c("chair" = "Committee Chair",
        "ranking_minority" = "Ranking Member",
-              "prestigeR2" = "Prestige Committee (R2)",
-                     "prestigeOLD" = "Prestige Committee (Old)",
+       "prestigeR2" = "Prestige Committee (R2)",
+       "prestigeOLD" = "Prestige Committee (Old)",
        "prestige" = "Prestige Committee",
+              "new_member" = "New Member", 
+       "new_senator" = " New Senator in Delegation",
+       "new_one" = " New Member in Delegation",
+       "new_proportion" = " New Proportion in Delegation",
+       "new_member:same_party" = " New Member x Same Party", 
        "first" = "First Year",
        "second" = "Second Year",
        "third" = "Third Year",
@@ -1037,24 +987,13 @@ cm = c("chair" = "Committee Chair",
         "fourth_year" = "Fourth Year",
         "fifth_year" = "Fifth Year",
         "sixth_year" = "Sixth Year",
-       "new_member" = "New Member", 
-       "new_senator" = " New Senator in Delegation",
-       "new_one" = " New Member in Delegation",
-              "new_proportion" = " New Proportion in Delegation",
-       "new_member:same_party" = " New Member x Same Party", 
        "same_party" = "Same Party",
        "majority" = "Majority",
        "presidents_party" = "President's party",
        "Legislator" = "Legislator", 
        "Agency" = "Agency",
-       # FIXED EFFECTS FORMATTED BY GM
-       # "FE: icpsr_agency" = "Legislator-agency fixed effects",
-       # "FE: District" = "District fixed effects",
-       # "FE: Year" = "Year fixed effects",
-       # "FE: Legislator.*x.*Agency"= "Legislator x agency fixed effects",
-       #  "FE: Year.*x.*Agency" = "Year x agency fixed effects",
-       # "FE: Legislator" = "Legislator fixed effects",
-              "Num.Obs." = "Observations"              )
+       "Num.Obs." = "Observations"
+       )
 
 # FORMATTING FOR AJPS 
 cmAJPS <- cm |> str_to_sentence()
@@ -1062,11 +1001,8 @@ names(cmAJPS) <- names(cm)
 cm <- cmAJPS
 # END FORMATTING FOR AJPS 
 
-coef_omit = "(Intercept)|majority|presidents_party"
-coef_omit = "none"
-
+# set fixed effects mapping 
 setFixest_dict(cm)
-
 
 format_n <- function(x) format(round(x, 3), big.mark=",") # this works
 f <- function(x) stringr::str_replace(x, "[A-z]", "✓") #FIXME not sure why this is not working
@@ -1082,85 +1018,6 @@ gm <- list(
         list("raw" = "FE: Year.*x.*Agency", "clean" = "Year x agency fixed effects", "fmt" = f),
        list("raw" = "FE: Legislator", "clean" = "Legislator fixed effects", "fmt" = f)
   )
-
-
-# table formatting to match stata (sort of)
-# The manuscript now just imports the model objects, so writing the .tex tables is vestigial (keeping it just in case)
-format_table <- . %>% 
-  # OLD modelsummary based on kableExtra package (broken): https://stackoverflow.com/questions/78422275/argument-is-of-length-zero-from-kableextra-after-updating-rstudio
-  #kableExtra::kable_styling(font_size = 11) %>% 
-                    #full_width = TRUE, 
-                    #latex_options = c("repeat_header")) %>%
-  # NEW modelsummary based on tinytable package: https://vincentarelbundock.github.io/tinytable/vignettes/format.html
-  as.character() %>% 
-  str_replace("Num.Obs.", "Observations") %>% 
-  str_replace("Std.Errors", "\footnotesize robust clustered standard errors") %>% 
-  str_replace("FE: Legislator.*x.*Agency", "Legislator x agency fixed effects") %>%
-  str_replace("FE: Year.*x.*Agency", "Year x agency fixed effects") %>% 
-  str_replace("FE: Year", "Year fixed effects") %>% 
-  str_replace("FE: District", "District fixed effects") %>% 
-  str_replace("FE: Legislator", "Legislator fixed effects") %>%
-    str_replace_all("X|✓", "\\\\\\checkmark") %>% 
-  # a random midrule appeared in the wrong place 
-  #str_remove("\\midrule") %>% 
-  #  extract just the table, no caption etc
-  str_remove_all("\\\\begin\\{table\\}|\\\\centering|\\\\end\\{table\\}")
-
-# for testing table formatting
-if(F){
-# raw   
- modelsummary::modelsummary(models)
-  
-  load(here::here("models", "models_total.Rdata"))
-
-# markdown 
-modelsummary::modelsummary(models_total,  
-             stars = c('+' = .1, '*' = .05, '**' = .01), 
-             #align="ldddd",
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "html",
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-    tinytable::style_tt(i = 1, bold = T, line = "b")
-
-  
-# TeX 
-modelsummary::modelsummary(models_total,  # stars = T, 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "latex",
-             notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-    tinytable::format_tt(
-    digits = 2,
-    fontsize = 11,
-    num_mark_big = ",") |>
-  format_table()  
-}
-
-
-# manuscript
-# AJPS regression table formatting
-modelsummary <- function(models, notes = "", center_rows = 1){
-  modelsummary::modelsummary(models,  
-             stars = c('†' = .1, '*' = .05, '**' = .01), 
-             align = paste0("l", paste0(rep("d", length(models)), collapse = "")), # Align coefficients by decimal for AJPS 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "tinytable",
-             notes = notes) |>
-  # bold header, hline bottom, aligned center
-    tinytable::style_tt(i = 0:1, bold = T, line = "b",  align = "c") |>
-     # stats aligned center 
-    tinytable::style_tt(i = center_rows, align = "c") |> 
-  # row labels left
-      tinytable::style_tt(j = 1, align = "l")
-} 
-
 ```
 
 
@@ -1169,7 +1026,6 @@ modelsummary <- function(models, notes = "", center_rows = 1){
 ## Total Letters 
 
 ### Member-level Coefficient Plots
-
 
 - Figures: `figs/m-total-[1:4].png`
 
@@ -1245,7 +1101,6 @@ coefplot(m_logtotal_dnd, horiz = T)
 
 ### Total Letters Table 
 
-- Table: `tables/models_total.tex` 
 - Models: `models/models_total.Rdata` 
 
 
@@ -1287,32 +1142,9 @@ attr(rows, 'position') <- c(0, 24,25)
 
 
 # HTML
-modelsummary::modelsummary(models_total,  
-             stars = c('†' = .1, '*' = .05, '**' = .01), 
-             ##align="ldddd",
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             
-             output = "tinytable",
+modelsummary(models_total,
              notes = list("Robust standard errors in parentheses, clustered by legislator.",
-                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator, per year effects are simply these coefficients times the number of agencies in the data.")) |>  
-    tinytable::style_tt(i = 1, bold = T, line = "b") 
-
-
-
-# # TeX 
-# modelsummary::modelsummary(models_total,
-#              stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              
-#              output = "latex",
-#              notes = list("Robust standard errors in parentheses, clustered by legislator.")) |> 
-#   format_table()  %>% 
-#   write_lines(file = here::here("docs", "tables", "models_total.tex") )
-
+                          "This table shows estimates of the effect of institutional power on levels of constituency service. All coefficients represent the average additional requests per year per agency; per legislator, per year effects are simply these coefficients times the number of agencies in the data.")) 
 
 beta <- m_total_dnd$coefficients %>%
   round(3) %>% 
@@ -1323,7 +1155,7 @@ se <- m_total_dnd$se %>%
   round(3) %>% as_tibble(rownames = "se") %>%
   pivot_wider(names_from = se)
 
-save(models_total, rows, cm, gm, coef_omit, beta, se,
+save(models_total, rows, cm, gm,  beta, se,
      file = here::here("models", "models_total.Rdata"))
 ```
 
@@ -1358,8 +1190,8 @@ predicted <- predictions(m_total_cross,
 
 # Cross-sectional predictions
 predicted %>%
-    mutate(estimate = estimate*n_agency, #predicted*n_agency,
-         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+    mutate(estimate = estimate*n_agency, 
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  
   ggchair() + 
   labs(title =  "", # "Predicted Total Letters per year\n(Cross-Sectional)",
        x = "",
@@ -1373,8 +1205,8 @@ predicted <- predictions(m_total_cross,
                          newdata = values_tenure)
 
 predicted %>%
-    mutate(estimate = estimate*n_agency, #predicted*n_agency,
-         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>%  # std.error = std.error*n_agency) %>%
+    mutate(estimate = estimate*n_agency, 
+         conf.high = conf.high*n_agency, conf.low = conf.low*n_agency) %>% 
 ggtenure() +
   labs(title =  "", # "Predicted Total Letters Per year\n(Cross-Sectional)",
        x = "Years serving in Congress",
@@ -1476,6 +1308,7 @@ m_con_2nd <-feglm (perYear_con ~
            data = dcounts_tenure %>% filter(survive == 1))
 
 if(testing){modelsummary::modelsummary(m_con_2nd)}
+
 coefplot(m_con_2nd, horiz = T) 
 
 
@@ -1494,7 +1327,6 @@ coefplot(m_logcon_dnd, horiz = T)
 
 ### Constituency Service Table
 
-- Table: `tables/models_con.tex` 
 - Models: `models/models_con.Rdata` 
 
 
@@ -1506,24 +1338,11 @@ models_con <- list(
   "(4)" = m_logcon_dnd
 )
 
-
-# modelsummary(models_con) %>% 
-#   tinytable::style_tt(i = 1, bold = T, line = "b")
-# 
-# modelsummary::modelsummary(models_con, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by legislator."))%>% 
-#   format_table() %>%
-#   write_lines(file = here::here("docs", "tables", "models_con.tex") )
-
 beta <- m_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_con, rows, cm, gm, coef_omit, beta, se,
+save(models_con, rows, cm, gm,  beta, se,
      file = here::here("models", "models_con.Rdata"))
 ```
 
@@ -1697,7 +1516,6 @@ coefplot(m_logcon_dnd, horiz = T)
 
 ### Policy Work Table
 
-- Table: `tables/models_policy.tex` 
 - Models: `models/models_policy.Rdata` 
 
 ```{r models_policy}
@@ -1708,22 +1526,13 @@ models_policy <- list(
   "(4)" = m_logcon_dnd
 )
 
-
-# modelsummary(models_policy,
-#              notes = list("Robust standard errors in parentheses, clustered by legislator." )) 
-# 
-# modelsummary::modelsummary(models_policy,
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by legislator." )) %>% 
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_policy.tex") )
-
+modelsummary(models_policy)
 
 beta <- m_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_policy, rows, cm, gm, coef_omit, beta, se,
+save(models_policy, rows, cm, gm,  beta, se,
      file = here::here("models", "models_policy.Rdata"))
 ```
 
@@ -1822,7 +1631,6 @@ Column 2 of Table `@tbl-models_policy` provides the estimated effects from the d
 
 ### Total + Constituency Service Table
 
-- Table: `tables/models_total_con.tex` 
 - Models: `models/models_total_con.Rdata` 
 
 ```{r models_total_con}
@@ -1941,7 +1749,6 @@ coefplot(m_ratio_dnd, horiz = T)
 
 ### Ratio Table
 
-- Table: `tables/models_ratio.tex` 
 - Models:  `tables/models_ratio.Rdata` 
 
 ```{r models_ratio}
@@ -1979,22 +1786,11 @@ attr(rows, 'position') <- c(0)
 modelsummary(models_ratio,
              notes = list("Robust standard errors in parentheses, clustered by legislator.") )
 
-# modelsummary::modelsummary(models_ratio, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by legislator.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_ratio.tex") )
-
 beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_ratio, rows, cm, gm, coef_omit, beta, se,
+save(models_ratio, rows, cm, gm,  beta, se,
      file = here::here("models", "models_ratio.Rdata"))
 ```
 
@@ -2243,8 +2039,7 @@ dcounts_per_district %<>%
   mutate(same_party = as.numeric(same_party),
          Legislator = icpsr,
          District = state_dist,
-         Year = year) %>% 
-  filter(year >2006 & year < 2021)
+         Year = year)
 
 m_district_cross <- feglm(perYear ~
   new_member + 
@@ -2328,7 +2123,6 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Total Per District Tables
 
-- Table: `tables/models_district.tex` 
 - Models: `models/models_district.Rdata` 
 
 ```{r models_district}
@@ -2374,16 +2168,6 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district,
              notes = list("Robust standard errors in parentheses, clustered by district.") )
 
-# modelsummary::modelsummary(models_district, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district.tex") )
-
 beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 beta_cross <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
@@ -2391,12 +2175,11 @@ beta_cross <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "
 
 se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district, rows, cm, gm, coef_omit, beta, se,
+save(models_district, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district.Rdata"))
 ```
 
 
-- Table: `tables/models_district_party.tex` 
 - Models: `models/models_district_party.Rdata` 
 
 ```{r models_district_party}
@@ -2416,19 +2199,8 @@ attr(rows, 'position') <- c(0, 28:31)
 
 modelsummary(models_district_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") )
-# 
-# modelsummary::modelsummary(models_district_party, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district_party.tex") )
 
-
-save(models_district_party, rows, cm, gm, coef_omit, beta, se,
+save(models_district_party, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district_party.Rdata"))
 ```
 
@@ -2895,7 +2667,6 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Constituency Service Per District Tables
 
-- Table: `tables/models_district_con.tex` 
 - Models: `models/models_district_con.Rdata` 
 
 ```{r models_district_con}
@@ -2940,16 +2711,6 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district_con, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-# modelsummary::modelsummary(models_district_con, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district_con.tex") )
-
 beta <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 beta_cross <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
@@ -2957,12 +2718,11 @@ beta_cross <- m_district_con_dnd$coefficients %>%round(3) %>% as_tibble(rownames
 
 se <- m_district_con_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district_con, rows, cm, gm, coef_omit, beta, se,
+save(models_district_con, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district_con.Rdata"))
 ```
 
 
-- Table: `tables/models_district_con_party.tex` 
 - Models: `models/models_district_con_party.Rdata` 
 
 ```{r models_district_con_party}
@@ -2982,20 +2742,8 @@ attr(rows, 'position') <- c(0, 28:31)
 
 modelsummary(models_district_con_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
-# 
-# modelsummary::modelsummary(models_district_con_party, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district_con_party.tex") )
 
-
-save(models_district_con_party, rows, cm, gm, coef_omit, beta, se,
+save(models_district_con_party, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district_con_party.Rdata"))
 ```
 
@@ -3464,7 +3212,6 @@ data = dcounts_per_district |> filter(chamber == "Senate"))
 
 ### Policy Per District Tables
 
-- Table: `tables/models_district_policy.tex` 
 - Models: `models/models_district_policy.Rdata` 
 
 ```{r models_district_policy}
@@ -3510,17 +3257,6 @@ attr(rows, 'position') <- c(0, 14:16)
 modelsummary(models_district_policy, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-# modelsummary::modelsummary(models_district_policy, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district_policy.tex") )
-
 beta <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 beta_cross <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
@@ -3528,12 +3264,11 @@ beta_cross <- m_district_policy_dnd$coefficients %>%round(3) %>% as_tibble(rowna
 
 se <- m_district_policy_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district_policy, rows, cm, gm, coef_omit, beta, se,
+save(models_district_policy, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district_policy.Rdata"))
 ```
 
 
-- Table: `tables/models_district_policy_party.tex` 
 - Models: `models/models_district_policy_party.Rdata` 
 
 ```{r models_district_policy_party}
@@ -3545,28 +3280,13 @@ models_district_policy_party <- list(
   "(4)" = m_district_policy_dnd_senate_party
 )
 
-
 # Checkmarks for controls 
 attr(rows, 'position') <- c(0, 28:31)
-
-
 
 modelsummary(models_district_policy_party, 
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-# modelsummary::modelsummary(models_district_policy_party, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_district_policy_party.tex") )
-
-
-save(models_district_policy_party, rows, cm, gm, coef_omit, beta, se,
+save(models_district_policy_party, rows, cm, gm,  beta, se,
      file = here::here("models", "models_district_policy_party.Rdata"))
 ```
 
@@ -3624,11 +3344,6 @@ predicted %<>%
     ungroup()
   
 # Ideally, we could plot against data, but there is so much variation that you can no longer distinguish differences in predicted values 
-# predicted %<>% full_join(dcounts_tenure2 %>% mutate(predicted = NA))
-  
-
-
-
 p <- predicted %>%  
   ungroup() %>% 
   ggplot() + 
@@ -4003,7 +3718,6 @@ data = dcounts_spillover |> filter(chamber == "Senate"))
 
 ### Spillover Effect Tables
 
-- Table: `tables/models_spillover.tex` 
 - Models: `models/models_spillover.Rdata`
 
 ```{r models_spillover}
@@ -4035,23 +3749,10 @@ rows <- tibble(
 attr(rows, 'position') <- c(0, 9:11)
 
 
-
 modelsummary(models_spillover,
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
-# modelsummary::modelsummary(models_spillover, # stars = T, 
-#              add_rows = rows,               
-#              coef_map = cm, 
-#              gof_map = gm, 
-#              output = "latex",
-#              notes = list(" Robust standard errors in parentheses, clustered by district.") ) %>% 
-#   # format to match stata output (sort of)
-#   format_table() %>%
-#    write_lines(file = here::here("docs", "tables", "models_spillover.tex") )
-
-
-
-save(models_spillover, rows, cm, gm, coef_omit, #beta, se,
+save(models_spillover, rows, cm, gm,  #beta, se,
      file = here::here("models", "models_spillover.Rdata"))
 ```
 
