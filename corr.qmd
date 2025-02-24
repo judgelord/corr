@@ -314,8 +314,8 @@ which legislative behavior can be viewed." As legislators gain
 experience and power, the marginal impact of the resources they allocate
 to policy work increases. Powerful legislators thus have incentives to
 shift their attention to policy work. If this theory is right, as
-legislators gain power and experience, they should increase the ratio of
-policy work to constituency service.
+legislators gain power and experience, they should decrease their ratio of
+constituency service to policy work.
 
 As legislators spend more time in Washington, they may become detached
 and alienated from their district. @Fenno1978 documents that some
@@ -369,15 +369,14 @@ magnitude of their shift in priorities. Increased capacity may offset a
 *relative* shift away from constituency service as a legislator gains
 power. If this occurs, we expect the absolute level of constituency
 service to stay the same or increase as legislators gain experience and
-power, even as their ratio of policy work to constituent service
-increases. Alternatively, if the effect of increased capacity is
+power, even as their ratio of constituent service to policy work
+decreases. Alternatively, if the effect of increased capacity is
 relatively small or the effect of shifting priorities relatively large,
 absolute levels of constituency service may decline as a legislator
 gains power.
 
 @tbl-theory and @fig-2x2 show potential changes in the absolute volume
-of constituency service and the ratio of policy work to constituency
-service due to *changes in capacity* and *shifting priorities*. The top-left cell of @tbl-theory shows our expectations if both mechanisms
+of constituency service and the ratio of constituency service to policy work  due to *changes in capacity* and *shifting priorities*. The top-left cell of @tbl-theory shows our expectations if both mechanisms
 affect behavior *and* the magnitude of the effect of increased capacity
 is large enough to overcome the countervailing effect of shifting
 priorities (any outcome in the upper, darker-shaded region of @fig-2x2,
@@ -391,12 +390,12 @@ Subfigure d, including the scenario shown in Subfigure c).
 |                           | **Sufficient increase in capacity**                                        | **Insufficient change in capacity**                                        |
 +:==========================+:===========================================================================+:===========================================================================+
 | **Priority shifts**       | -   $\Delta$ Level of service: $0$ or $\uparrow$                           | -   $\Delta$ Level of service: $\downarrow$                                |
-|  **to policy work**       | -   $\Delta$ Ratio of $\frac{\textrm{policy}}{\text{service}}$: $\uparrow$ | -   $\Delta$ Ratio of $\frac{\textrm{policy}}{\text{service}}$: $\uparrow$ |
+|  **to policy work**       | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $\uparrow$ | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $\uparrow$ |
 +---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
 |                           |                                                                            |                                                                            |
 +---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
 | **No change**             | -   $\Delta$ Level of service: $\uparrow$                                  | -   $\Delta$ Level of service: $0$                                         |
-| **in priorities**         | -   $\Delta$ Ratio of $\frac{\textrm{policy}}{\text{service}}$: $0$        | -   $\Delta$ Ratio of $\frac{\textrm{policy}}{\text{service}}$: $0$        |
+| **in priorities**         | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$        | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$        |
 +---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
 
 Divergent Predictions for the Change in the Levels of Constituency
@@ -614,8 +613,8 @@ general and industry-focused policy work) for our tests in
 @sec-capacity. We find that 76% of requests from committee chairs are
 constituency service (compared to 85% for non-chairs). Descriptively,
 most legislator requests are constituency service. However, legislators
-in more powerful positions have a higher ratio of policy work to
-constituency service.[^4]
+in more powerful positions have a lower ratio of 
+constituency service to policy work.[^4]
 
 [^4]: To measure committee prestige, we use a revealed preference
     approach--what do members think is most valuable--using party
@@ -671,27 +670,29 @@ knitr::include_graphics("docs/figs/counts-per-year-1.png")
 # The Effect of Experience and Institutional Power {#sec-results}
 
 Using this dataset of requests to federal agencies, we estimate the
-effect of institutional power on legislator behavior. First, we test
+effect of institutional power on legislator behavior. First, @sec-capacity tests
 theories rooted in legislator capacity by modeling the effects of
-institutional power on a legislator's total number of requests to federal agencies. Next, we test theories rooted in legislators' priorities by
+institutional power on a legislator's total number of requests to federal agencies. 
+Next, @sec-prioirty test theories rooted in legislators' priorities by
 modeling the effects of institutional power on a legislator's *ratio* of
-policy work to constituency service before examining the impact on a legislator's *level* of constituency service.
+constituency service to policy work.
+@sec-joint then examine the impact of power and experience on a legislator's *level* of constituency service, showing that increasing capacity allows legislators to maintain levels of constituency service even as they prioritize policy work.
 
-## The Effects of Experience and Institutional Power  {#sec-capacity}
+## The Effect of Expiernece and Power Institutional on Legislator Capacity {#sec-capacity}
 
+
+Our analysis in this section is at the legislator-agency-year level.
 Our primary models are difference-in-differences regressions, similar to
 the specifications in [@BerryFowler2016]. Our most stringent
 specifications examine changes within legislator-agency pairs
 (@eq-diff1).[^5]
 
-[^5]: We drop five member-congress level observations for congresses
-    where members switched political parties.
+[^5]: We drop ten member-year level observations where members switched chambers mid-congress.
 
 $$\begin{aligned}
 Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} 
 \end{aligned}$$ {#eq-diff1}
 
-Our analysis in this section is at the legislator-agency-year level.
 $Y_{ijt}$ is the number of requests legislator $i$ makes to agency $j$
 in year $t$. $\gamma_{ij}$ is a fixed effect for the legislator-agency
 pair. This fixed effect controls for legislators' characteristics, such
@@ -785,7 +786,11 @@ then the estimates from Model 1 confound legislators' overall ability
 with their institutional position.
 
 To address potential confounding, Model 2 (Column 2 of @tbl-models-total)
-shows the difference-in-differences specification in @eq-diff1. Across
+shows the difference-in-differences specification in @eq-diff1. 
+
+### More Expiernced and Powerful Legislators Make More Requests to Federal Agencies
+
+Across
 all measures of institutional power, we find that acquiring power
 increases the number of requests that a given legislator makes. Becoming
 a committee chair causes an increase of `r beta$chair` requests *per agency*
@@ -966,7 +971,7 @@ where the same legislator has been serving for seven or more years).[^8]
     received by that agency, (3) and the agency received an average
     number of letters.
 
-#### The Costs of Electoral Turnover
+#### Electoral Turnover has Costs
 
 Taken together, our results demonstrate that a new legislator will make fewer requests to federal agencies than the more experienced legislator they replaced. Legislators in their first year and second year contact federal agencies significantly less than legislators serving longer than six years. Further, when districts elect a new representative or senator, people in the district experience a sharp decrease in requests made on their behalf. Rather
 than experienced legislators forgetting about their districts, our
@@ -976,9 +981,9 @@ experienced legislators deliver to their constituents.
 
 \clearpage
 
-## Constituent Service Requests are a Smaller Proportion of the Work of Experienced and Powerful Legislators {#sec-priority}
+## The Effect of Expiernece and Institutional Power on Legislator Priorities {#sec-priority}
 
-To assess legislators' ratio of policy work to constituency service, we
+To assess legislators' ratio of constituency service to policy work, we
 use the hand-coded data described in @sec-data. The dependent variable
 in @tbl-models-ratio is the number of policy requests divided by the
 number of constituency service requests per legislator per year. These
@@ -987,7 +992,7 @@ gain experience and power.
 
 ```{r}
 #| label: tbl-models-ratio
-#| tbl-cap: "The Effect of Institutional Power on the Ratio of Policy Work to Constituency Service"
+#| tbl-cap: "The Effect of Institutional Power on the Ratio of Constituency Service to Policy Work"
 #| out-width: 100%
 
 load(here::here("models", "models_ratio.Rdata"))
@@ -997,13 +1002,14 @@ modelsummary(models_ratio,
                           "This table shows how the proportion of contacts focused on constituency service changes as legislators acquire more experience and power in Congress. Column 1 shows average differences across committee assignments and years in Congress. Column 2 presents difference-in-differences estimates.")) 
 ```
 
-@tbl-models-ratio shows that legislators increase the ratio of policy
-work to constituency service as they obtain more prestigious committee
-assignments. The first column of @tbl-models-ratio shows how the
-proportion of policy work to constituency service differs *across*
-legislators for legislators who acquire committee positions.
+### Constituent Service is a Smaller Proportion of the Work of Experienced and Powerful Legislators
 
-While the ratio of policy work to constituency service is conditional on
+@tbl-models-ratio shows that legislators decrease the ratio of constituency service to policy
+work as they obtain more prestigious committee
+assignments. The first column of @tbl-models-ratio shows how the
+ratio differs *across* legislators with different committee positions.
+
+While the ratio of constituency service to policy work is conditional on
 the levels of each, the inference we make about the ratio does not
 depend on these levels; we are not using the ratio to infer the level
 (e.g., that a lower share of constituency service means a lower level).
@@ -1039,9 +1045,9 @@ as a committee chair and a counterfactual where they are not. Notably,
 whether a member has a co-partisan president does not cause a
 significant difference.
 
-Taken together, these findings about how the ratio of policy work to constituency service varies across legislators show that as legislators acquire more experience and power, their contacts with the bureaucracy become more policy-focused. 
+Taken together, these findings about how the ratio of constituency service to policy work varies across legislators show that as legislators acquire more experience and power, their contacts with the bureaucracy become more policy-focused. 
 
-## Experienced and Powerful Legislators Maintain or Increase Levels of Constituency Service, While Also Prioritizing Policy Work {#sec-joint}
+## Experienced and Powerful Legislators Maintain Levels of Constituency Service, While Also Prioritizing Policy Work {#sec-joint}
 
 When legislators acquire capacity they make more requests of federal agencies.  At the same time, higher capacity legislators allocate a relatively larger share of their efforts towards policy work.  In this section, we show that the net result of these two simultaneous effects in our time period (2007-2020) is that the total number of constituency service requests did not decrease, even as legislators allocated a relatively larger share of their attention towards policy.    
 
