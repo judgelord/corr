@@ -27,6 +27,8 @@ author:
      - name: Stanford University
      #department: Department of Political Science and Hoover Institution
 date: today
+dataverse: "https://doi.org/10.7910/DVN/LWOCWO"
+# keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
 #linestretch: 1.5
 indent: true
 number-sections: true
@@ -84,7 +86,7 @@ load(here::here("data", "means.Rdata"))
 # FOIA Data
 
 Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. In 2018, the FOIA office estimated they would fill our May 2018 request in 2024. As of February 2025, we are still waiting for this data.] 
-and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all `r n2007_2020` records we have processed. In the paper, we focus on `r n2007_2020` of these requests sent from January 1, 2007, to December 31, 2020.
+and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all 627,356  records we have processed. In the paper, we focus on `r n2007_2020` of these requests sent from January 1, 2007, to December 31, 2020.
 
 ## Variation in Responses to Identical FOIA Request
 
@@ -100,11 +102,15 @@ Small agencies and regional offices had staff search their email history or prov
 here::here("docs", "tables", "FOIA.csv")  |> 
 read.csv() |>
   tinytable::tt( 
-   notes = "The Department of State has a notorious FOIA backlog. The FOIA office expects to fill our May 2018 request in 2024.") |> 
+   notes = "The Department of State has a notorious FOIA backlog. The FOIA office initially expected to fill our May 2018 request in 2024. We are still waiting.") |> 
  tinytable::style_tt(
    i = 16:17,
    bold = T,
-   line = "t")
+   line = "t") |> 
+    # stats aligned center 
+    tinytable::style_tt(j = 2:4, align = "r") |> 
+    # row labels left
+    tinytable::style_tt(j = 1, align = "l")
 ```
 
 
@@ -423,4 +429,43 @@ knitr::include_graphics("docs/figs/m-district-predicted-4.png")
 Despite the increased uncertainty caused by the much smaller (and non-random) sample of districts where turnover allows us to measure the new “same party” variable, our main results (direction, statistical significance, and magnitude of effects) are largely the same: legislators contact the bureaucracy significantly less in their first two years in office, even holding district constant. Because the new models contain a large number of interaction terms, we present predictions at modal values in @fig-m-district-predicted-party.
 @fig-m-district-predicted-party shows the predicted total number of letters per district per year by whether a district is represented by a new legislator and whether that legislator replaced a member of the same party (compared to counterfactuals where the same legislator has been serving for more than six years).^[Predictions are based on a district-year pair where (1) the district's average annual contacts equaled the overall average, (2) the district's number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.]
 
+## Spillover models
+
+In the paper, we show estimates using requests hand coded as constituency service. Using district and year fixed effects, we estimate a series of difference-in-differences regressions
+where the treatment is new members in the state. Because we are interested in assessing
+whether constituents with new legislators direct their constituency
+service requests to more experienced members, restrict the regression
+to incumbent legislators.
+
+@tbl-models-spillover shows that the results are nearly identical for total requests, using our full sample (not just observations we were able to hand code.  @tbl-models-spillover-policy further shows that there are also no positive spillover effects on policy work. Indeed, requests from other members of a state delegation may go down when an experienced member of there delegation is replaced by a new member. This is consistent with our theory that these effects are driven by capacity, perhaps even collective capacity of a delegation, not by constituents demanding more of more experienced and powerful legislators. 
+
+```{r}
+#| label: tbl-models-spillover
+#| tbl-cap: "Spillover Effects: Total Requests Redirected to Expierenced Legislators when a New Legislator is Elected"
+#| out-width: 100%
+
+load(here::here("models", "models_spillover.Rdata"))
+modelsummary(models_spillover,  
+             center_rows = 7:12,
+             notes = list("Robust standard errors in parentheses, clustered by district",
+                          "The first column estimates the effect of an experienced Senator being replaced by a new Senator on the level of service that other legislators in the state provide (total requests to federal agencies per year). Columns 2 and 3 show the effect of a new member of a delegation or the portion of new members of a delegation on senators from that delegation.")) 
+```
+
+```{r}
+#| label: tbl-models-spillover-policy
+#| tbl-cap: "Spillover Effects: Policy Requests Redirected to Expierenced Legislators when a New Legislator is Elected"
+#| out-width: 100%
+
+load(here::here("models", "models_spillover_policy.Rdata"))
+modelsummary(models_spillover_policy,  
+             center_rows = 7:12,
+             notes = list("Robust standard errors in parentheses, clustered by district",
+                          "The first column estimates the effect of an experienced Senator being replaced by a new Senator on the level of policy work that other legislators in the state do (policy-related requests to federal agencies per year). Columns 2 and 3 show the effect of a new member of a delegation or the portion of new members of a delegation on senators from that delegation.")) 
+```
+
+
+The first column of @tbl-models-spillover and @tbl-models-spillover-policy estimates the effect of an
+experienced Senator being replaced by a new Senator for all other
+incumbent legislators.
+Columns 2 and 3 of @tbl-models-spillover and @tbl-models-spillover-policy show, respectively, that either a new member in the delegation or the proportion of new members in the delegation results in insignificant or negative effects on requests when focusing on senators only. This consistent null or negative finding regarding the impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
 
