@@ -1,7 +1,7 @@
 ---
 journal:
   blinded: false
-wordcount: 10017
+wordcount: 10346 # 10068 excluting table notes
 format:
   #html
   #docx
@@ -106,7 +106,7 @@ the popular press [@Edwards2005] and evoked in rallying cries to "drain
 the swamp" of legislators focused on Washington politics
 [@Rosenblatt2016].
 
-We test these competing expectations with a massive new dataset of
+We test these competing expectations with a new dataset of
 constituency service and policy work: a near census of legislator
 contacts with federal agencies from 2007 to 2020. Recent work using data
 on congressional correspondence has yielded important findings regarding
@@ -154,8 +154,8 @@ legislators with access to more staff resources do more policy work.
 Advocates for term limits assert that powerful career politicians become
 alienated from their constituents. We show, however, that even as
 legislators gain power, they remain focused on providing constituency
-service. In fact---in contrast to arguments from term limit
-supporters---the biggest decrease in constituency service occurs when a
+service. In contrast to arguments from term limit
+supporters, the biggest decrease in constituency service occurs when a
 new legislator replaces an experienced legislator. Our findings imply
 that the turnover that term limits induce would cause a sharp decrease
 in the volume of work from legislative offices.
@@ -381,17 +381,17 @@ Subfigure d, including the outcome shown in Subfigure c).
 
 ::: {#tbl-theory}
 
-+---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
-|                           | **Sufficient increase in capacity**                                        | **Insufficient change in capacity**                                        |
-+:==========================+:===========================================================================+:===========================================================================+
-| **Priority shifts**       | -   $\Delta$ Level of service: $0$ or $\uparrow$                           | -   $\Delta$ Level of service: $\downarrow$                                |
++---------------------------+------------------------------------------------------------------------------+------------------------------------------------------------------------------+
+|                           | **Sufficient increase in capacity**                                          | **Insufficient change in capacity**                                          |
++:==========================+:=============================================================================+:=============================================================================+
+| **Priority shifts**       | -   $\Delta$ Level of service: $0$ or $\uparrow$                             | -   $\Delta$ Level of service: $\downarrow$                                  |
 |  **to policy work**       | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $\downarrow$ | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $\downarrow$ |
-+---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
-|                           |                                                                            |                                                                            |
-+---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
-| **No change**             | -   $\Delta$ Level of service: $\uparrow$                                  | -   $\Delta$ Level of service: $0$                                         |
-| **in priorities**         | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$        | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$        |
-+---------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+
++---------------------------+------------------------------------------------------------------------------+------------------------------------------------------------------------------+
+|                           |                                                                              |                                                                              |
++---------------------------+------------------------------------------------------------------------------+------------------------------------------------------------------------------+
+| **No change**             | -   $\Delta$ Level of service: $\uparrow$                                    | -   $\Delta$ Level of service: $0$                                           |
+| **in priorities**         | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$          | -   $\Delta$ Ratio of $\frac{\textrm{service}}{\text{policy}}$: $0$          |
++---------------------------+------------------------------------------------------------------------------+------------------------------------------------------------------------------+
 
 Divergent Predictions for the Change in the Levels of Constituency
 Service and Policy Work as Legislators Gain Experience and Power
@@ -737,7 +737,7 @@ legislator is from the same party as the president in year $t$
 ($p_{it}$). Throughout, we cluster standard errors at the legislator
 level.
 
-We also include indicators for legislators' first six years in Congress,
+We also include indicators for legislators' first six years in Congress (House or Senate),
 $\sum_{s = 1}^{6} \eta_{s} \text{tenure}_{it}$ as controls. This
 specification, however, is not the best specification to assess how
 electing a less experienced representative affects the number of requests made on behalf of a given district. 
@@ -1011,9 +1011,13 @@ to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair-1.
 Becoming a ranking member of a committee causes the ratio of constituency service to policy work to decrease by `r -beta$ranking_minority` (95-percent confidence interval [`r beta$ranking_minority-1.96*se$ranking_minority`, `r beta$ranking_minority+1.96*se$ranking_minority`]).
 --> 
 
+
 ```{r}
 #| label: fig-m-ratio-predicted
 #| fig-cap: "Predicted Ratio of Constituency Service to Policy Work (Within Legislator Difference in Differences), 2007-2020"
+#| fig-subcap: 
+#|   - "Predicted Ratio by Presidents' Party"
+#|   - "Predicted Ratio by Years of Service in Congress"
 #| layout-ncol: 2
 #| out-width: 100%
 
@@ -1021,6 +1025,8 @@ knitr::include_graphics("docs/figs/m-ratio-predicted-3.png")
 knitr::include_graphics("docs/figs/m-ratio-predicted-4.png")
 
 ```
+
+
 
 @fig-m-ratio-predicted shows the predicted ratio of constituency service
 to policy work. Subfigure *a* shows predictions by committee chair status and whether that member has a
@@ -1068,32 +1074,25 @@ In short, the "shifting priorities" effects that we find are insufficiently larg
 
 # The Effects of Demand for Constituency Service {#sec-demand}
 
-This section shows that demand for constituency service affects the
-level of constituency service that members provide. However, demand-side
-shifts do not appear to explain the within-legislator or within-district variation we observe with changing committee positions and longer tenure in Congress. We show that constituent demand does not shift
+While constituent demand affects the level of constituency service that members provide, demand-side shifts do not appear to explain the within-legislator or within-district variation we observe with changing committee positions and longer tenure in Congress.
+Constituent demand does not shift
 among legislators in ways we would expect to see if shifting
 constituent demand explained the within-legislator and within-district
 variation shown in @sec-results.
 
 ## District Characteristics Affect the Provision of Constituency Service
 
-<!--The characteristics of their districts help inform which agencies
-legislators contact.-->  We find that population size correlates with the
-overall number of legislator requests. <!-- and that constituency characteristics---the proportion of veterans and the proportion over 65---correlate with the
-distribution of requests across agencies. --> 
-These correlations provide
-face validity for our measures of legislator behavior, but they also suggest
-that cross-sectional comparisons may conflate legislator choices with
-district characteristics. Given this potential confounding, our models
-above leveraged within-district and within-agency variation.
+We find that population size correlates with the overall number of legislator requests. 
+<!--The characteristics of their districts also correlates with which agencies legislators contact.  For example, a one percentage point increase in the proportion of residents who are veterans is associated with an increase of about .84 constituency service requests to the Department of Veterans Affairs. A one percentage point increase in the proportion of residents over 65 is associated with an increase of an additional 0.03 requests made to the Social Security Administration--> 
+These correlations provide face validity for our measures of legislator behavior, but they also suggest that cross-sectional comparisons may conflate legislator choices with district characteristics. 
+<!--Given this potential confounding, our models above leveraged within-district and within-agency variation.-->
 
 We expect senators who represent larger states to make more requests.
 Senators from larger states have a larger number of constituents to
 serve, and they receive a larger budget to handle that increase in
 requests. @fig-stateSize shows that this is the case: senators from
-larger states provide more constituency service on average. Senators
-from larger states (like John Cornyn (R-TX), Barbara Boxer (D-CA), and
-Pat Toomey (R-PA)) average more requests per year than legislators from
+larger states provide more service on average. Senators
+from larger states average more requests per year than legislators from
 smaller states. While the number of legislator requests is associated
 with population size, @fig-stateSize also shows significant variation in
 the level of service senators provide, even among states of similar
@@ -1128,7 +1127,7 @@ increased capacity and resources to generate demand. For example,
 constituents could direct more of their demands to legislators who are
 more powerful or who have served longer (holding constant legislators' levels of soliciting
 constituency service requests). As a robustness check, this section
-investigates whether that additional constituent demand could plausibly
+investigates whether additional constituent demand could plausibly
 explain our results. We find no evidence that the higher levels of
 constituency service of experienced members are driven by higher
 constituent demand.
@@ -1282,7 +1281,7 @@ legislators to develop expertise, for example, in certain committee work
 or specialized policy work that builds their capacity to influence
 certain agencies?
 
-The massive new dataset we introduce here will help scholars answer
+The new dataset we introduce here will help scholars answer
 these questions. With data from nearly all parts of the vast U.S. federal bureaucracy, future work can advance the study of descriptive
 representation, expanding on work by @LowandeRitchieLauterbach2018, who
 find that women, minority, and veteran members do more casework on
