@@ -181,6 +181,19 @@ Suggest a new category in the NOTES column only if you cannot fit it under 1-4. 
 
 \clearpage 
 
+# Variation in Legislator Requests by Year
+
+To visualize the year to year variation for individual legislators @fig-peryear shows the number of requests per legislator over time, highlighting three Senators at the upper, middle, and lower parts of the distribution.
+
+```{r}
+#| fig-cap: "Variation in Legislator Requests by Year, 2007-2017"
+#| label: fig-peryear
+#| out-width: 80%
+
+knitr::include_graphics("docs/figs/counts-per-year-1.png")
+```
+
+
 # Additional Models {#appendix_models}
 
 ## Interpreting Experience Effects
