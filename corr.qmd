@@ -1,7 +1,7 @@
 ---
 journal:
   blinded: false
-wordcount: 10170 # Add 440 to word count for figure and table captions (unless we can cut figure and table captions)
+wordcount: 10006 # 9551 words in text body... Add 455 to the word count for figure and table captions (unless we can cut figure and table captions)
 format:
   #html
   #docx
@@ -89,9 +89,7 @@ accountability imply that if constituency service enables elected
 officials to demonstrate competence to their constituents, then
 increased institutional power and capacity will result in more
 constituency service effort to secure reelection
-[@AshworthBuenodeMesquita2006]. Experienced incumbents may also have an
-advantage over challengers if newly elected officials incur start-up
-costs that reduce their capacity to provide constituency service.
+[@AshworthBuenodeMesquita2006]. Experienced incumbents may also have an advantage over challengers if newly elected officials incur start-up costs that reduce their capacity to provide constituency service.
 
 On the other hand, we might expect that as legislators spend more time
 in Washington, they become more focused on 
@@ -137,11 +135,8 @@ variation in constituent demand, differences across districts, or
 differences across legislators. Our research designs limit the influence
 of any potential variation in constituent demand by leveraging
 within-legislator and within-district comparisons. Moreover, through a
-series of robustness checks and additional analyses, we find no evidence
-that constituents shift demands to more established legislators when a new
-representative is elected. When House members lose an election, there is
-no corresponding increase in constituency service requests from the
-state's Senate delegation.
+series of additional analyses, we find no evidence
+that constituents shift demands to more established legislators when a new representative is elected. When House members lose an election, there is no corresponding increase in constituency service requests from the state's Senate delegation.
 
 While this study does not aim to examine the effects of institutional
 reforms, our results have implications for debates over congressional
@@ -251,7 +246,7 @@ For example, @MillsKalafHuges2015 find that the Federal Aviation Administration 
 more likely to grant the requests of senior members of Congress.
 @Lowande2018JOP finds that agencies systematically
 prioritize the requests of majority party legislators.
-A related literature similarly finds that seniority and committee
+A related literature finds that seniority and committee
 membership affect the distribution of earmarked spending in agency budgets [@Lazarus2010].
 Increased marginal returns may incentivize more powerful legislators to
 make more requests [@CainFerejohnFiorina1987].[^1] 
@@ -282,12 +277,10 @@ service work.
 
 ## Shifting Priorities: Why Experience and Power Could *Decrease* Constituency Service
 
-A different set of expectations for how legislator behavior may change
-in response to increased experience and power is present in the
-political science literature on Congressional careers.
-Different institutional positions allow legislators to advance different goals [@Fenno1973].
-Legislators do not only care about reelection; they also
-have policy goals. As @ButlerKarpowitzPope2012 [p. 475] conclude, "The
+Political science literature on Congressional careers offers a different set of expectations for how legislator behavior may change
+in response to increased experience and power.
+In addition to reelection goals, legislators have policy goals, and different institutional positions allow legislators to advance different goals [@Fenno1973].
+As @ButlerKarpowitzPope2012 [p. 475] conclude, "The
 service-policy divide is thus an important theoretical lens through
 which legislative behavior can be viewed." As legislators gain
 experience and power, the marginal impact of the resources they allocate
@@ -305,8 +298,7 @@ longer-serving officials may prioritize other goals.-->
 If the shifting priorities hypothesis is right---that legislators shift
 attention from their district to policy work---we expect that
 legislators provide *relatively less* constituent service compared to
-policy work as they gain experience and power. The "Potomac fever" concern is that, as legislators gain experience and power, the magnitude
-of the shift toward prioritizing policy work is
+policy work as they gain experience and power. The "Potomac fever" concern is that, as legislators gain experience and power, the shift toward prioritizing policy work is
 large enough to swamp any increase in capacity. If this strong ("Potomac fever") version of the shifting priorities hypothesis is true, we should
 find that legislators provide *less* constituent service in absolute
 terms.
@@ -321,14 +313,13 @@ affairs," while today, "far too many of our politicians come to
 Washington to stay," [@termlimit2019].
 
 Formal models of legislator behavior predict that as legislators prioritize
-policy work in Washington, the ratio of constituency service to policy work to  will decrease. 
+policy work in Washington, the ratio of constituency service to policy work will decrease. 
 All else equal, they will then provide lower
 levels of constituency service to their district. In the model in
 @AshworthBuenodeMesquita2006, this would occur as legislators place a
 lower priority on constituency service. 
 
-If legislators' priorities shift
-over their careers or as they gain power, more experienced and powerful
+If legislators' priorities shift over their careers or as they gain power, more experienced and powerful
 legislators will allocate more *staff* to policy work over constituency
 service. Likewise, if members shift their *attention* from their
 district to their career in Washington (in Congress or after), their
@@ -341,7 +332,7 @@ mutually exclusive. Legislators' career shifts may simultaneously
 increase their resources and decrease their relative priority on
 constituency service. The net effect of these countervailing shifts on levels of constituency service thus depends on the
 *relative* magnitude of capacity increase compared to the
-magnitude of shift in priorities. Increased capacity may offset a
+magnitude of the shift in priorities. Increased capacity may offset a
 *relative* shift away from constituency service as a legislator gains
 power. If this occurs, the absolute level of constituency
 service may stay the same or even increase as legislators gain experience and
@@ -457,8 +448,8 @@ interfere with our results.
 Legislators may also use their official resources to encourage requests
 from constituents for help navigating the federal bureaucracy through
 workshops, newsletters to constituents, social media posts, or
-stories in local papers. Such constituent outreach may even be a primary
-way that constituencies discover that their elected officials can help. 
+stories in local papers. Such constituent outreach may be a primary
+way constituencies discover that their elected officials can help. 
 If legislators use
 increased staff budgets or organizational capacities to solicit
 constituent requests, constituent demands may increase as legislator
@@ -547,16 +538,11 @@ inter-coder agreement was 0.78, which rose to 0.9 when we removed coding decisio
 
 ## Who Contacts the Bureaucracy and Why? {#sec-descriptive}
 
-Before testing theories of how legislator behavior changes as they acquire experience and power, we
-first use our extensive new data set to answer outstanding descriptive
-questions about legislator behavior in U.S. politics. These descriptive
+Before testing theories of how legislator behavior changes as they acquire experience and power, we use our extensive new data set to answer outstanding descriptive questions about legislator behavior in U.S. politics. These descriptive
 findings regarding the level, variation, and reasons for legislator
 requests to federal agencies are only possible with our census of
 legislator requests. Overall, we find a general focus on constituency service but massive variation across
-legislators. <!--We also find surprising consistency in the purpose of the
-communication; when legislators contact federal agencies, it is almost
-always to provide constituency service, with only a small fraction focused on
-policy work. <!---Further, we find that legislators are responsive to their
+legislators. <!---Further, we find that legislators are responsive to their
 constituency's demographic characteristics, but there is still
 significant variation in levels of service from similar districts.---> 
 
@@ -599,11 +585,6 @@ House and Senate range between 0.56 and 0.90, exceeding the Gini coefficient for
 senators (right panel).[^5] On average, senators in our data contacted agencies
 148 times per year, while House members averaged 54 per year. We see a similar level of variation in the House but with lower overall levels of contact with federal agencies, reflecting lower resources and fewer constituents than senators. 
 
-<!--
-A few examples high contact senators , Senator Byrd (D-WV) averaged 538
-contacts per year, Senator Nelson (D-FL) averaged 535, and Senator Webb (D-VA) averaged 533 contacts per year. 
--->
-
 ```{r}
 #| fig-cap: "Variation in Average Legislator Requests by Percentile"
 #| label: fig-contact1
@@ -611,11 +592,21 @@ contacts per year, Senator Nelson (D-FL) averaged 535, and Senator Webb (D-VA) a
 
 knitr::include_graphics("docs/figs/percentiles-1.png")
 ```
+
+
+Among the most prolific senators, Senator Byrd (D-WV) averaged 538
+contacts per year, Senator Nelson (D-FL) averaged 535, and Senator Webb (D-VA) averaged 533 contacts per year. 
+
 <!--
-Rep. Barbara Comstock averaged 349 contacts per year. Comstock replaced Rep. Frank Wolf (R-VA), who averaged 381 contacts per year and inherited many of his staff. Comstock had worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. Nevertheless, Comstock's first year saw the volume of contacts on behalf of Virginia's 10th district dip slightly to 245, the lowest level in our time period. Other members of the House wrote at
+Rep. Barbara Comstock averaged 349 contacts per year. Comstock replaced Rep. Frank Wolf (R-VA), who averaged 381 contacts per year and inherited many of his staff. 
+<!--Comstock had worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. 
+--> 
+<!--
+Nevertheless, Comstock's first year saw the volume of contacts on behalf of Virginia's 10th district dip slightly to 245, the lowest level in our time period. <!--Other members of the House wrote at
 much lower rates. For example, in her first year in Congress, Michele
 Bachmann wrote only six letters in our data but would average 31 letters
-per year by the end of her time in Congress.-->  
+per year by the end of her time in Congress.--> 
+
 [^5]: Figure 1 in the Supplemental Appendix shows the number of requests per legislator over time, highlighting three Senators at the upper, middle, and lower parts of the distribution.
 
 # The Effect of  Institutional Power and Experience {#sec-results}
@@ -629,16 +620,16 @@ modeling the effects of institutional power on a legislator's *ratio* of
 constituency service to policy work.
 @sec-joint then examines the impact of power and experience on a legislator's *level* of constituency service, showing that increasing capacity allows legislators to maintain levels of constituency service even as they prioritize policy work.
 
-## The Effect of Institutional Power on Legislator Capacity {#sec-capacity}
+## The Effect of Institutional Power on Legislator *Capacity* {#sec-capacity}
 
 
 Our analysis in this section is at the legislator-agency-year level.
 Our primary models are difference-in-differences regressions, similar to
 the specifications in @BerryFowler2016. Our most stringent
 specifications test for differences within legislator-agency pairs
-(@eq-diff1).[^5]
+(@eq-diff1).[^9]
 
-[^5]: We drop ten member-year level observations where members switched chambers mid-congress.
+[^9]: We drop ten member-year level observations where members switched chambers mid-congress.
 
 $$\begin{aligned}
 Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} 
@@ -656,7 +647,7 @@ including population, demographics, and local industries that might be
 particularly likely to request help from specific agencies. 
 $\delta_{jt}$ is an agency-year fixed effect that accounts for agency-specific
 shocks that may affect legislator requests and the different
-periods for which data were available from each agency.  
+periods for which data were available from each agency.
 This difference-in-difference design ensures that coefficients
 $\boldsymbol{\beta}$ capture variation related to changes in
 institutional power, not other factors that may vary across districts,
@@ -668,7 +659,7 @@ Assuming that legislators' trends in the number of requests to a given
 agency follow parallel paths over time, $\boldsymbol{\beta}$ represents
 the average effect of changing institutional position on their number of requests *per agency*. 
 We focus on three measures of institutional power: (1) whether they are a committee chair, (2)
-whether they are a ranking member of a committee, and (3) whether they
+whether they are the ranking member of a committee, and (3) whether they
 are members of a prestige committee. Each position represents a
 different way legislators can acquire more power. As a legislator
 becomes a committee chair or ranking member, they have increased
@@ -681,28 +672,27 @@ policy through the legislative process.[^4]
 [^4]: To measure committee prestige, we take a revealed preference
     approach (what members think is most valuable) using party
     rules that limit members to serving on only one of a small
-    number of desirable committees. For House members, these "exclusive" committees are: Appropriations, Energy & Commerce, Financial Services, Rules, and Ways & Means [@CRS2022]. For Senators, these exclusive ("Super A") Committees are: Appropriations,
+    number of desirable committees. For House members, these "exclusive" committees are Appropriations, Energy & Commerce, Financial Services, Rules, and Ways & Means [@CRS2022]. For Senators, these exclusive ("Super A") Committees are: Appropriations,
     Armed Services, Finance, and Foreign Relations [@CRS2024].
 
 
-As @BerryFowler2016 note, changes in legislators' committee
+Changes in legislators' committee
 assignments are often due to circumstances outside of the legislator's
 control, such as changing majority status, retirements on a committee,
 or exclusion due to losses from a previous election
-[@GrimmerPowell2013]. To violate the parallel trends assumption,
+[@GrimmerPowell2013, @BerryFowler2016]. To violate the parallel trends assumption,
 legislators must differentially alter their rates of contacting federal agencies
 in anticipation of joining particular committees. To help avoid
 this violation, we include a series of controls that capture
-time-varying characteristics of a legislator that might confound our
-inference about the effect of committee prestige. Because legislators
+time-varying characteristics of a legislator. Because legislators
 may make more requests to a president of the same party
 [@BerryBurdenHowell09], it is a particular concern that legislators
 obtain new committee assignments when their party moves into or out of
 the majority or at the same time as the president's party changes. To address these concerns, we include indicators for whether the
 legislator's party is the majority in year $t$, ($m_{it}$) and if the
 legislator is from the same party as the president in year $t$
-($p_{it}$). Throughout, we cluster standard errors at the legislator
-level.
+($p_{it}$). We cluster standard errors at the legislator
+level ($\epsilon_{ijt}$).
 
 We also include indicators for legislators' first six years in Congress (House or Senate),
 $\sum_{s = 1}^{6} \eta_{s} \text{tenure}_{it}$ as controls. This
@@ -735,14 +725,14 @@ modelsummary(models_total,
 ```
 
 Model 1 (the first column of @tbl-models-total) shows differences across legislators. Legislators with more institutional power make more requests. Committee chairs, ranking
-members, and members of prestige committees make substantially more requests than other legislators. However, these cross-sectional differences may be the result of other legislator
-characteristics. If party leaders assign legislators who are better at
-their jobs or exert more effort to more prestigious committee positions,
-then the estimates from Model 1 confound legislators' overall ability
-with their institutional position.
+members, and members of prestige committees all make substantially more requests than other legislators.  Because we estimate the effects of becoming a committee chair and being a member of a prestige committee in the same model, these effects are additive: prestige committee chairs may make more requests than non-prestige committee chairs who make more requests than non-chairs.
 
-To address potential confounding, Models 2-4 (Columns 2-4 of @tbl-models-total)
-shows the difference-in-differences specification in @eq-diff1. 
+However, these cross-sectional differences may be the result of other legislator
+characteristics. If party leaders assign legislators who are better at
+their jobs to more prestigious committee positions,
+then the estimates from Model 1 confound legislators' overall ability
+with their institutional position. To address potential confounding, Models 2-4 (Columns 2-4 of @tbl-models-total)
+show the difference-in-differences specification in @eq-diff1. 
 
 ### More Powerful Legislators Make More Requests to Federal Agencies
 
@@ -754,9 +744,9 @@ a committee chair causes an increase of `r beta$chair` requests *per agency*
 this represents an increase of approximately `r round(beta$chair*n_agency)` additional requests per
 year, more than a **20% increase** over the average requests per year in our data.
 
-Other measures of institutional power included in these models (ranking member and prestige committee member) are also associated with increased levels of contact with federal agencies, but these effects are only significant at the .05 level in the cross-sectional model (Models 1), and, for ranking member, in the difference in differences design with the logged number of contacts as the dependent variable (Model 4). Because we estimate the effects of becoming a committee chair and being a member of a prestige committee in the same model, these effects are additive: prestige committee chairs may make more requests than non-prestige committee chairs who make more requests than non-chairs. 
+Other measures of institutional power included in these models (ranking member and prestige committee member) are also associated with increased levels of contact with federal agencies, but these effects are only significant at the .05 level in the cross-sectional model (Models 1), and, for ranking member, in the difference in differences design with the logged number of contacts as the dependent variable (Model 4). 
 
-Evidence about the effects of majority party status or having a co-partisan president is less conclusive. Majority party status is negatively associated with contacting agencies only in Models 1 and 4. Having a co-partisan president is negatively associated with contacting agencies on average (Model 1), but gaining a co-partisan president leads to making more requests in all models of within-legislator variation.
+Evidence about the effects of majority party status or having a co-partisan president is less conclusive. Majority party status is negatively associated with contacting agencies only in Models 1 and 4. On average, having a co-partisan president is negatively associated with contacting agencies (Model 1). However, gaining a co-partisan president leads to making more requests in all models of within-legislator variation.
 
 ```{r}
 #| fig-cap: "Predicted Number of Total Requests to Federal Agencies (Within Legislator Difference in Differences), 2007-2020"
@@ -792,11 +782,10 @@ The results in @tbl-models-total show that when legislators acquire more power, 
 
 ## The Effect of Electing a New Representative {#sec-district}
 
- We found that as legislators acquire more power, they contact agencies more. In this section, we show that legislators also increase their capacity as they gather experience in the institution.  Rather than examining changes in the number of requests by making
+@sec-capacity demonstrated that acquiring institutional power gives legislators the capacity to contact agencies more. This section shows similar capacity effects as they gain experience in the institution.  Rather than examining changes in the number of requests by making
 within-legislator comparisons, we now make within-district comparisons
 to assess how electing a new legislator affects the total number of
-requests a district's representative makes. In other words,
-within-district comparisons enable us to assess the costs or benefits of
+requests a district's representative makes. Within-district comparisons enable us to assess the costs or benefits of
 electing a new representative compared to an incumbent.
 
 Even without the aid of statistical models, we can see effects in the raw counts of requests on behalf of a district before and after a new legislator replaces a more experienced legislator. 
@@ -839,7 +828,7 @@ Y_{it} & = & \beta_{1}\text{New Member}_{it} + \sum_{s = 2}^{6} \beta_{s} \text{
 \end{aligned}$$ {#eq-district1}
 
 $\gamma_{i}$ is a district-specific fixed effect that accounts for each
-district's particular demographic characteristics, along with the levels
+district's particular demographic characteristics, along with average levels
 of demand from district residents. $\delta_{t}$ is a year fixed effect
 that controls for common shocks. Our key result of interest,
 $\beta_{1}$, is the effect of a district electing a new representative.
@@ -853,12 +842,14 @@ we estimate district-level differences for a legislator's second
     by incumbents with more or less experience; it cannot estimate the
     impact of the choice of an incumbent versus a new representative.
     
-For each model in @tbl-models-district, @fig-m-district-predicted shows
-the predicted total number of letters per district per year by whether a
-district is represented by a new legislator (compared to counterfactuals
-where the same legislator has been serving for seven or more years).[^8]
 
-[^8]: Predictions are based on a district with average annual contacts.
+#### Electoral Turnover Has Costs
+
+When districts elect a new representative or senator, people in the district experience a sharp decrease in requests made on their behalf. Rather
+than experienced legislators forgetting about their districts, our
+evidence suggests that newly elected legislators experience substantial
+start-up costs and struggle to provide the levels of service that
+experienced legislators deliver to their constituents.
 
 ```{r}
 #| label: tbl-models-district
@@ -878,9 +869,9 @@ differences across districts represented by a new member and legislators
 in their first six years in office (@eq-district1 minus the district
 fixed effect, $\gamma_{i}$). Districts represented by new legislators
 receive substantially lower levels of service. On average,
-districts with a new representative have 34.7 fewer
+districts with a new representative have 35 fewer
 requests made on their behalf. The magnitude of this difference shrinks
-for districts represented by legislators in their second year (29.33
+for districts represented by legislators in their second year (29
 fewer requests). It then reaches a relatively
 stable number for districts represented by legislators in their third
 through sixth years.
@@ -889,7 +880,7 @@ To account for differences in district demographics and demand
 for service, Column 2 of @tbl-models-district provides the
 estimated effects from the difference-in-differences specification from
 @eq-district1. In this specification, we see a large causal effect of a
-new member taking over: electing a new member causes the number of requests on behalf of a given district to decrease by about 40%, or `r -beta$new_member` letters per year
+new member taking over: electing a new member causes the number of requests on behalf of a given district to **decrease by about 40%**, or `r -beta$new_member |> round()` letters per year
 (95-percent confidence interval [`r beta$new_member-1.96*se$new_member`, `r beta$new_member+1.96*se$new_member`]).
 
 The effect of electing a new representative, however, dissipates
@@ -898,6 +889,13 @@ legislators providing substantially fewer requests---persists when
 examining the House (Column 3) and the Senate (Column 4) separately. In
 short, new legislators make fewer contacts for their constituents than more
 experienced legislators.
+
+For each model in @tbl-models-district, @fig-m-district-predicted shows
+the predicted total number of letters per district per year by whether a
+district is represented by a new legislator (compared to counterfactuals
+where the same legislator has been serving for seven or more years).[^8]
+
+[^8]: Predictions are based on a district with average annual contacts.
 
 ```{r}
 #| fig-cap: "Predicted Number of Total Requests to Federal Agencies Per District, 2007-2020"
@@ -919,24 +917,28 @@ knitr::include_graphics("docs/figs//m-district-predicted-senate-1.png")
 
 
 
-#### Electoral Turnover Has Costs
 
-When districts elect a new representative or senator, people in the district experience a sharp decrease in requests made on their behalf. Rather
-than experienced legislators forgetting about their districts, our
-evidence suggests that newly elected legislators experience substantial
-start-up costs and struggle to provide the levels of service that
-experienced legislators deliver to their constituents.
 
 \clearpage
 
-## The Effect of Experience and Institutional Power on Legislator Priorities {#sec-priority}
+## The Effect of Experience and Institutional Power on Legislator *Priorities* {#sec-priority}
 
 To assess legislators' ratio of constituency service to policy work, we
-use the `r n2007_2020coded` hand-coded requests described in @sec-data. The dependent variable
-in @tbl-models-ratio is the number of policy requests divided by the
-number of constituency service requests per legislator per year. These
+use the `r n2007_2020coded` hand-coded requests described in @sec-data. The dependent variable is the number of constituency service requests divided by the number of policy requests per legislator per year.  These
 models test whether legislators' priorities shift among goals as they
-gain experience and power.
+gain experience and power. Otherwise, they are the same as @eq-diff1.
+
+While the ratio of constituency service to policy work is conditional on
+the levels of each, the inference we make about the ratio does not
+depend on these levels; we are not using the ratio to infer the level
+(e.g., that a lower share of constituency service means a lower level).
+Instead, our theory regarding prioritization is about the ratio,
+regardless of the level. 
+<!--
+Levels may interact with the ratio, but not in
+ways that do not mean the same thing for our theory, i.e., that legislators
+prioritize one thing over the other.
+--> 
 
 ```{r}
 #| label: tbl-models-ratio
@@ -953,24 +955,13 @@ modelsummary(models_ratio,
 ### Constituent Service is a Smaller Proportion of the Work of Experienced and Powerful Legislators
 
 @tbl-models-ratio shows that legislators decrease the ratio of constituency service to policy
-work as they obtain experience and powerful positions in Congress. While the ratio of constituency service to policy work is conditional on
-the levels of each, the inference we make about the ratio does not
-depend on these levels; we are not using the ratio to infer the level
-(e.g., that a lower share of constituency service means a lower level).
-Instead, our theory regarding prioritization is about the ratio,
-regardless of the level. 
-<!--
-Levels may interact with the ratio, but not in
-ways that do not mean the same thing for our theory, i.e., that legislators
-prioritize one thing over the other.
---> 
-
-The first column of @tbl-models-ratio shows how the
+work as they obtain experience and powerful positions in Congress.  The first column of @tbl-models-ratio shows how the
 ratio differs *across* legislators with different committee positions.
 Column 2 of @tbl-models-ratio provides the estimated effects from the
 difference-in-differences specification. We estimate that becoming a
 committee chair causes the ratio of constituency service to policy work
-to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair-1.96*se$chair`, `r beta$chair+1.96*se$chair`]).
+to decrease by `r -beta$chair` (95-percent confidence interval [`r beta$chair-1.96*se$chair`, `r beta$chair+1.96*se$chair`]). Becoming a
+ranking member causes the ratio to decrease by `r -beta$ranking_minority` (95-percent confidence interval [`r beta$ranking_minority-1.96*se$ranking_minority`, `r beta$ranking_minority+1.96*se$ranking_minority`]).
 <!--
 Becoming a ranking member of a committee causes the ratio of constituency service to policy work to decrease by `r -beta$ranking_minority` (95-percent confidence interval [`r beta$ranking_minority-1.96*se$ranking_minority`, `r beta$ranking_minority+1.96*se$ranking_minority`]).
 --> 
@@ -996,19 +987,20 @@ knitr::include_graphics("docs/figs/m-ratio-predicted-4.png")
 to policy work. Subfigure *a* shows predictions by committee chair status and whether that member has a
 co-partisan president. We estimate chair effects for our most senior category of
 "7 or more years" (a plausible time for acquiring a chair position).
-Subfigure *b* shows predictions for counterfactuals where the same legislator did and did not receive a chair position in their sixth year. There is a significant difference when members gain a committee chair position. Notably, whether a member has a co-partisan president does not cause a significant difference.
+Subfigure *b* shows predictions for counterfactuals where the same legislator did and did not receive a chair position in their sixth year. There is a significant difference when members gain a committee chair position or four or more years of experience. Notably, whether a member has a co-partisan president does not cause a significant difference.
 
-Taken together, these findings about how the ratio of constituency service to policy work varies across legislators show that as legislators acquire more experience and power, their contacts with the bureaucracy become more policy-focused. 
+Taken together, these findings about how the ratio of constituency service to policy work varies across legislators show that as legislators acquire more power and experience, their contacts with the bureaucracy become more policy-focused. 
 
 ## Experienced and Powerful Legislators Maintain Levels of Constituency Service, While Also Prioritizing Policy Work {#sec-joint}
 
-Increasing capacity and shifting priorities are not mutually exclusive. When legislators acquire capacity, they make more requests of federal agencies. At the same time, higher capacity legislators allocate a larger share of their efforts towards policy work. In this section, we show that the net result of these two simultaneous effects from 2007 to 2020 was that more experienced and powerful legislators did not decrease their *levels* of constituency service, even though they allocated a larger *share* of their attention towards policy.    
+Increasing capacity and shifting priorities are not mutually exclusive. When legislators acquire capacity, they make more requests of federal agencies. At the same time, higher-capacity legislators allocate a larger share of their efforts toward policy work. That is, we found support for both theories.
+In this section, we show that the net result of these two simultaneous effects from 2007 to 2020 was that more experienced and powerful legislators did not decrease their *levels* of constituency service, even though they allocated a larger *share* of their attention towards policy.    
 
 ```{r}
 load(here::here("models", "models_con.Rdata"))
 ```
 
-In Table 3 of the Supplementary Information, we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chairperson makes an additional `r beta$chair` constituency service contacts per agency per year, an increase that is not statistically significant at standard levels of confidence (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table 4 of the Supplementary Information show significant increases in policy work as a legislator gains experience or a committee leadership position.
+In Table 3 of the Supplementary Information, we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair |> round()` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table 4 of the Supplementary Information show significant increases in policy work as a legislator gains experience or a committee leadership position.
 
 
 <!---WHY IS DO WE NEED THIS PARAGRAPH?--> 
@@ -1024,19 +1016,19 @@ In contrast, in Table 4 of the Supplementary Information, we find using the same
 load(here::here("models", "models_district_con.Rdata"))
 ```
 
-Similarly, in Table 5 of the Supplementary Information, we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces an experienced member with a new legislator, we estimate `r -beta$new_member` fewer constituency service contacts per year (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]). All models in Table 6 of the Supplementary Information show significant decreases in policy work done on behalf of a district persisting for at least five years after a new legislator replaces an experienced legislator.
+Similarly, in Table 5 of the Supplementary Information, we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces an experienced member with a new legislator, we estimate `r -beta$new_member |> round()` fewer *constituency service* contacts per year (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]). All models in Table 6 of the Supplementary Information show significant decreases in policy work done on behalf of a district persisting for at least five years after a new legislator replaces an experienced legislator.
 
-In short, the "shifting priorities" effects that we find are insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease in constituency service among longer-serving or more powerful legislators. Indeed, **districts that replace an experienced legislator with a new legislator see a significant decrease in both policy work *and* constituency service** for at least two years.  We also find support for both theories. Interestingly, the capacity effects overcome the effects of shifting priorities, meaning that longer-serving legislators do more constituency service, not less. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2), we found that becoming a committee chair causes an increase of 0.29 requests per agency (95 percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.
+In short, the "shifting priorities" effects were insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease in constituency service among longer-serving or more powerful legislators. Instead, **districts that replaced an experienced legislator with a new legislator saw a significant decrease in both policy work *and* constituency service** for at least two years. The capacity effects overcame the effects of shifting priorities, meaning that longer-serving legislators did more constituency service, not less. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2), we found that becoming a committee chair causes an increase of 0.29 requests per agency (95 percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.
 --> <!--TODO INSERT EVIDENCE FOR THIS --> 
 
 <!--However, as we discuss further in @sec-discussion, the total number of constituency service requests does not drop, even as the proportion of constituency service-related requests decreases. -->
 
-# Robustness Check: The Effects of Demand for Constituency Service {#sec-demand}
+# The Effects of Demand for Constituency Service {#sec-demand}
 
 While constituent demand affects the level of constituency service that members provide, demand-side shifts do not appear to explain the within-legislator or within-district variation we observe with changing committee positions and longer tenure in Congress.
 Constituent demand does not shift
 among legislators in ways we would expect to see if shifting
-constituent demand explained the within-legislator and within-district
+constituent demand explained the within-legislator or within-district
 variation shown in @sec-results.
 
 ## District Characteristics Affect the Provision of Constituency Service
@@ -1050,9 +1042,8 @@ We expect senators who represent larger states to make more requests.
 Senators from larger states have a larger number of constituents to
 serve, and they receive a larger budget to handle that increase in
 requests. @fig-stateSize shows that this is the case: senators from
-larger states provide more service on average. Senators
-from larger states average more requests per year than legislators from
-smaller states. While the number of legislator requests is associated
+larger states provide more service on average. 
+While the number of legislator requests is associated
 with population size, @fig-stateSize also shows significant variation in
 the level of service senators provide, even among states of similar
 sizes.
@@ -1067,11 +1058,9 @@ knitr::include_graphics("docs/figs/pop-1.png")
 
 ## Do Voters Demand More of More Powerful Legislators?
 
-Can variation in demand for constituency service explain why more
-experience and prestigious committee positions provide more constituency
-service?
+Can variation in demand for constituency service explain why legislators increas contacts with agencies when they gain experience and committee leadership positions?
 
-We limited the influence in demand when assessing how power and
+We limited the influence of demand when assessing how power and
 experience affect the levels of constituency service above. For example,
 our empirical strategies in @sec-results all account for demand based on the characteristics of the district. Because our
 analyses include either legislator-agency or district fixed effects, we
@@ -1083,17 +1072,16 @@ increased constituency service that we attribute to increased capacity and exper
 Yet, we might expect that a legislator's experience or power could
 affect constituency demand, even without legislators using their
 increased capacity and resources to generate demand. For example,
-constituents could direct more of their demands to legislators who are
-more powerful or who have served longer (holding constant legislators' levels of soliciting
-constituency service requests). As a robustness check, this section
-investigates whether additional constituent demand could plausibly
+constituents could direct their demands to legislators who are
+more powerful or who have served longer. This section
+investigates whether such shifts in constituent demand could plausibly
 explain our results. We find no evidence that higher
 constituent demand drives experienced members' higher levels of
 constituency service.
 
 Suppose constituents
 shift demand based on legislator experience (as required for constituent
-demand to explain our results). In that case, we should observe them redirecting their
+demand to explain our results). In that case, we should observe them redirecting 
 demands away from newly elected legislators toward other
 representatives. The most plausible target for these constituent demands
 would be one of the senators representing the constituent's state. While
@@ -1104,16 +1092,16 @@ To assess whether constituents redirect demand toward other, more
 experienced legislators when new members replace their more experienced
 incumbent representative, we examine how experienced legislators' levels
 of constituency service change in response to having new representatives
-in their state.  Because House members generally do not provide constituency service to people outside their district, we measure
-the effect of a new Senator in a House member's state delegation. For Senators, we measure new members in the state in two ways: either the proportion of a
-state delegation that is new or an indicator of whether there is a new
-legislator (House or Senate) in the delegation. As in
-@sec-capacity, we measure the number of requests a district's
-representative makes in a particular year. Since we aim to test whether constituent demand drives our results, @tbl-models-spillover shows estimates using requests hand-coded as constituency service. The results  for total requests are nearly identical (see Supplemental Information).  Using district and year fixed effects, we estimate a series of difference-in-differences regressions
+in their state.  Using district and year fixed effects, we estimate a series of difference-in-differences regressions
 where the treatment is new members in the state. Because we are interested in assessing
 whether constituents with new legislators direct their constituency
-service requests to more experienced members, restrict the regression
-to incumbent legislators.
+service demands to more experienced legislators, we restrict the regression to incumbents. 
+Because House members generally do not provide constituency service to people outside their district, we measure
+the effect of a new Senator in a state delegation. For Senators, we measure new members in the state in two ways: either the proportion of a
+state delegation that is new or an indicator of whether there is a new
+legislator (House or Senate) in the delegation. As in
+@sec-district, we measure the number of requests a district's
+representative makes in a particular year. Since we aim to test whether constituent demand drives our results, @tbl-models-spillover shows estimates using requests hand-coded as constituency service. The results for total requests are nearly identical (see Supplemental Information).  
 
 ```{r}
 #| label: tbl-models-spillover
@@ -1129,8 +1117,8 @@ modelsummary(models_spillover_con,
 
 The first column of @tbl-models-spillover estimates the effect of an
 a new Senator replacing an experienced Senator on all other
-incumbent legislators from the state, with no significant effect on the level of constituency service that other legislators  provide.
-Columns 2 and 3 of @tbl-models-spillover show that either a new member in the delegation or the proportion of new members in the delegation results in decreased constituency service (insignificant in model 2, significant in model 3) when focusing on senators only. This consistent null or negative finding regarding the impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
+incumbent legislators from the state, with no significant effect on the level of constituency service that other legislators provide.
+Columns 2 and 3 of @tbl-models-spillover focus only on Senators. They show that either a new member in the delegation or the proportion of new members does not increase incumbents' constituency service (indeed, we see a statistically significant decrease in model 3). This consistent null or negative impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
 
 # Discussion {#sec-discussion}
 
@@ -1140,8 +1128,7 @@ that different members provide, we show that this is not the result of
 long-serving members devoting less attention to their district over
 time, as the "Potomac Fever" hypothesis suggests. Legislators prioritize policy work as they acquire positions of institutional power. However, simultaneous increases in capacity that
 come with experience and institutional power more than offset shifting
-priorities. Critically, the magnitude of the effect of increased
-capacity is large enough that the district constituency receives no less
+priorities, such that the district constituency receives no less
 particularistic service from long-serving and powerful legislators.
 
 ## Implications for Theory
@@ -1151,32 +1138,30 @@ contacts with agencies imply that scholars of legislator behavior
 should focus both on the levels of effort legislators provide and how
 they divide that effort. Legislator requests to the bureaucracy are one
 of many types of behavior that are likely affected by simultaneous
-changes in capacity and priority. In addition to correspondence with
+changes in capacity and priorities. In addition to correspondence with
 federal agencies, the volume of legislative work, oversight reports, or
 hearings produced by a legislator's office depend both on their
 capacity to do that work and the relative priority of each task.
 
 Further, our findings suggest that the mechanisms we
 suggest---organizational efficiency, office resources, and likelihood
-of success---help explain legislator behavior. The dramatic decrease in
-requests when new legislators take office is consistent with the
+of success---may help explain legislator behavior. The dramatic decrease in
+both constituent and policy work when new legislators take office is consistent with the
 organizational efficiency mechanism. Becoming a committee chair
 increases the resources available to a legislator and their volume of
-contact with federal agencies. Both results are consistent with
+work with federal agencies. Both results are consistent with
 legislators making more requests to federal agencies when they are
 likely to perceive greater rewards.
 
 Elected officials continue to dedicate substantial
 resources to constituency service well into their careers and after achieving high-status institutional positions. This evidence that constituency service is a core function of congressional offices calls for renewed attention to the motivations for and effects of
 constituency service in contemporary American politics. As we collected and coded
-these data, we spoke to numerous staffers and agency officials. A
-recurring theme in the data and stories we heard was the interaction
-between constituency service casework and other activities, including
-oversight investigations and legislation. Conversely, new legislation
-often resulted in new forms of constituency service as legislators
+these data, we spoke to numerous staffers and agency officials. 
+A recurring theme in the data and stories we heard was how constituency service casework led to other activities, including oversight investigations and legislation. 
+Moreover, our data show new legislation leading to new forms of constituency service as legislators
 helped their constituents attain newly legislated benefits, deal with
-new paperwork requirements, or avoid new regulatory requirements. While
-constituency service may have underlying electoral motivations, as
+new paperwork requirements, or avoid new regulatory requirements.
+While constituency service may have underlying electoral motivations, as
 formal models suggest, it is also a prominent yet understudied form of
 legislator behavior in its own right.
 
@@ -1188,7 +1173,7 @@ find doing more casework for minority groups also likely to do more
 policy work on behalf of those groups (in line with @Mendez2018) and
 higher rates of advocacy for nonprofits that serve those groups. While
 legislators must prioritize limited time [@Kaslovsky2022], institutional
-power adds to the capacity of a legislative office as an institution to
+power increases the capacity of a legislative office to
 pursue both policy work and constituency service. Because institutional
 power comes with resources, representation matters not just in Congress
 but also in powerful positions like committee chairs.
@@ -1217,14 +1202,14 @@ constituency service.
 ## Future Research {#sec-future} 
 
 <!--NOTE: prose could be better--> 
-While we've focused on understanding the impact of experience and institutional power in this paper, many questions remain ripe for future research. On this same topic, future research should delved into the mechanisms by which
+While we've focused on understanding the impact of experience and institutional power in this paper, many questions remain ripe for future research. On this same topic, future research should delve into the mechanisms by which
 increasing experience and capacity shape legislator behavior. This could
 include explicit measures of office organization and efficiency and more
 nuanced measures of institutional power. This could also include
 measuring agency responsiveness to legislator requests. Likewise,
 research could examine mechanisms related to shifting priorities.
 
-Perhaps the most pressing unexplored question is explaining the massive inequities in the levels of service and policy work that members provide that we've documented here. This variation is even greater than can be explained by the substantively large effects of experience and power, suggesting that the "service-policy divide" [@ButlerKarpowitzPope2012] offers an incomplete picture of how legislators use their capacity. Why do some legislators provide so much constituency service and other legislators so little?  
+Perhaps the most pressing question is explaining the massive inequities in legislators' provision of service and policy work we found. This variation is even greater than can be explained by the substantively large effects of experience and power, suggesting that the "service-policy divide" [@ButlerKarpowitzPope2012] offers an incomplete picture of how legislators use their capacity. Why do some legislators provide so much constituency service and other legislators so little?  
 
 Finally, future work could include legislators' substantive areas of
 expertise. Does expertise increase a legislator's capacity to act in
@@ -1259,16 +1244,16 @@ allow tests of variation across policy domains and government functions.
 
 # Conclusion {#sec-conclude}
 
-As legislators gain experience and power, they both gain the capacity to
-make more requests to agencies while simultaneously shifting priorities
-to policy work. Crucially, the increase in capacity is large enough
+As legislators gain experience and power, they shift their priorities
+to policy work. Simultaneously, they gain institutional positions that increase their capacity to make more requests to federal agencies.
+Consistent with our theory that experience
+increases capacity, we also show that legislators make fewer
+requests at the start of their careers. New legislators do
+substantially less constituency service and policy work than their more experienced
+colleagues. Crucially, for the period we study, the increase in capacity was large enough
 relative to the shift in attention toward policy work that legislators
-maintain or even increase levels of constituency service as they gain
-institutional power. Consistent with our theory that experience
-increases capacity, we also show that legislators make fewer service
-requests at the start of their careers and that new legislators make
-substantially fewer service requests than their more experienced
-colleagues.
+maintained or even increased levels of constituency service as they gained
+institutional power. Voters do not face a trade-off between powerful and attentive representatives.
 
 \clearpage
 
