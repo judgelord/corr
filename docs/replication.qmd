@@ -326,20 +326,7 @@ corr_counts %<>% ungroup()
 # subset to 2007-2020
 corr_counts  %<>% filter(year > 2006, year < 2021)
 
-load(here::here("data", "members.Rdata"))
-
-member_data <- members |>
-  ungroup() |> 
-  distinct( congress, chamber,
-           bioname, last_name, 
-           icpsr, cqlabel, district_code,
-           state_abbrev, state, district_code, pop2010, 
-           committees, chair, ranking_minority, 
-           majority, presidents_party, party,
-           yearelected) |>
-  group_by(icpsr) |>
-  mutate(first_cong = min(congress),
-         first_year = 1787 + 2*first_cong)
+load(here::here("data", "member_data.Rdata"))
 
 
 #FIXME two names for the same data in this script 
@@ -680,12 +667,20 @@ dcounts_tenure %>% left_join(members %>% distinct(bioname, icpsr)) %>%
 # mean 
 perYear_mean1 <- dcounts_tenure$perYear |> mean()
 perYear_mean1
-perYear_mean2 <- dcounts_tenure |> 
+perYear_mean_total <- dcounts_tenure |> 
   group_by(icpsr, year) |> 
   transmute(perYearTotal = sum(perYear))
-perYear_mean2 <- mean(perYear_mean2$perYearTotal) |> round()
+perYear_mean_total <- mean(perYear_mean_total$perYearTotal) |> round()
 
+perYear_mean_policy <- dcounts_tenure |> 
+  group_by(icpsr, year) |> 
+  transmute(perYear = sum(perYear_policy))
+perYear_mean_policy <- mean(perYear_mean_policy$perYear) |> round()
 
+perYear_mean_con <- dcounts_tenure |> 
+  group_by(icpsr, year) |> 
+  transmute(perYear = sum(perYear_con))
+perYear_mean_con <- mean(perYear_mean_con$perYear) |> round()
 
 # Better variable names for tables
 dcounts_tenure %<>% 
@@ -749,11 +744,11 @@ https://ourworldindata.org/what-is-the-gini-coefficient
 
 The most frequent legislator agency pair: McCain x VA with 2159 letters!
 
-The average is  `r perYear_mean2` letters per legislator per year, `r perYear_mean1` letters per agency per year.
-For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean2`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean2` ). For realism, this person would ideally become a chair at some point in our data. 
+The average is  `r perYear_mean_total` letters per legislator per year, `r perYear_mean1` letters per agency per year.
+For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean_total`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean_total` ). For realism, this person would ideally become a chair at some point in our data. 
 
 
-
+<!--
 Of the modal legislators, 
 John Barrasso and
 Phil Roe 
@@ -761,25 +756,50 @@ meet this last criterion. However, whereas Barrasso's seat was always held by a 
 Roe entered in 2009 and became a chair in 2017.
 The IRS is a fairly modal agency, so predictions are Phil Roe X Treasury IRS X 2015. 
 Other legislators, years, and agencies are simply intercept shifts. 
+--> 
+
+### Modal agencies
 
 
-```{r values, fig.width=5, fig.height=3}
+```{r}
+ dcounts_tenure %>% 
+ group_by(agency, year) %>% 
+  summarise(perAgency = sum(perYear)) %>% 
+  ungroup() %>% 
+  mutate(median = median(perAgency),
+         diff = abs(perAgency - median)) %>% 
+  arrange(diff) %>% 
+  kablebox()
+  
+```
+
+
+### Modal legislators
+
+```{r}
 modal <- dcounts_tenure %>% 
   group_by(icpsr) %>% 
-  filter(first_year > 2006, first_year < 2013, max_year > 6) %>% 
+  filter(first_year > 2006, first_year < 2013,  max_year > 6) %>% 
   mutate(Chair = sum(chair, na.rm = T) >1) %>% 
   group_by(icpsr, year) %>%
   mutate(perLeg = sum(perYear)) %>% 
-  filter(perYear == 1, perLeg == perYear_mean2  ) %>% #FIXME MAKE THIS VARIABLE 
+  filter(perYear == 1, perLeg == perYear_mean_total  ) %>% #FIXME MAKE THIS VARIABLE 
   select(perAgency = perYear, perLeg, icpsr, icpsr_agency, agency_year, first_year, max_year, Chair) %>% 
   distinct() %>% 
   ungroup() %>% left_join(members %>% select(bioname, icpsr))
+
 
 modal %>%
   mutate(average = perLeg) %>% 
   count(average, bioname, first_year, max_year, Chair, sort = T, name = "agency_year_count == 1") %>% 
   distinct() %>%
   kablebox()
+
+```
+
+### Modal Legislator-Agency Pairs
+
+```{r values, fig.width=5, fig.height=3}
 
 modal %<>% filter(Chair) %>% distinct()
 
@@ -793,7 +813,7 @@ dcounts_tenure %>%
   ungroup() %>% 
   mutate(meanLeg = mean(perYearTotal),
          meanYear = mean(perYear)) %>%
-  filter( abs(perYearTotal - perYear_mean2) < 10,   
+  filter( abs(perYearTotal - perYear_mean_total) < 10,   
           perYear < 10 )  %>% 
   ggplot() +
   aes(x = perYear, y = perYearTotal) + 
@@ -814,7 +834,7 @@ modal %>%
 
 # by chair and President's party
 values <- tidyr::expand(dcounts_tenure,
-                        agency = "Treasury_IRS",
+                        agency =  "Treasury_IRS",
                         chair = chair, 
                         ranking_minority	= FALSE, 
                         prestige = TRUE, 
@@ -826,8 +846,8 @@ values <- tidyr::expand(dcounts_tenure,
                         sixth = FALSE,
                         Legislator_x_Agency = "Treasury_IRS_20947",
                         Year_x_Agency = "Treasury_IRS_2015",
-                        Legislator = "20947",
-                        Year = "2015",
+                        Legislator =  "20947",
+                        Year =  "2015",
                         majority = TRUE,
                         presidents_party = presidents_party
                    ) %>% 
@@ -835,7 +855,7 @@ values <- tidyr::expand(dcounts_tenure,
 
 # by year 
 values_tenure <- tidyr::expand(dcounts_tenure,
-                        agency = "Treasury_IRS",
+                        agency =  "Treasury_IRS",
                         chair = chair, 
                         ranking_minority	= FALSE, 
                         prestige = TRUE, 
@@ -845,10 +865,10 @@ values_tenure <- tidyr::expand(dcounts_tenure,
                         fourth = fourth,
                         fifth = fifth, 
                         sixth = sixth,
-                        Legislator_x_Agency = "Treasury_IRS_20947",
-                        Year_x_Agency = "Treasury_IRS_2015",
-                        Legislator = "20947",
-                        Year = "2015",
+                        Legislator_x_Agency =  "Treasury_IRS_20947",
+                        Year_x_Agency =  "Treasury_IRS_2015",
+                        Legislator =  "20947",
+                        Year =  "2015",
                         majority = TRUE,
                         presidents_party = TRUE
                    ) %>% 

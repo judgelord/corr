@@ -382,6 +382,8 @@ Notice several patterns
 
 
 ```{r cases, eval=FALSE}
+members %<>% mutate(cqlabel = paste0("(", state_abbrev, "-", district_code, ")") |> str_remove("-0"))
+
 case_study <- function(cq){
 
   CHAMBER <- filter(members, cqlabel == cq) %>% 
