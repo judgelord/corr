@@ -56,28 +56,13 @@ knitr::knit_hooks$set(inline = function(x) {
         return(as.numeric(x) |> round(2))
 })
 
-
-# Regression table formatting
-modelsummary <- function(models, notes = "", center_rows = 1){
-  modelsummary::modelsummary(models,  
-             stars = c('†' = .1, '*' = .05, '**' = .01), 
-             align = paste0("l", paste0(rep("d", length(models)), collapse = "")), # Align coefficients by decimal for AJPS 
-             add_rows = rows,               
-             coef_map = cm, 
-             gof_map = gm, 
-             output = "tinytable",
-             notes = notes) |>
-  # bold header, hline bottom, aligned center
-    tinytable::style_tt(i = 0:1, bold = T, line = "b",  align = "c") |>
-     # stats aligned center 
-    tinytable::style_tt(i = center_rows, align = "c") |> 
-  # row labels left
-      tinytable::style_tt(j = 1, align = "l")
-} 
-
 # means for use in inline code
 load(here::here("data", "means.Rdata"))
 
+# custom table formatting for AJPS 
+modelsummary <- modelsummary_AJPS 
+
+library(scales)
 ```
 
 
@@ -86,7 +71,7 @@ load(here::here("data", "means.Rdata"))
 # FOIA Data
 
 Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. In 2018, the FOIA office estimated they would fill our May 2018 request in 2024. As of February 2025, we are still waiting for this data.] 
-and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all 627,356  records we have processed. In the paper, we focus on `r n2007_2020` of these requests sent from January 1, 2007, to December 31, 2020.
+and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all 627,356  records we have processed. In the paper, we focus on `r n2007_2020` of these requests sent from these agencies from January 1, 2007, to December 31, 2020. Because FOIA requests often take several years, data for years after 2020 are still incomplete.
 
 ## Variation in Responses to Identical FOIA Request
 
@@ -198,11 +183,9 @@ knitr::include_graphics("docs/figs/counts-per-year-1.png")
 
 ## Interpreting Experience Effects
 
-In the paper, we draw inferences about the effects of legislator experience from a within-district design, showing that new legislators provide less  service. The within-legislator design shows results consistent with this conclusion (shown here in @tbl-models-total). However, we interpret indicator variables for years of experience in the within-legislator design with caution given the complexity of this model with time shocks and experience increasing in time, which has the potential to cause identification issues in interpreting the estimates for years of experience. Including years of experience as a control is appropriate and important for correctly chair effects, which are clearly identified in these models.  
+In the paper, we draw inferences about the effects of legislator experience from a within-district design, showing that new legislators make fewer requests than the more expiernced legislators they replaced. The within-legislator design shows results consistent with this conclusion (shown here in @tbl-models-total). However, we interpret indicator variables for years of experience in the within-legislator design with caution given the complexity of this model with time shocks and experience increasing in time, which has the potential to cause identification issues in interpreting the estimates for years of experience in the within-legislator design. Including years of experience as a control is appropriate and important for correctly chair effects, which are clearly identified in these models.  
 
-If we interpret this alternative measure of experience as identified, it shows further support for the conclusions of the within-district models. Legislators make significantly fewer requests to agencies in their first year than they do the following year. Subsequent increases are less significant.  
-
-We estimate that the experience gained between the first and second year in Congress causes an increase of 0.24 requests *per agency*. The experience gained between the first and seventh years causes an increase of 0.51 per agency. Across all `r n_agency` agencies in these data, this represents an increase of approximately 46 additional requests per year, 45.5% of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.28 per agency, an increase of approximately 25 additional requests per year, 24.5% of the average number of requests per year in our data.
+If we interpret this alternative measure of experience as identified, the within-legislator models show further support for the conclusions of the within-district models. Legislators make significantly fewer requests to agencies in their first few years than they after they have gained more experience. As with the district-level models, the effect of capacity gained with experience is largely in the first two years. Subsequent increases are less significant.  
 
 
 ```{r}
@@ -219,6 +202,8 @@ modelsummary(models_total,
 ```
 
 
+
+
 ```{r}
 #| label: fig-m-total-predicted-time
 #| fig-cap: "Predicted Number of Total Letters (Within-Legislator Difference in Differences), 2007-2020"
@@ -229,17 +214,19 @@ knitr::include_graphics("docs/figs/m-total-predicted-4.png")
 @fig-m-total-predicted-time shows the predicted total number of letters in Congress and committee chair status (comparing predictions for counterfactuals where the same legislator did and did not receive a chairmanship in their sixth year).^[Predictions are based on a legislator-agency pair where (1) the legislators' average annual contacts equaled the overall average, (2) the legislators' number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.]
 
 
-@fig-m-total-predicted-time uses the coefficients in legislators' first six years in office from @tbl-models-total. The reference group is representatives who have served longer than six years.^[Interpreting these coefficients requires that we assume the effects of tenure and committee assignment are linearly separable. This assumption is reasonable because most legislators do not become chairs, ranking members, or join prestige committees in their first six years, and almost none in their first two years. 
+@fig-m-total-predicted-time uses the coefficients in legislators' first six years in office from @tbl-models-total. The reference group is representatives who have served longer than six years.^[Interpreting these coefficients requires that we assume the effects of tenure and committee assignment are linearly separable. This assumption is reasonable because most legislators do not become chairs, ranking members, or join prestige committees in their first six years, and almost none in their first two years in Congress.]
 
-The first column of @tbl-models-total shows large cross-sectional differences: legislators in their first year make fewer contacts than more experienced legislators. First-year legislators make approximately 0.255 fewer requests per agency than legislators in their seventh year or beyond. This difference shrinks in the second year and then is mostly gone. But we advise caution in interpreting the differences in Column 1 because they conflate the effect of increased experience with other characteristics that may correlate with whether a legislator remains in office and, thus whether we observe them in later years.   
+The first column of @tbl-models-total shows large cross-sectional differences: legislators in their first year make fewer contacts than than legislators in their seventh year or beyond. This difference shrinks in the second year and then is mostly gone. But we advise caution in interpreting the differences in Column 1 because they conflate the effect of increased experience with other characteristics that may correlate with whether a legislator remains in office and, thus whether we observe them in later years.   
 
 $$\begin{aligned}
 Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} 
 \end{aligned}$$ {#eq-diff1}
 
-To account for possible differences in legislators who obtain different levels of tenure, the second column of @tbl-models-total estimates the difference-in-differences specification in @eq-diff1. The tenure coefficients show that legislators provide less service in their first year in office. As they acquire experience, they make more requests to federal agencies. In their first year in office, legislators provide 21.33 (`r n_agency` $\times$ (.512 - .275)) fewer requests per agency than legislators in their second year and 29.07 (`r n_agency` $\times$ (.512 - .189)) fewer requests than legislators in their third year---both differences are statistically significant at conventional levels. The overall increase in levels of  service from a legislator's first to third year is similar in size to the increase that comes from becoming a member of the oversight committee. Once legislators enter their fourth year, their behavior no longer differs from more experienced legislators. We find small and statistically insignificant differences for legislators in their fourth through sixth years. As legislators acquire experience and build their office's organizational capacity in their first two years, they make more contacts with federal agencies.  
+To account for possible differences in legislators who obtain different levels of tenure, the second column of @tbl-models-total estimates the difference-in-differences specification in @eq-diff1. The tenure coefficients show that legislators make fewer requests to agencies in their first year in office. As they acquire experience, they make more requests to federal agencies. This member-level models show that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years is associates with an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of  `r -(beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/84)` increase** over average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year is associated with an increase of `r `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) |> round()` additional requests per year.
+After a legislator's third year, increases in capacity level off. 
+By their sixth year, their behavior no longer differs from more experienced legislators in Model 2.  
 
-As with the analysis of committee prestige, the findings in @tbl-models-total are robust to alternative specifications. Despite the difference-in-difference design, we might still be concerned that the set of legislators who served a third year differs from those who served a first year. If this were the case, our findings would result from both the experience and a selection effect due to House members who win reelection, a potential indication that they are better able to perform the job than other legislators. To address the potentially different samples each year, the third column of @tbl-models-total assesses the changes in the number of contacts of federal agencies for legislators who serve for at least three years. The pattern is similar: legislators initially provide less  service in their first two years than in subsequent years. Column 4 in @tbl-models-total shows that the results are robust to analyzing $\log(Y_{ijt} + 1)$, ensuring that our results are not because of outliers. Additional models below estimate the same models as @tbl-models-total on hand-coded subsets of the data, showing similar results. 
+As with the district-level models in the paper, the findings in @tbl-models-total are robust to alternative specifications. Despite the difference-in-difference design, we might still be concerned that the set of legislators who served a third year differs from those who served a first year. If this were the case, our findings would result from both the experience and a selection effect due to House members who win reelection, a potential indication that they are better able to perform the job than other legislators. To address the potentially different samples each year, the third column of @tbl-models-total assesses the changes in the number of contacts of federal agencies for legislators who serve for at least three years. The pattern is similar: legislators initially make fewer requests in their first two years than in subsequent years. Column 4 in @tbl-models-total shows that the results are robust to analyzing $\log(Y_{ijt} + 1)$, ensuring that our results are not because of outliers. Additional models below estimate the same models as @tbl-models-total on hand-coded subsets of the data, showing similar results. 
 
 
  
@@ -263,17 +250,21 @@ modelsummary(models_con,
 ```
 
 @tbl-models_con is identical to @tbl-models-total except that we subset the data to only legislator requests hand-coded as constituency service. 
-Column 2 of @tbl-models_con provides the estimated effects from the difference-in-differences specification in @eq-diff1. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level. We estimate that the experience gained between the first and second year in Congress causes an increase of 0.02 requests *per agency*. The experience gained between the first and seventh year causes an increase of 0.21 per agency. Across all 92 agencies, this represents an increase of approximately 19 additional requests per year, 21.9% of the average requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of 0.19 per agency, an increase of approximately 17 additional requests per year, 19.6% of the average requests per year in our data.
+Column 2 of @tbl-models_con provides the estimated effects from the difference-in-differences specification in @eq-diff1. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level.
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of `r (-beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/58)` increase** over average number of constituency service requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r `-beta$second` per agency, an increase of `r (-beta$second*n_agency) |> round()` additional requests per year.
+After a legislator's third year, increases in capacity level off. 
+By their sixth year, their behavior no longer differs from more experienced legislators in Model 2. 
 
 
 ```{r}
-#| fig-cap: "Predicted Number of Constituency Service Requests"
+#| fig-cap: "Predicted Number of Constituency Service Requests to Federal Agencies"
 #| label: fig-m-con-predicted
 #| fig-subcap: 
 #|   - "Model 1"
+#|   - "Model 1"
 #|   - "Model 2"
-#|   - "Model 3"
-#|   - "Model 4"
+#|   - "Model 2"
 #| layout-ncol: 2
 #| out-width: 100%
 knitr::include_graphics("docs/figs/m-con-predicted-1.png")
@@ -299,16 +290,22 @@ modelsummary(models_policy,
 
 
 @tbl-models_policy is identical to @tbl-models-total except that we subset the data to only legislator requests hand-coded as policy work. 
-Column 2 of @tbl-models_policy and @fig-m-policy-predicted) provide the estimated effects from the difference-in-differences specification in @eq-diff1. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair. We estimate that becoming a committee chair causes an increase of 0.17  policy requests(95-percent confidence interval [0.11, 0.24]). Across all 92 agencies, this represents an increase of approximately 16 additional requests per year, 96.8%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of 0.11 contacts per agency, while joining a prestige committee causes a 0.17 per agency increase in the policy requests a member of Congress makes.
+Column 2 of @tbl-models_policy and @fig-m-policy-predicted) provide the estimated effects from the difference-in-differences specification in @eq-diff1. Across all measures of institutional power, we find that more power increases the level of policy work that legislators provide. Consider first the effect of being a committee chair.
+
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of  `r (-beta$first*n_agency) |> round()` additional requests per year, approximately half of the average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of  `r (-beta$second*n_agency) |> round()` additional requests per year.
+After a legislator's third year, increases in capacity level off. 
+By their sixth year, their behavior no longer differs from more experienced legislators in Model 2. 
+
+We estimate that becoming a committee chair causes an increase of `r beta$chair`  policy requests (95-percent confidence interval [`r beta$chair -se$chair*1.96`, `r beta$chair+se$chair*1.96`]). Across all `r n_agency` , this represents an increase of `r (beta$chair*n_agency) |> round()`, **a `r percent(beta$chair*n_agency/12)` increase** over the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r (beta$ranking_minority*n_agency) |> round()` contacts, while joining a prestige committee causes a `r (beta$chair*n_agency) |> round()` increase in the policy requests a member of Congress makes.
 
 ```{r}
-#| fig-cap: "Predicted Number of Policy Requests"
+#| fig-cap: "Predicted Number of Policy Requests to Federal Agencies"
 #| label: fig-m-policy-predicted
 #| fig-subcap: 
 #|   - "Model 1"
+#|   - "Model 1"
 #|   - "Model 2"
-#|   - "Model 3"
-#|   - "Model 4"
+#|   - "Model 2"
 #| layout-ncol: 2
 #| out-width: 100%
 knitr::include_graphics("docs/figs/m-policy-predicted-1.png")
@@ -397,7 +394,7 @@ As a robustness check, we replicate our within-district results using a subset o
 The table below accounts for redistricting by treating post-redistricting districts as new entities, not the same district as the one with the same number prior to redistricting (i.e., we do not count cases where a district elects someone of the same or different party as the district with the same number had before redistricting). Since some states completely re-number their districts, there is no way to be sure that a new District 4 has any relationship to the District 4 under the previous redistricting map (though it often may have significant overlap) without creating some spatial measure of the percent of shared census tracts, or something like that, which we do not attempt. 
 
 Many NAs exist for the "same party" variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
-Specifically, we go from **7666 observations in the district-level models presented in the paper to 2822 observations in @tbl-models-district-party when we include "same party" in the models below.**
+Specifically, we go from **7666 observations in the district-level models presented in the paper to 2822 observations in @tbl-models-district-party when we include "same party" in the models below.** This data loss is not random: it omits less competitive districts entirely, left censors all districts until turnover, and limits the analysis to newer legislators.
 
 To measure turnover in the Senate where "districts" have two members, we code "same party" as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the "same party" is FALSE. If there are two Democrats and a Democrat is elected, the "same party" is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, "same party" is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
 
