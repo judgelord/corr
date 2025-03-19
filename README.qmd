@@ -1,0 +1,85 @@
+---
+title: "README"
+format: md
+bibliography: "assets/congress2019.bib"
+---
+
+Replication code for "The Effects of Shifting Priorities and Capacity on Congressional Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
+
+## Data files: 
+
+###  The main replication data 
+
+1. Counts of legislator contacts per year per agency: "data/corr_counts.Rdata" (on dataverse)
+
+### Required data on members of Congress
+
+2. legislator covariates: "data/member_data.rda" including 
+
+- year, chamber, and party retrieved from voteview.com (also available on dataverse)
+
+- committee positions from @StewartWoon2017 and @unitedstates
+
+
+## Code files
+
+1. "docs/replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
+2. "docs/descriptives.qmd" uses `corr_counts` and `member_data` to produce all descriptive figures in the paper (rendered [here](https://judgelord.github.io/corr/descriptives)) 
+
+
+## Data details 
+
+```{r}
+load(here::here("data", "corr_counts.Rdata"))
+
+names(corr_counts)
+
+head(corr_counts, 7)
+```
+
+```{r, eval=FALSE, echo = FALSE}
+library(tidyverse)
+library(magrittr)
+# checking data 
+min(corr_counts$year)
+max(corr_counts$year)
+corr_counts %<>% filter(year > 2006) %>%
+  left_join(member_data)
+
+corr_counts |> skimr::skim()
+```
+
+
+- "icpsr"  = Legislator id                            
+- "chamber"  = "House" or "Senate"                         
+- "agency" = Agency acronym                            
+- "year"  = Year                            
+- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.                    
+- "per_icpsr_chamber_year_agency_type" = Count per legislator per year per agency per type
+
+```{r}
+load(here::here("data", "member_data.Rdata"))
+
+names(member_data)
+```
+
+- "congress"     = Congress   
+- "chamber"      = "House" or "Senate"   
+- "bioname"      = name from voteview.com   
+- "first_year"    = First year serving in Congress  
+- "icpsr"        = ICPSR id number from voteview.com    
+- "district_code" = District number  
+- "state_abbrev" = State abbreviation    
+- "state"        = State name   
+- "pop2010"    = State population in 2010      
+- "committees"  = Committee assignments      
+- "chair"      = Committee chair [0 = no, 1 = yes]   
+- "ranking_minority" = Ranking minority [0 = no, 1 = yes] 
+- "majority"        = Majority party  [0 = no, 1 = yes] 
+- "presidents_party" = Same party as the president [0 = no, 1 = yes]
+- "party"           = Political party
+
+
+```{r}
+head(member_data)
+```
