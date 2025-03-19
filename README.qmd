@@ -14,11 +14,13 @@ Replication code for "The Effects of Shifting Priorities and Capacity on Congres
 
 ### Required data on members of Congress
 
-2. legislator covariates: "data/member_data.rda" including 
+2. legislator covariates: "data/member_data.rda" including: 
 
 - year, chamber, and party retrieved from voteview.com (also available on dataverse)
 
 - committee positions from @StewartWoon2017 and @unitedstates
+
+- state population from the US Census
 
 
 ## Code files
@@ -32,7 +34,7 @@ Replication code for "The Effects of Shifting Priorities and Capacity on Congres
 ```{r}
 load(here::here("data", "corr_counts.Rdata"))
 
-names(corr_counts)
+dim(corr_counts)
 
 head(corr_counts, 7)
 ```
@@ -60,7 +62,7 @@ corr_counts |> skimr::skim()
 ```{r}
 load(here::here("data", "member_data.Rdata"))
 
-names(member_data)
+dim(member_data)
 ```
 
 - "congress"     = Congress   

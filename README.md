@@ -14,13 +14,15 @@ Census of Legislator Requests to U.S. Federal Agencies”
 
 ### Required data on members of Congress
 
-1.  legislator covariates: “data/member_data.rda” including
+1.  legislator covariates: “data/member_data.rda” including:
 
 -   year, chamber, and party retrieved from voteview.com (also available
     on dataverse)
 
 -   committee positions from Stewart and Woon (2017) and
     @unitedstates-project (2025)
+
+-   state population from the US Census
 
 ## Code files
 
@@ -36,12 +38,10 @@ Census of Legislator Requests to U.S. Federal Agencies”
 ``` r
 load(here::here("data", "corr_counts.Rdata"))
 
-names(corr_counts)
+dim(corr_counts)
 ```
 
-    [1] "icpsr"                              "chamber"                           
-    [3] "agency"                             "year"                              
-    [5] "TYPE"                               "per_icpsr_chamber_year_agency_type"
+    [1] 4139982       6
 
 ``` r
 head(corr_counts, 7)
@@ -68,13 +68,10 @@ head(corr_counts, 7)
 ``` r
 load(here::here("data", "member_data.Rdata"))
 
-names(member_data)
+dim(member_data)
 ```
 
-     [1] "congress"         "chamber"          "bioname"          "first_year"      
-     [5] "icpsr"            "district_code"    "state_abbrev"     "state"           
-     [9] "pop2010"          "committees"       "chair"            "ranking_minority"
-    [13] "majority"         "presidents_party" "party"           
+    [1] 3865   15
 
 -   “congress” = Congress  
 -   “chamber” = “House” or “Senate”  
