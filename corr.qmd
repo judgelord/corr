@@ -1,7 +1,7 @@
 ---
 journal:
   blinded: false
-wordcount: 9996 # 9541 words in text body... Add 455 to the word count for figure and table captions (unless we can cut figure and table captions)
+wordcount: 9982 # 9527 words in text body... Add 455 to the word count for figure and table captions (unless we can cut figure and table captions)
 format:
   #html
   #docx
@@ -581,8 +581,7 @@ constituency service (compared to 85% for non-chairs).
 ### Levels of Contact with Federal Agencies are Highly Unequal
 
 Legislators vary significantly in how often they contact federal
-agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year for the
-House and Senate range between 0.56 and 0.90, exceeding the Gini coefficient for income inequality in every country the World Bank reported in 2023. To visualize this variation, @fig-contact1 shows the average number of contacts per year for House members (left panel) and
+agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year among members of each chamber range between 0.56 and 0.90, exceeding the Gini coefficient for income inequality in every country the World Bank reported in 2023. To visualize this variation, @fig-contact1 shows the average number of contacts per year for House members (left panel) and
 senators (right panel).[^5] On average, senators in our data contacted agencies
 148 times per year, while House members averaged 54 per year. We see a similar level of variation in the House but with lower overall levels of contact with federal agencies, reflecting lower resources and fewer constituents than senators. 
 
@@ -608,7 +607,7 @@ much lower rates. For example, in her first year in Congress, Michele
 Bachmann wrote only six letters in our data but would average 31 letters
 per year by the end of her time in Congress.--> 
 
-[^5]: Figure 1 in the Supplemental Appendix shows the number of requests per legislator over time, highlighting three Senators at the upper, middle, and lower parts of the distribution.
+[^5]: Figure 1 in the Supplemental Appendix shows the number of requests per legislator over time.
 
 # The Effect of  Institutional Power and Experience {#sec-results}
 
@@ -868,9 +867,9 @@ differences across districts represented by a new member and legislators
 in their first six years in office (@eq-district1 minus the district
 fixed effect, $\gamma_{i}$). Districts represented by new legislators
 receive substantially lower levels of service. On average,
-districts with a new representative have 35 fewer
+districts with a new representative have 34 fewer
 requests made on their behalf. The magnitude of this difference shrinks
-for districts represented by legislators in their second year (29
+for districts represented by legislators in their second year (30
 fewer requests). It then reaches a relatively
 stable number for districts represented by legislators in their third
 through sixth years.
@@ -879,7 +878,7 @@ To account for differences in district demographics and demand
 for service, Column 2 of @tbl-models-district provides the
 estimated effects from the difference-in-differences specification from
 @eq-district1. In this specification, we see a large causal effect of a
-new member taking over: electing a new member causes the number of requests on behalf of a given district to **decrease by about 40%**, or `r -beta$new_member |> round()` letters per year
+new member taking over: electing a new member causes the number of requests on behalf of a given district to **decrease by `r percent(-beta$new_member/84)` **, or `r -beta$new_member |> round()` letters per year
 (95-percent confidence interval [`r beta$new_member-1.96*se$new_member`, `r beta$new_member+1.96*se$new_member`]).
 
 The effect of electing a new representative, however, dissipates
