@@ -9,16 +9,23 @@ corr_counts <- dcounts_min %>% distinct(icpsr, chamber,
                                    agency, year, 
                                    TYPE, per_icpsr_chamber_year_agency_type) #%>% filter(TYPE %in% c(1,2,3,4,5))
 
+# agency name corrections 
+#TODO implement this upstream 
+corr_counts %<>% mutate(agency = agency |> 
+                          str_replace("DOC_SBA", "SBA") |>
+                          str_replace("HUD_HQ", "HUD") |>
+                          str_replace("DHS_HQ", "DHS") |> 
+                          str_replace("Navy", "NAVY")
+)
+
 save(corr_counts, 
      file = here::here("data", "corr_counts.Rdata"))
 
 
 ## The data on members
-## mostly from voteview + committee data from Stewart and Wu 
+## from voteview + committee data from Stewart and Wu + @unitedstates project
 #TODO merge both sources of committee data first and then with voteview 
-## but also including population from the census
-#load(here::here("data", "members.Rdata"))
-
+##  also including population from the census
 
 members_raw <- read_csv(here::here("data", "HSall_members.csv"))
 
@@ -263,5 +270,13 @@ missing %>%
 
 
 
+members <- members_raw %>% 
+  distinct(icpsr, bioname, congress, chamber, nominate_dim1, nominate_dim2) 
+
+member_data %<>% left_join(members)
+  
 save(member_data, 
      file = here::here("data", "member_data.Rdata"))
+
+
+

@@ -1,7 +1,7 @@
 ---
 journal:
   blinded: false
-wordcount: 9982 # 9527 words in text body... Add 455 to the word count for figure and table captions (unless we can cut figure and table captions)
+wordcount: 10,000 # 9511 words in text body... Add 449 to the word count for figure and table captions (unless we can cut figure and table captions)
 format:
   #html
   #docx
@@ -137,8 +137,8 @@ variation in constituent demand, differences across districts, or
 differences across legislators. Our research designs limit the influence
 of any potential variation in constituent demand by leveraging
 within-legislator and within-district comparisons. Moreover, through a
-series of additional analyses, we find no evidence
-that constituents shift demands to more established legislators when a new representative is elected. When House members lose an election, there is no corresponding increase in constituency service requests from the state's Senate delegation.
+series of additional analyses, we find little evidence
+that constituents shift demands to more established legislators when a new representative is elected. 
 
 While this study does not aim to examine the effects of institutional
 reforms, our results have implications for debates over congressional
@@ -479,7 +479,7 @@ targeted at more experienced legislators of a delegation whenever a less
 experienced legislator replaces another more experienced member of their
 state's delegation. To address such concerns,
 we conduct a series of analyses to test alternative
-constituency demand-driven explanations in @sec-demand. We find no evidence of requests
+constituency demand-driven explanations in @sec-demand. We find little evidence of requests
 spilling over to more experienced and powerful members within a state
 delegation.
 
@@ -596,12 +596,9 @@ knitr::include_graphics("docs/figs/percentiles-1.png")
 
 Among the most prolific senators, Senator Byrd (D-WV) averaged 538
 contacts per year, Senator Nelson (D-FL) averaged 535, and Senator Webb (D-VA) averaged 533 contacts per year. 
-
-<!--
 Rep. Barbara Comstock averaged 349 contacts per year. Comstock replaced Rep. Frank Wolf (R-VA), who averaged 381 contacts per year and inherited many of his staff. 
 <!--Comstock had worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. 
 --> 
-<!--
 Nevertheless, Comstock's first year saw the volume of contacts on behalf of Virginia's 10th district dip slightly to 245, the lowest level in our time period. <!--Other members of the House wrote at
 much lower rates. For example, in her first year in Congress, Michele
 Bachmann wrote only six letters in our data but would average 31 letters
@@ -637,7 +634,7 @@ Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s
 
 $Y_{ijt}$ is the number of requests legislator $i$ makes to agency $j$
 in year $t$. $\gamma_{ij}$ is a fixed effect for the legislator-agency
-pair. This fixed effect controls for **legislators' characteristics**, such
+pair. This fixed effect controls for **legislator characteristics**, such
 as legislators who are more skillful at filling constituency service
 requests than others. Critically for our research design, this fixed
 effect also accounts for **time-invariant constituent demand**, ensuring
@@ -719,8 +716,8 @@ load(here::here("models", "models_total.Rdata"))
 modelsummary(models_total,
              center_rows = 23:29,
              notes = list("Robust standard errors in parentheses, clustered by legislator.",
-                          "This table shows how the number of requests changes as legislators acquire more experience and power. Column 1 shows the average differences across committee positions and years in Congress. Column 2 presents the difference-in-differences estimates. Column 3 subsets to legislators who serve at least three years. Column 4 makes the Log of the counts + 1 the dependent variable.
-                          All coefficients represent the average additional requests per year per agency per legislator. Legislator per year effects are simply these coefficients times the number of agencies in the data.")) 
+                          "This table shows how the number of requests changes as legislators acquire power. Column 1 shows average differences across committee positions and years in Congress. Column 2 presents difference-in-differences estimates. Column 3 subsets to legislators who serve at least three years. Column 4 makes the Log of the counts + 1 the dependent variable.
+                          All coefficients represent average additional requests per year per agency per legislator. Legislator per year effects are simply these coefficients times the number of agencies in the data.")) 
 ```
 
 Model 1 (the first column of @tbl-models-total) shows differences across legislators. Legislators with more institutional power make more requests. Committee chairs, ranking
@@ -857,7 +854,8 @@ experienced legislators deliver to their constituents.
 load(here::here("models", "models_district.Rdata"))
 modelsummary(models_district,
              center_rows = 14:26,
-             notes = list("Robust standard errors in parentheses, clustered by district", "This table shows how contacts on behalf of a district vary across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) 
+             notes = list("Robust standard errors in parentheses, clustered by district", 
+                          "This table shows how contacts on behalf of a district vary across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) 
 
 beta <- round(beta)
 ```
@@ -998,10 +996,12 @@ In this section, we show that the net result of these two simultaneous effects f
 load(here::here("models", "models_con.Rdata"))
 ```
 
-In Table 3 of the Supplementary Information, we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair |> round()` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table 4 of the Supplementary Information show significant increases in policy work as a legislator gains experience or a committee leadership position.
+In Table 3 of the Supplementary Information, we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair ` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table 4 of the Supplementary Information show significant increases in policy work as a legislator gains experience or a committee leadership position.
 
 
-<!---WHY IS DO WE NEED THIS PARAGRAPH?--> 
+<!---WHY IS DO WE NEED THIS PARAGRAPH?
+|> round() removed rounding
+--> 
 <!--
 ```{r}
 load(here::here("models", "models_policy.Rdata"))
@@ -1114,8 +1114,8 @@ modelsummary(models_spillover_con,
 
 The first column of @tbl-models-spillover estimates the effect of an
 a new Senator replacing an experienced Senator on all other
-incumbent legislators from the state, with no significant effect on the level of constituency service that other legislators provide.
-Columns 2 and 3 of @tbl-models-spillover focus only on Senators. They show that either a new member in the delegation or the proportion of new members does not increase incumbents' constituency service (indeed, we see a statistically significant decrease in model 3). This consistent null or negative impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
+incumbent legislators from the state shows a marginally significant impact (p<0.1) on the level of constituency service that other legislators provide.
+Columns 2 and 3 of @tbl-models-spillover focus only on Senators. They show that either a new member in the delegation or the proportion of new members does not increase incumbents' constituency service (indeed, we see a statistically significant decrease in model 3). These inconsistent weak, null and negative impact of new legislators in a state delegation provides reassurance that there is little evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
 
 # Discussion {#sec-discussion}
 
