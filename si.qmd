@@ -6,6 +6,8 @@ format:
     fig-pos: 'h!'
     fig-env: "figure"
     filters: [citeproc.lua, wordcount.lua]
+linestretch: 1
+number-sections: true
 title: "Supplemental Information: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service"
 subtitle: "Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
 runningtitle: Shifting Priorities and Capacity
@@ -29,9 +31,7 @@ author:
 date: today
 dataverse: "https://doi.org/10.7910/DVN/LWOCWO"
 # keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
-#linestretch: 1.5
 indent: true
-number-sections: true
 number-depth: 2
 cap-location: top
 bibliography: "assets/congress2019.bib"
@@ -64,6 +64,15 @@ modelsummary <- modelsummary_AJPS
 
 library(scales)
 ```
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A\arabic{figure}}
 
 
 \clearpage

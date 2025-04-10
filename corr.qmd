@@ -9,6 +9,8 @@ format:
     fig-pos: 'h!'
     fig-env: "figure"
     filters: [citeproc.lua, wordcount.lua]
+linestretch: 1.5
+number-sections: false
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
 subtitle: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
 runningtitle: Shifting Priorities and Capacity
@@ -34,11 +36,9 @@ thanks: |
 date: today
 abstract: |
   When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect legislator behavior.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of 611,239 legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
-dataverse: "https://doi.org/10.7910/DVN/LWOCWO"
+dataverse: "https://doi.org/10.7910/DVN/LWOCW"
 keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
-#linestretch: 1.5
 indent: true
-number-sections: true
 number-depth: 2
 cap-location: top
 bibliography: "assets/congress2019.bib"
@@ -72,7 +72,6 @@ library(scales)
 
 \clearpage 
 
-# Introduction
 
 One of the oldest traditions of representation in American politics is
 constituency service--how members of Congress help channel and
@@ -531,7 +530,7 @@ We use the text or summaries of letters to classify
 legislators' reasons for contacting federal agencies into five types: requests on behalf of (1)
 individual constituents, (2) individual corporations, (3) nonprofits and local governments, (4) policy work on behalf of specific industries, or (5) general policy work. Our coding process
 began with the authors coding a representative sample of records using
-our codebook (see Supplemental Information). We then trained research assistants
+our codebook (see Supplemental Information, p. 2). We then trained research assistants
 to continue the coding. The first several thousand letters were
 double-coded. For example, of over 10,000 letters for the Environmental
 Protection Agency, the first 2,500 were double-coded. Our overall
@@ -604,7 +603,7 @@ much lower rates. For example, in her first year in Congress, Michele
 Bachmann wrote only six letters in our data but would average 31 letters
 per year by the end of her time in Congress.--> 
 
-[^5]: Figure 1 in the Supplemental Appendix shows the number of requests per legislator over time.
+[^5]: Figure A1 in the Supplemental Appendix (p.6) shows the number of requests per legislator over time.
 
 # The Effect of  Institutional Power and Experience {#sec-results}
 
@@ -897,10 +896,10 @@ where the same legislator has been serving for seven or more years).[^8]
 #| fig-cap: "Predicted Number of Total Requests to Federal Agencies Per District, 2007-2020"
 #| label: fig-m-district-predicted
 #| fig-subcap: 
-#|   - "Model 1"
-#|   - "Model 2"
-#|   - "Model 3"
-#|   - "Model 4"
+#|   - "Model 1: Cross-sectional"
+#|   - "Model 2: Within-legislator"
+#|   - "Model 3: Within-legislator (House)"
+#|   - "Model 4: Within-legislator (Senate)"
 #| layout-ncol: 2
 #| out-width: 100%
 
@@ -996,7 +995,7 @@ In this section, we show that the net result of these two simultaneous effects f
 load(here::here("models", "models_con.Rdata"))
 ```
 
-In Table 3 of the Supplementary Information, we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair ` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table 4 of the Supplementary Information show significant increases in policy work as a legislator gains experience or a committee leadership position.
+In Table A3 of the Supplementary Information (p. 11), we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair ` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table A4 of the Supplementary Information (p. 13) show significant increases in policy work as a legislator gains experience or a committee leadership position.
 
 
 <!---WHY IS DO WE NEED THIS PARAGRAPH?
@@ -1014,7 +1013,7 @@ In contrast, in Table 4 of the Supplementary Information, we find using the same
 load(here::here("models", "models_district_con.Rdata"))
 ```
 
-Similarly, in Table 5 of the Supplementary Information, we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces an experienced member with a new legislator, we estimate `r -beta$new_member |> round()` fewer *constituency service* contacts per year (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]). All models in Table 6 of the Supplementary Information show significant decreases in policy work done on behalf of a district persisting for at least five years after a new legislator replaces an experienced legislator.
+Similarly, in Table A5 of the Supplementary Information (p. 15), we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces an experienced member with a new legislator, we estimate `r -beta$new_member |> round()` fewer *constituency service* contacts per year (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]). All models in Table A6 of the Supplementary Information (p. 17) show significant decreases in policy work done on behalf of a district persisting for at least five years after a new legislator replaces an experienced legislator.
 
 In short, the "shifting priorities" effects were insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease in constituency service among longer-serving or more powerful legislators. Instead, **districts that replaced an experienced legislator with a new legislator saw a significant decrease in both policy work *and* constituency service** for at least two years. The capacity effects overcame the effects of shifting priorities, meaning that longer-serving legislators did more constituency service, not less. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2), we found that becoming a committee chair causes an increase of 0.29 requests per agency (95 percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.
 --> <!--TODO INSERT EVIDENCE FOR THIS --> 
@@ -1098,7 +1097,7 @@ the effect of a new Senator in a state delegation. For Senators, we measure new 
 state delegation that is new or an indicator of whether there is a new
 legislator (House or Senate) in the delegation. As in
 @sec-district, we measure the number of requests a district's
-representative makes in a particular year. Since we aim to test whether constituent demand drives our results, @tbl-models-spillover shows estimates using requests hand-coded as constituency service. The results for total requests are nearly identical (see Supplemental Information).  
+representative makes in a particular year. Since we aim to test whether constituent demand drives our results, @tbl-models-spillover shows estimates using requests hand-coded as constituency service. The results for total requests are nearly identical (see Supplemental Information p. 21).  
 
 ```{r}
 #| label: tbl-models-spillover
