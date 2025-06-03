@@ -25,8 +25,8 @@ Replication code for "The Effects of Shifting Priorities and Capacity on Congres
 
 ## Code files
 
-1. "docs/replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
-2. "docs/descriptives.qmd" uses `corr_counts` and `member_data` to produce all descriptive figures in the paper (rendered [here](https://judgelord.github.io/corr/descriptives)) 
+- "docs/replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
+
 
 
 ## Data details 
@@ -56,7 +56,12 @@ corr_counts |> skimr::skim()
 - "chamber"  = "House" or "Senate"                         
 - "agency" = Agency acronym                            
 - "year"  = Year                            
-- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.                    
+- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.     
+  - 1 ~ "Constituent (individual)"
+  - 2 ~ "Constituent (corporate)"
+  - 3 ~ "Constituent (501c3 or local\n government)"
+  - 4 ~ "Policy (corporate)"
+  - 5 ~ "Policy (general)"
 - "per_icpsr_chamber_year_agency_type" = Count per legislator per year per agency per type
 
 ```{r}

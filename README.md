@@ -19,19 +19,16 @@ Census of Legislator Requests to U.S. Federal Agencies”
 -   year, chamber, and party retrieved from voteview.com (also available
     on dataverse)
 
--   committee positions from Stewart and Woon (2017) and
+-   committee positions from Stewart and Woon (2017) and the
     @unitedstates-project (2025)
 
 -   state population from the US Census
 
 ## Code files
 
-1.  “docs/replication.qmd” uses `corr_counts` and `member data` to
+-   “docs/replication.qmd” uses `corr_counts` and `member data` to
     reproduce all analyses in the paper and Supplemental Information
     (rendered [here](https://judgelord.github.io/corr/replication))
-2.  “docs/descriptives.qmd” uses `corr_counts` and `member_data` to
-    produce all descriptive figures in the paper (rendered
-    [here](https://judgelord.github.io/corr/descriptives))
 
 ## Data details
 
@@ -61,7 +58,12 @@ head(corr_counts, 7)
 -   “agency” = Agency acronym  
 -   “year” = Year  
 -   “TYPE” = Type of Legislator Request. See codebook in Suplimental
-    Information.  
+    Information.
+    -   1 ~ “Constituent (individual)”
+    -   2 ~ “Constituent (corporate)”
+    -   3 ~ “Constituent (501c3 or localgovernment)”
+    -   4 ~ “Policy (corporate)”
+    -   5 ~ “Policy (general)”
 -   “per_icpsr_chamber_year_agency_type” = Count per legislator per year
     per agency per type
 
@@ -71,7 +73,7 @@ load(here::here("data", "member_data.Rdata"))
 dim(member_data)
 ```
 
-    [1] 3865   15
+    [1] 3865   17
 
 -   “congress” = Congress  
 -   “chamber” = “House” or “Senate”  
@@ -114,18 +116,17 @@ head(member_data)
     4                                             APPROPRIATIONS|INTELLIGENCE     0
     5                                 AGRICULTURE|ARMED SERVICES|INTELLIGENCE     0
     6                                                      FINANCIAL SERVICES     0
-      ranking_minority majority presidents_party party
-    1                0        0                1   (R)
-    2                0        0                1   (R)
-    3                0        1                0   (D)
-    4                0        1                0   (D)
-    5                0        0                1   (R)
-    6                1        0                1   (R)
+      ranking_minority majority presidents_party party nominate_dim1 nominate_dim2
+    1                0        0                1   (R)         0.367         0.513
+    2                0        0                1   (R)         0.379         0.377
+    3                0        1                0   (D)        -0.270         0.454
+    4                0        1                0   (D)        -0.132         0.612
+    5                0        0                1   (R)         0.414         0.528
+    6                1        0                1   (R)         0.387         0.228
 
 Stewart, Charles, III, and Jonathan Woon. 2017.
 “<span class="nocase">Congressional Committee Assignments, 103rd to
 115th Congresses, 1993–2017: House of Representatives</span>.”
 
-@unitedstates-project, the. 2025.
+the @unitedstates-project. 2025.
 “<span class="nocase">unitedstates/congress-legislators</span>.”
-<https://unitedstates.github.io/>.
