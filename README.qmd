@@ -19,7 +19,7 @@ file.copy("readme.md", "readme.txt", overwrite = T)
 
 Alternatively to step 2, if you only wish to reproduce the figures and results and not the manuscript, you can just run "replication.r"---the R code extracted from replication.qmd. Running "replication.r" will not save the figures in the /figs/ folder as required to render the manuscript. 
 
-## Data files: 
+# Data files (in /data/ folder)
 
 The main replication data 
 
@@ -31,11 +31,13 @@ Required data on members of Congress
 - "data/member_data.rda" legislator covariates: (in the /data/ folder of this dataverse project)
 
 
-## Dataset codebooks
+# Dataset codebooks (in /docs/ folder)
 
-###  Counts of legislator contacts per year per agency 
+## 1. Counts of legislator contacts per year per agency 
 
-Title/file name: corr_counts.Rdata 
+Codebook: "docs/corr_counts_codebook.pdf"
+
+Data file: "data/corr_counts.Rdata"
 
 Citation: Author-created data souce [@replication]
 
@@ -63,10 +65,11 @@ head(corr_counts, 7)
 ```
 
 
-### 2. Data on members of Congress
+## 2. Data on members of Congress
 
+Codebook: "docs/member_data_codebook.pdf"
 
-Title/file name: member_data.Rdata 
+Data file:  "data/member_data.Rdata"
 
 Citations: Author-created data souce  [@replication], including: 
 
@@ -108,7 +111,7 @@ member_data |> skimr::skim()
 
 
 
-## Code files
+# Code files
 
 - "replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
    - **NOTE:** this file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include: 
@@ -129,13 +132,13 @@ member_data |> skimr::skim()
 <!-- "robusteness-negbin.qmd"  uses `corr_counts` and `member_data` to replicate all count models on in negative binomial or poisson as a robustness check. All of the substantive results are the same with this alternative estimation strategy.--> 
    
 
-## Manuscript files 
+# Manuscript files 
 
 - "corr.qmd" compiles the manuscript text, pulling in results from the intermediate files created by running replication.qmd 
    - "assets/congress2019.bib" is the required bib file
 - "si.qmd" compiles the Supplemental Information text, pulling in saved results running replication.qmd
 
-## Output files 
+# Output files 
 
 - "replication.pdf" is "replication.qmd" rendered to PDF 
 - "replication.html" is "replication.qmd" rendered to HTML 
@@ -144,7 +147,7 @@ member_data |> skimr::skim()
 <!-- "robustness-negbin.html" is "robustness-negbin.qmd" rendered to HTML-->
 
 
-## Computing Environment: 
+# Computing Environment: 
 
 - Computer Processor: Apple M2 Max,	12 Cores 
 - Computer Memory (RAM): 96 GB 
@@ -178,4 +181,4 @@ xfun
 yaml
 ```
 
-## References
+# References

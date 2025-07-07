@@ -19,7 +19,7 @@ code extracted from replication.qmd. Running “replication.r” will not
 save the figures in the /figs/ folder as required to render the
 manuscript.
 
-## Data files:
+# Data files (in /data/ folder)
 
 The main replication data
 
@@ -33,11 +33,13 @@ Required data on members of Congress
 -   “data/member_data.rda” legislator covariates: (in the /data/ folder
     of this dataverse project)
 
-## Dataset codebooks
+# Dataset codebooks (in /docs/ folder)
 
-### Counts of legislator contacts per year per agency
+## 1. Counts of legislator contacts per year per agency
 
-Title/file name: corr_counts.Rdata
+Codebook: “docs/corr_counts_codebook.pdf”
+
+Data file: “data/corr_counts.Rdata”
 
 Citation: Author-created data souce (Devin Judge-Lord and Eleanor Neff
 Powell and Justin Grimmer 2025)
@@ -79,9 +81,11 @@ head(corr_counts, 7)
     6 10713   House   ABMC 2016    4                                  0
     7 10713   House   ABMC 2016    5                                  0
 
-### 2. Data on members of Congress
+## 2. Data on members of Congress
 
-Title/file name: member_data.Rdata
+Codebook: “docs/member_data_codebook.pdf”
+
+Data file: “data/member_data.Rdata”
 
 Citations: Author-created data souce (Devin Judge-Lord and Eleanor Neff
 Powell and Justin Grimmer 2025), including:
@@ -158,7 +162,7 @@ head(member_data)
 member_data |> skimr::skim()
 ```
 
-## Code files
+# Code files
 
 -   “replication.qmd” uses `corr_counts` and `member data` to reproduce
     all analyses in the paper and Supplemental Information (rendered
@@ -185,7 +189,7 @@ member_data |> skimr::skim()
 
 <!-- "robusteness-negbin.qmd"  uses `corr_counts` and `member_data` to replicate all count models on in negative binomial or poisson as a robustness check. All of the substantive results are the same with this alternative estimation strategy.-->
 
-## Manuscript files
+# Manuscript files
 
 -   “corr.qmd” compiles the manuscript text, pulling in results from the
     intermediate files created by running replication.qmd
@@ -193,7 +197,7 @@ member_data |> skimr::skim()
 -   “si.qmd” compiles the Supplemental Information text, pulling in
     saved results running replication.qmd
 
-## Output files
+# Output files
 
 -   “replication.pdf” is “replication.qmd” rendered to PDF
 -   “replication.html” is “replication.qmd” rendered to HTML
@@ -201,7 +205,7 @@ member_data |> skimr::skim()
 -   “si.pdf” is the Supplemental Information text produced by “si.qmd”
     <!-- "robustness-negbin.html" is "robustness-negbin.qmd" rendered to HTML-->
 
-## Computing Environment:
+# Computing Environment:
 
 -   Computer Processor: Apple M2 Max, 12 Cores
 -   Computer Memory (RAM): 96 GB
@@ -260,7 +264,7 @@ replication.r)
     xfun
     yaml
 
-## References
+# References
 
 Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025.
 “Replication Data: The Effects of Shifting Priorities and Capacity on
