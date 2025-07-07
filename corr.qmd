@@ -1,14 +1,15 @@
 ---
 journal:
   blinded: false
-wordcount: 10,000 # 9511 words in text body... Add 449 to the word count for figure and table captions (unless we can cut figure and table captions)
+wordcount: 10,000
 format:
   #html
-  docx
-  # cmc-article-pdf:
-  #   fig-pos: 'h!'
-  #   fig-env: "figure"
-  #   filters: [citeproc.lua, wordcount.lua]
+  # docx # sent to AJPS for typsetting 
+  # pdf # basic pdf 
+  cmc-article-pdf: # the PDF manuscript uploaded applies additional formatting from  https://github.com/CoryMcCartan/cmc-article thanks to Cory McCartan and Christopher Kenny
+      filters: [citeproc.lua, wordcount.lua]
+      fig-pos: 'h!'
+      fig-env: "figure"
 linestretch: 1.5
 number-sections: false
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
@@ -68,6 +69,7 @@ load(here::here("data", "means.Rdata"))
 modelsummary <- modelsummary_AJPS
 
 library(scales)
+library(here)
 ```
 
 \clearpage 
@@ -292,9 +294,7 @@ As legislators spend more time in Washington, they may also become detached from
 @Fenno1978 documents how some members of Congress catch "Potomac fever."  As
 legislators spend more time in office and attain more influential
 institutional roles, legislators might focus on policy priorities and
-less on the particular demands of their constituents. <!--While newly
-elected officials may remain primarily focused on reelection,
-longer-serving officials may prioritize other goals.-->
+less on the particular demands of their constituents. 
 
 If the shifting priorities hypothesis is right---that legislators shift
 attention from their district to policy work---we expect that
@@ -387,10 +387,10 @@ Service and Policy Work as Legislators Gain Power
 #| out-width: 100%
 
 
-knitr::include_graphics("docs/figs/2x2-fig-1.png")
-knitr::include_graphics("docs/figs/2x2-fig-2.png")
-knitr::include_graphics("docs/figs/2x2-fig-3.png")
-knitr::include_graphics("docs/figs/2x2-fig-4.png")
+knitr::include_graphics("figs/2x2-fig-1.png")
+knitr::include_graphics("figs/2x2-fig-2.png")
+knitr::include_graphics("figs/2x2-fig-3.png")
+knitr::include_graphics("figs/2x2-fig-4.png")
 ```
 
 @fig-2x2 formalizes the potential outcomes implied by our theory to
@@ -549,7 +549,7 @@ significant variation in levels of service from similar districts.--->
 ### Legislator Contacts with Federal Agencies Focus on Constituency Service
 
 <!--Overall, when legislators contact federal agencies, they are helping
-constituents navigate the federal bureaucracy.--> @fig-type2 shows the
+constituents navigate the federal bureaucracy.--> @fig-by-type shows the
 proportion of contacts for each of the five types of legislator requests
 in our hand-coded sample described above. The center bar shows that 71%
 of all legislator requests to federal agencies are on behalf of
@@ -560,10 +560,10 @@ requests made to federal agencies.
 
 ```{r}
 #| fig-cap: "Legislator requests to federal agencies by type, 2007-2020. Note: The center bar shows that 71% of all legislator requests to federal agencies are on behalf of individual constituents. Requests on behalf of individual corporations are a smaller percentage, 6%. 7% of requests are on behalf of nonprofits and local governments. General policy work and policy work on behalf of specific industries account for just 16% of all requests made to federal agencies."
-#| label: fig-type2
+#| label: fig-by-type
 #| out-width: 80%
 
-knitr::include_graphics("docs/figs/data_by_type-tall-1.png")
+knitr::include_graphics("figs/data_by_type-1.png")
 ```
 
 To assess whether legislators shift their priorities as they gain
@@ -580,14 +580,14 @@ constituency service (compared to 85% for non-chairs).
 ### Levels of Contact with Federal Agencies are Highly Unequal
 
 Legislators vary significantly in how often they contact federal
-agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year among members of each chamber range between 0.56 and 0.90, exceeding the Gini coefficient for income inequality in every country the World Bank reported in 2023. To visualize this variation, @fig-contact1 shows the average number of contacts per year for House members (panel (a)) and
+agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year among members of each chamber range between 0.56 and 0.90, exceeding the Gini coefficient for income inequality in every country the World Bank reported in 2023. To visualize this variation, @fig-percentiles shows the average number of contacts per year for House members (panel (a)) and
 senators (panel (b)).[^5] 
 On average, senators in our data contacted agencies
 148 times per year, while House members averaged 54 per year. We see a similar level of variation in the House but with lower overall levels of contact with federal agencies, reflecting lower resources and fewer constituents than senators. 
 
 ```{r}
 #| fig-cap: "Variation in average legislator requests by percentile. Note: This figure shows that some legislators contact agencies many times per year, while many others do so rarely. We see these highly unequal rates of contacting agencies in both the House and Senate."
-#| label: fig-contact1
+#| label: fig-percentiles
 #| out-width: 80%
 #| layout-ncol: 2
 #| fig-subcap: 
@@ -595,8 +595,8 @@ On average, senators in our data contacted agencies
 #|   - "Senate"
 
 
-knitr::include_graphics("docs/figs/percentiles-chamber-1.png")
-knitr::include_graphics("docs/figs/percentiles-chamber-2.png")
+knitr::include_graphics("figs/percentiles-chamber-1.png")
+knitr::include_graphics("figs/percentiles-chamber-2.png")
 ```
 
 
@@ -755,7 +755,7 @@ Evidence about the effects of majority party status or having a co-partisan pres
 #| label: fig-m-total-predicted
 #| out-width: 65%
 
-knitr::include_graphics("docs/figs/m-total-predicted-3.png")
+knitr::include_graphics("figs/m-total-predicted-3.png")
 ```
 
 @fig-m-total-predicted shows the predicted total number of letters per
@@ -812,8 +812,8 @@ Feingold to Senator Johnson and from Senator Kohl to Senator Baldwin.
 #| label: fig-wi
 #| out-width: 80%
 
-knitr::include_graphics("docs/figs/districts/(WI-07).png")
-knitr::include_graphics("docs/figs/districts/(WI).png")
+knitr::include_graphics("figs/districts/(WI-07).png")
+knitr::include_graphics("figs/districts/(WI).png")
 
 ```
 
@@ -910,10 +910,10 @@ where the same legislator has been serving for seven or more years).[^8]
 #| layout-ncol: 2
 #| out-width: 100%
 
-knitr::include_graphics("docs/figs//m-district-predicted-1.png")
-knitr::include_graphics("docs/figs//m-district-predicted-3.png")
-knitr::include_graphics("docs/figs//m-district-predicted-house-1.png")
-knitr::include_graphics("docs/figs//m-district-predicted-senate-1.png")
+knitr::include_graphics("figs/m-district-predicted-1.png")
+knitr::include_graphics("figs/m-district-predicted-3.png")
+knitr::include_graphics("figs/m-district-predicted-house-1.png")
+knitr::include_graphics("figs/m-district-predicted-senate-1.png")
 
 ```
 
@@ -978,8 +978,8 @@ Becoming a ranking member of a committee causes the ratio of constituency servic
 #| layout-ncol: 2
 #| out-width: 100%
 
-knitr::include_graphics("docs/figs/m-ratio-predicted-3.png")
-knitr::include_graphics("docs/figs/m-ratio-predicted-4.png")
+knitr::include_graphics("figs/m-ratio-predicted-3.png")
+knitr::include_graphics("figs/m-ratio-predicted-4.png")
 
 ```
 
@@ -1005,27 +1005,13 @@ load(here::here("models", "models_con.Rdata"))
 In Table A3 of the Supplementary Information (p. 11), we use our hand-coding of agency contacts to assess how legislators' levels of constituency service requests change as their capacity changes.  Using the same difference-in-differences specification as in Model 2 of @tbl-models-total, we find that a given **legislator** who becomes committee chair makes an additional `r beta$chair ` constituency service contacts per agency per year, an increase that is not statistically significant (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]).  All models in Table A4 of the Supplementary Information (p. 13) show significant increases in policy work as a legislator gains experience or a committee leadership position.
 
 
-<!---WHY IS DO WE NEED THIS PARAGRAPH?
-|> round() removed rounding
---> 
-<!--
-```{r}
-load(here::here("models", "models_policy.Rdata"))
-```
-
-In contrast, in Table 4 of the Supplementary Information, we find using the same difference-in-difference model that becoming a committee chairperson causes  `r beta$chair`  additional policy contacts per agency per year (95 percent confidence interval [`r beta$chair-se$chair*1.96`, `r beta$chair+se$chair*1.96`]), a statistically significant difference compared to the constituency service increase [-0.00, 0.28].^[We fail to detect an effect of becoming a ranking member or joining a prestige committee for constituency service while detecting an effect for policy work.  That said, we fail to reject the null of a difference in the change in rates of constituency service and policy work for legislators who join prestige committees or become a ranking member.  We find first-year legislators make fewer constituency service and policy work requests.]  
---> 
-
 ```{r}
 load(here::here("models", "models_district_con.Rdata"))
 ```
 
 Similarly, in Table A5 of the Supplementary Information (p. 15), we use our hand-coding of agency contacts to assess how the level of constituency service requests coming from a given **district** changes when a new member is elected. Using the same difference-in-differences specification as in Model 2 of @tbl-models-district, we find that electing a new member causes a significant decrease in the level of constituency service. When a district replaces an experienced member with a new legislator, we estimate `r -beta$new_member |> round()` fewer *constituency service* contacts per year (95 percent confidence interval [`r beta$new_member-se$new_member*1.96`, `r beta$new_member+se$new_member*1.96`]). All models in Table A6 of the Supplementary Information (p. 17) show significant decreases in policy work done on behalf of a district persisting for at least five years after a new legislator replaces an experienced legislator.
 
-In short, the "shifting priorities" effects were insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease in constituency service among longer-serving or more powerful legislators. Instead, **districts that replaced an experienced legislator with a new legislator saw a significant decrease in both policy work *and* constituency service** for at least two years. The capacity effects overcame the effects of shifting priorities, meaning that longer-serving legislators did more constituency service, not less. <!--We can see that from these two sets of analyses by recalling that in the difference-in-difference specification of our level analysis (Model 2 of Table 2), we found that becoming a committee chair causes an increase of 0.29 requests per agency (95 percent confidence interval [0.12,0.47]). Across all 92 agencies, this represents an increase of approximately 27 additional requests per year.
---> <!--TODO INSERT EVIDENCE FOR THIS --> 
-
-<!--However, as we discuss further in @sec-discussion, the total number of constituency service requests does not drop, even as the proportion of constituency service-related requests decreases. -->
+In short, the "shifting priorities" effects were insufficiently large to overpower the "increasing capacity" effects to cause an overall decrease in constituency service among longer-serving or more powerful legislators. Instead, **districts that replaced an experienced legislator with a new legislator saw a significant decrease in both policy work *and* constituency service** for at least two years. The capacity effects overcame the effects of shifting priorities, meaning that longer-serving legislators did more constituency service, not less. 
 
 # The Effects of Demand for Constituency Service {#sec-demand}
 
@@ -1038,9 +1024,7 @@ variation shown in @sec-results.
 ## District Characteristics Affect the Provision of Constituency Service
 
 We find that population size correlates with the overall number of legislator requests. 
-<!--The characteristics of their districts also correlate with which agencies legislators contact.  For example, a one percentage point increase in the proportion of residents who are veterans is associated with an increase of about .84 constituency service requests to the Department of Veterans Affairs. A one percentage point increase in the proportion of residents over 65 is associated with an increase of an additional 0.03 requests made to the Social Security Administration--> 
 These correlations provide face validity for our measures of legislator behavior, but they also suggest that cross-sectional comparisons may conflate legislator choices with district characteristics. 
-<!--Given this potential confounding, our models above leveraged within-district and within-agency variation.-->
 
 We expect senators who represent larger states to make more requests.
 Senators from larger states have a larger number of constituents to
@@ -1056,7 +1040,7 @@ sizes.
 #| label: fig-stateSize
 #| out-width: 70%
 
-knitr::include_graphics("docs/figs/pop-1.png")
+knitr::include_graphics("figs/pop-1.png")
 ```
 
 ## Do Voters Demand More of More Powerful Legislators?
@@ -1231,18 +1215,6 @@ Our near-census of legislator contacts minimizes such confounders and
 will allow researchers to test more general theories of legislator
 behavior, as we have done here.
 
-<!---
-advance the study of descriptive
-representation, expanding on work by @LowandeRitchieLauterbach2018, who
-find that women, minority, and veteran members do more casework on
-behalf of groups that share their identity. The new data we collect will
-allow similar tests of representation for other demographic groups,
-including seniors, farmers, and low-income populations, to name just a
-few. Likewise, more data will allow new tests of prior work showing that
-members use lobbying the bureaucracy to advance policy goals when they
-conflict with their party's agenda [@Ritchie2017]. Our systematic data
-allow tests of variation across policy domains and government functions.
---->
 
 
 # Conclusion {#sec-conclude}

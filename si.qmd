@@ -1,11 +1,10 @@
 ---
 format:
-  #html
+  html
   #docx
-  cmc-article-pdf:
-    fig-pos: 'h!'
-    fig-env: "figure"
-    filters: [citeproc.lua, wordcount.lua]
+  # pdf:
+  #  fig-pos: 'h!'
+  #  fig-env: "figure"
 linestretch: 1
 number-sections: true
 title: "Supplemental Information: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service"
@@ -63,6 +62,7 @@ load(here::here("data", "means.Rdata"))
 modelsummary <- modelsummary_AJPS 
 
 library(scales)
+library(here)
 ```
 
 \setcounter{section}{0}

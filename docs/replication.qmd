@@ -3,8 +3,7 @@ title: "Replication Code and Robustness Checks"
 subtitle: "The Effects of Shifting Priorities and Capacity on Elected Officials' Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
 author: Devin Judge-Lord
 format: 
-  # pdf:
-  #     toc: true
+  #pdf: 
   html:
       toc: true
       code-fold: true
@@ -16,16 +15,50 @@ editor_options:
 ```{r global.options, include=FALSE}
 testing = F
 verification = T
+start_time <- Sys.time()
+
+
+# load packages 
+requires <- c("tidyverse", "magrittr", # data wrangling
+              "scales", # plot scales 
+              "ggrepel",# plot labels
+              "here", # file paths 
+              "knitr", # document formatting 
+              "kableExtra", # for table formatting 
+              "modelsummary", # for regression tables 
+              "marginaleffects", # for predictions 
+              "fixest", # statistical package for fixed effects estimation 
+              "ineq", # to calculate gini coeficient 
+              # MAY BE REQUIRED FOR QMD RENDERING
+              "base64enc",
+              "digest",
+              "evaluate",
+              "glue",
+              "highr",
+              "htmltools",
+              "jsonlite",
+              "markdown",
+              "mime",
+              "rmarkdown",
+              "stringi",
+              "stringr",
+              "xfun",
+              "yaml")
+to_install <- c(requires %in% rownames(installed.packages()) == FALSE)
+if(sum(to_install>0)){
+install.packages( requires[to_install], 
+                  repos = "https://cloud.r-project.org/" )
+}
 
 library(modelsummary)
 library(marginaleffects)
 library(fixest)
 library(tidyverse)
 library(magrittr)
-library(knitr)
+library(ineq)
 library(kableExtra)
-library(here)
 library(ggrepel)
+library(scales)
 
 knitr::opts_chunk$set(echo = T, # code is folded 
                       cache = F, # CACHE 
@@ -86,14 +119,14 @@ library(ggplot2); theme_set(
 kablebox <- . %>%  
   head(100) %>%
   knitr::kable() %>% 
-  kable_styling() %>% 
-  scroll_box(height = "200px")
+  kableExtra::kable_styling() %>% 
+  kableExtra::scroll_box(height = "200px")
 
 kablebox_long <- . %>% 
   head(100) %>% 
   knitr::kable() %>% 
-  kable_styling() %>% 
-  scroll_box(height = "500px")
+  kableExtra::kable_styling() %>% 
+  kableExtra::scroll_box(height = "500px")
 ```
 
 
@@ -595,14 +628,14 @@ type_totals %>%
     xmin = type_totals$type[1], 
     xmax = type_totals$type[3], 
     y.position = 380000,
-    label = paste(type_totals$percent_t[1], "Constituency service" ),
+    label = paste(type_totals$percent_t[6], "Constituency service" ),
     #hjust = 1,
     vjust = -1
   ) + 
   ggpubr::geom_bracket(label.size = 3, # FOR AJPS
     xmin = type_totals$type[4], xmax = type_totals$type[5], 
     y.position = 85000,
-    label = paste(type_totals$percent_t[5], "Policy work"),
+    label = paste(type_totals$percent_t[9], "Policy work"),
     #hjust = 1,
     vjust = -1
   )+ 
@@ -1295,14 +1328,22 @@ dcounts_tenure %>%
   filter( abs(perYearTotal - perYear_mean_total) < 10,   
           perYear < 10 )  %>% 
   ggplot() +
-  aes(x = perYear, y = perYearTotal) + 
-    geom_jitter() + 
+  aes(x = perYear, 
+      y = perYearTotal) + 
+  geom_jitter(alpha = .5) + 
   geom_vline(aes(xintercept = meanYear), color = "blue") + 
   geom_hline(aes(yintercept = meanLeg), color = "blue") + 
-  geom_text_repel(aes(label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year , icpsr_agency, NA) ),
-                  color = "red", box.padding = 0.5, max.overlaps = Inf) + 
+  geom_text_repel(
+    aes( label = ifelse(icpsr_agency %in% modal$icpsr_agency & agency_year %in% modal$agency_year , 
+                     icpsr_agency, 
+                     NA)  ),
+    color = "red", 
+    box.padding = 0.5, 
+    max.overlaps = Inf
+    ) + 
   labs(x = "Contacts per Legislator per Agency per year",
-       y = "Contacts per Legislator per year")
+       y = "Contacts per Legislator per year") + 
+  scale_x_continuous(breaks = seq.int(0, 9, length.out =  10))
 
 modal %>%
   distinct(perAgency, bioname, icpsr_agency, agency_year) %>% 
@@ -1364,11 +1405,10 @@ values_tenure <- tidyr::expand(dcounts_tenure,
 ### Gini coefficients 
 
 ```{r gini}
-library(ineq)
 gini <- dcounts_tenure |> 
   ungroup() |> 
   group_by(year, chamber) |> 
-  summarise(gini = round(Gini(perYear),2)) |>
+  summarise(gini = round(ineq::Gini(perYear),2)) |>
   arrange(- year) |> 
   filter(year > 2006) 
 
@@ -1385,7 +1425,7 @@ gini2 <- dcounts_tenure |>
   filter(perYear > 0) |> 
   ungroup() |> 
   group_by(year, chamber) |> 
-  summarise(gini = round(Gini(perYear),2)) |>
+  summarise(gini = round(ineq::Gini(perYear),2)) |>
   arrange(- year) |> 
   filter(year > 2006) 
 
@@ -1403,7 +1443,7 @@ gini2 |>
 :::{.callout-important collapse="true"}
 ## Results in manuscript (p. 23)
 ```{r echo=verification, eval=verification}
-gini2 %<>% filter(year > 2016)
+gini2 %<>% filter(year > 2017)
 
 min(gini2$gini)
 max(gini2$gini)
@@ -2552,7 +2592,11 @@ The table below accounts for redistricting by treating post-redistricting distri
 
 Many NAs exist for the `same party` variable because we only observe it when there is turnover *within* a redistricting cycle. Seats that do not turn over for an entire cycle (e.g., 2002-2012) are FALSE ("0") for "new member" and have no value for "same party." Other districts are NA until there is turnover. Thus, adding "same party" causes significant data loss due to NAs. 
 
-- Specifically, we go from 7666 to 2822 observations when including `same_party` in the models below. 
+::: {.callout-warning}
+Specifically, we go from 7666 to 2822 observations when including `same_party` in the models below. 
+
+These observations are **not** missing at random, so all models with the `same_party` variable should be interpreted with great caution.
+:::
 
 To measure turnover in the Senate where "districts" have two members, we code `same party` as FALSE if there is a change in the partisanship of a state's Senate delegation. This captures the parallel dynamic of single-member House districts. If there are two Democrats and one is replaced by a Republican, the `same party` is FALSE. If there are two Democrats and a Democrat is elected, the `same party` is TRUE. If there are a Democrat senator and a Republican senator representing a state, and the Democrat is replaced by a Republican, `same_party` is FALSE. As per the VoteView convention, Senate delegations are District "0" (e.g., "alabama_0"). Split Senate delegations appear as "Democratic Party;Republican Party" in the table below.
 
@@ -4478,4 +4522,19 @@ modelsummary(models_spillover_policy,
 
 save(models_spillover_policy, rows, cm, gm,  #beta, se,
      file = here::here("models", "models_spillover_policy.Rdata"))
+```
+
+
+
+
+# Computing Environment and Required Packages
+
+```{r echo=TRUE}
+sessionInfo()
+```
+
+## Duration of time to process the job from start to finish
+
+```{r echo=TRUE}
+Sys.time() - start_time
 ```

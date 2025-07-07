@@ -1,35 +1,58 @@
 ---
-title: "README"
+title: "How Shifting Priorities and Capacity Affect Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
+author: Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
 format: md
 bibliography: "assets/congress2019.bib"
 ---
 
-Replication code for "The Effects of Shifting Priorities and Capacity on Congressional Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies"
+```{r echo=FALSE, results = 'hide'}
+# make txt version for dataverse 
+file.copy("readme.md", "readme.txt", overwrite = T)
+```
+
+# Instructions for replication 
+
+1. Save all files and folders from this dataverse project to the root-level of a project directory and ensure it is the active directory in R. This allows the `here` package to construct valid file paths.
+1. run "replication.qmd" to generate all figures and results
+1. run "corr.qmd" to render manuscript pdf ("corr.pdf")
+1. run "si.qumd" to render Supplemental Information pdf ("si.pdf")
+
+Alternatively to step 2, if you only wish to reproduce the figures and results and not the manuscript, you can just run "replication.r"---the R code extracted from replication.qmd. Running "replication.r" will not save the figures in the /figs/ folder as required to render the manuscript. 
 
 ## Data files: 
 
-###  The main replication data 
+The main replication data 
 
-1. Counts of legislator contacts per year per agency: "data/corr_counts.Rdata" (on dataverse)
+- "data/corr_counts.Rdata" - Counts of legislator contacts per year per agency (in the /data/ folder of this dataverse project)
+   - see complete codebook and coding procedure in Supplemental Information Part B (SI.pdf)
 
-### Required data on members of Congress
+Required data on members of Congress
 
-2. legislator covariates: "data/member_data.rda" including: 
-
-- year, chamber, and party retrieved from voteview.com (also available on dataverse)
-
-- committee positions from @StewartWoon2017 and @unitedstates
-
-- state population from the US Census
+- "data/member_data.rda" legislator covariates: (in the /data/ folder of this dataverse project)
 
 
-## Code files
+## Dataset codebooks
 
-- "docs/replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
+###  Counts of legislator contacts per year per agency 
 
+Title/file name: corr_counts.Rdata 
 
+Citation: Author-created data souce [@replication]
 
-## Data details 
+Variable names, descriptive labels, and values: 
+
+- "icpsr"  = Legislator id                            
+- "chamber"  = "House" or "Senate"                         
+- "agency" = Agency acronym                            
+- "year"  = Year  [2007:2020]                          
+- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.     
+  - 1 ~ "Constituent (individual)"
+  - 2 ~ "Constituent (corporate)"
+  - 3 ~ "Constituent (501c3 or local\n government)"
+  - 4 ~ "Policy (corporate)"
+  - 5 ~ "Policy (general)"
+- "per_icpsr_chamber_year_agency_type" = Count per legislator per year per agency per type [0:1440]
+
 
 ```{r}
 load(here::here("data", "corr_counts.Rdata"))
@@ -39,54 +62,120 @@ dim(corr_counts)
 head(corr_counts, 7)
 ```
 
-```{r, eval=FALSE, echo = FALSE}
-library(tidyverse)
-library(magrittr)
-# checking data 
-min(corr_counts$year)
-max(corr_counts$year)
-corr_counts %<>% filter(year > 2006) %>%
-  left_join(member_data)
 
-corr_counts |> skimr::skim()
-```
+### 2. Data on members of Congress
 
 
-- "icpsr"  = Legislator id                            
-- "chamber"  = "House" or "Senate"                         
-- "agency" = Agency acronym                            
-- "year"  = Year                            
-- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.     
-  - 1 ~ "Constituent (individual)"
-  - 2 ~ "Constituent (corporate)"
-  - 3 ~ "Constituent (501c3 or local\n government)"
-  - 4 ~ "Policy (corporate)"
-  - 5 ~ "Policy (general)"
-- "per_icpsr_chamber_year_agency_type" = Count per legislator per year per agency per type
+Title/file name: member_data.Rdata 
+
+Citations: Author-created data souce  [@replication], including: 
+
+   - year, chamber, and party from @dwnominate2018 via voteview.com (also available on dataverse)
+
+   - committee positions from @StewartWoon2017 and @unitedstates
+
+   - state population from @Census2019
+
+Variable names, descriptive labels, and values: 
+
+- "congress"     = Congress   [110-116]
+- "chamber"      = "House" or "Senate"
+- "bioname"      = name from voteview.com
+- "first_year"    = First year serving in Congress  [1989:2020]
+- "icpsr"        = ICPSR id number from voteview.com
+- "district_code" = District number  [0:53]
+- "state_abbrev" = State abbreviation
+- "state"        = State name
+- "pop2010"    = State population in 2010 [563,767:37,252,895]
+- "committees"  = Committee assignments
+- "chair"      = Committee chair [0 = no, 1 = yes]
+- "ranking_minority" = Ranking minority [0 = no, 1 = yes]
+- "majority"        = Majority party  [0 = no, 1 = yes]
+- "presidents_party" = Same party as the president [0 = no, 1 = yes]
+- "party"           = Political party ["(D)" = Democrat, "(R)" = Republican, "(I)" = Independent]
 
 ```{r}
 load(here::here("data", "member_data.Rdata"))
 
 dim(member_data)
-```
 
-- "congress"     = Congress   
-- "chamber"      = "House" or "Senate"   
-- "bioname"      = name from voteview.com   
-- "first_year"    = First year serving in Congress  
-- "icpsr"        = ICPSR id number from voteview.com    
-- "district_code" = District number  
-- "state_abbrev" = State abbreviation    
-- "state"        = State name   
-- "pop2010"    = State population in 2010      
-- "committees"  = Committee assignments      
-- "chair"      = Committee chair [0 = no, 1 = yes]   
-- "ranking_minority" = Ranking minority [0 = no, 1 = yes] 
-- "majority"        = Majority party  [0 = no, 1 = yes] 
-- "presidents_party" = Same party as the president [0 = no, 1 = yes]
-- "party"           = Political party
-
-
-```{r}
 head(member_data)
 ```
+
+```{r, eval=FALSE}
+member_data |> skimr::skim()
+```
+
+
+
+## Code files
+
+- "replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
+   - **NOTE:** this file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include: 
+      - data/means.Rdata
+      - models/models_total.Rdata
+      - models/models_district.Rdata
+      - models/models_ratio.Rdata
+      - models/models_con.Rdata
+      - models/models_policy.Rdata
+      - models/models_district_con.Rdata
+      - models/models_spillover_con.Rdata
+      - models/models_spillover.Rdata
+      - models/models_spillover_policy.Rdata
+      - models/models_district_policy.Rdata
+      - models/models_district_party.Rdata
+   - "replication.r" is simply the R code extracted from  "replication.qmd" --- it will produce but not save figures
+   
+<!-- "robusteness-negbin.qmd"  uses `corr_counts` and `member_data` to replicate all count models on in negative binomial or poisson as a robustness check. All of the substantive results are the same with this alternative estimation strategy.--> 
+   
+
+## Manuscript files 
+
+- "corr.qmd" compiles the manuscript text, pulling in results from the intermediate files created by running replication.qmd 
+   - "assets/congress2019.bib" is the required bib file
+- "si.qmd" compiles the Supplemental Information text, pulling in saved results running replication.qmd
+
+## Output files 
+
+- "replication.pdf" is "replication.qmd" rendered to PDF 
+- "replication.html" is "replication.qmd" rendered to HTML 
+- "corr.pdf" is the manuscript text produced by "corr.qmd"
+- "si.pdf" is the Supplemental Information text produced by "si.qmd" 
+<!-- "robustness-negbin.html" is "robustness-negbin.qmd" rendered to HTML-->
+
+
+## Computing Environment: 
+
+- Computer Processor: Apple M2 Max,	12 Cores 
+- Computer Memory (RAM): 96 GB 
+
+Software
+
+- RStudio 2025.05.1+513
+
+```{r}
+sessionInfo()
+```
+
+Note: running replication.qmd or replication.r will install the required packages to render the manuscript, including `here`, `scales`, and `modelsummary`.
+
+The following packages may be need to be installed to render qmd files (not required to simply reproduce the just the results using replication.r)
+
+```
+base64enc
+digest
+evaluate
+glue
+highr
+htmltools
+jsonlite
+markdown
+mime
+rmarkdown
+stringi
+stringr
+xfun
+yaml
+```
+
+## References
