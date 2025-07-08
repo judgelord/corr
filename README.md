@@ -108,9 +108,12 @@ Variable names, descriptive labels, and values:
 -   “district_code” = District number \[0:53\]
 -   “state_abbrev” = State abbreviation
 -   “state” = State name
--   “pop2010” = State population in 2010 \[563,767:37,252,895\]
--   “committees” = Committee assignments
--   “chair” = Committee chair \[0 = no, 1 = yes\]
+-   “pop2010” = State population in 2010 \[563,767:37,252,895\] from
+    U.S. Census Bureau (2019)
+-   “committees” = Committee assignments from Stewart and Woon (2017)
+    and @unitedstates-project (2025)
+-   “chair” = Committee chair \[0 = no, 1 = yes\] from Stewart and
+    Woon (2017) and @unitedstates-project (2025)
 -   “ranking_minority” = Ranking minority \[0 = no, 1 = yes\]
 -   “majority” = Majority party \[0 = no, 1 = yes\]
 -   “presidents_party” = Same party as the president \[0 = no, 1 = yes\]
@@ -123,7 +126,7 @@ load(here::here("data", "member_data.Rdata"))
 dim(member_data)
 ```
 
-    [1] 3865   17
+    [1] 3865   15
 
 ``` r
 head(member_data)
@@ -144,19 +147,19 @@ head(member_data)
     5             2           AL alabama 4780127
     6             6           AL alabama 4780127
                                                                    committees chair
-    1 AGRICULTURE|APPROPRIATIONS|BUDGET|SCIENCE|STANDARDS OF OFFICIAL CONDUCT     0
-    2                            AGRICULTURE|ARMED SERVICES|HOMELAND SECURITY     0
-    3   HOUSE ADMINISTRATION|JUDICIARY|WAYS|VOTING IRREGULARITIES OF AUGUST 2     0
-    4                                             APPROPRIATIONS|INTELLIGENCE     0
-    5                                 AGRICULTURE|ARMED SERVICES|INTELLIGENCE     0
+    1 AGRICULTURE;APPROPRIATIONS;BUDGET;SCIENCE;STANDARDS OF OFFICIAL CONDUCT     0
+    2                            AGRICULTURE;ARMED SERVICES;HOMELAND SECURITY     0
+    3   HOUSE ADMINISTRATION;JUDICIARY;WAYS;VOTING IRREGULARITIES OF AUGUST 2     0
+    4                                             APPROPRIATIONS;INTELLIGENCE     0
+    5                                 AGRICULTURE;ARMED SERVICES;INTELLIGENCE     0
     6                                                      FINANCIAL SERVICES     0
-      ranking_minority majority presidents_party party nominate_dim1 nominate_dim2
-    1                0        0                1   (R)         0.367         0.513
-    2                0        0                1   (R)         0.379         0.377
-    3                0        1                0   (D)        -0.270         0.454
-    4                0        1                0   (D)        -0.132         0.612
-    5                0        0                1   (R)         0.414         0.528
-    6                1        0                1   (R)         0.387         0.228
+      ranking_minority majority presidents_party party
+    1                0        0                1   (R)
+    2                0        0                1   (R)
+    3                0        1                0   (D)
+    4                0        1                0   (D)
+    5                0        0                1   (R)
+    6                1        0                1   (R)
 
 ``` r
 member_data |> skimr::skim()
@@ -187,8 +190,6 @@ member_data |> skimr::skim()
     -   “replication.r” is simply the R code extracted from
         “replication.qmd” — it will produce but not save figures
 
-<!-- "robusteness-negbin.qmd"  uses `corr_counts` and `member_data` to replicate all count models on in negative binomial or poisson as a robustness check. All of the substantive results are the same with this alternative estimation strategy.-->
-
 # Manuscript files
 
 -   “corr.qmd” compiles the manuscript text, pulling in results from the
@@ -203,7 +204,6 @@ member_data |> skimr::skim()
 -   “replication.html” is “replication.qmd” rendered to HTML
 -   “corr.pdf” is the manuscript text produced by “corr.qmd”
 -   “si.pdf” is the Supplemental Information text produced by “si.qmd”
-    <!-- "robustness-negbin.html" is "robustness-negbin.qmd" rendered to HTML-->
 
 # Computing Environment:
 
@@ -266,11 +266,12 @@ replication.r)
 
 # References
 
-Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025.
-“Replication Data: The Effects of Shifting Priorities and Capacity on
-Elected Officials’ Policy Work and Constituency Service: Evidence from a
-Census of Legislator Requests to u.s. Federal Agencies.” Harvard
-Dataverse Network, at: <https://doi.org/10.7910/DVN/LWOCW>.
+Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025. “The
+Effects of Shifting Priorities and Capacity on Elected Officials’ Policy
+Work and Constituency Service: Evidence from a Census of Legislator
+Requests to u.s. Federal Agencies, Replication Data.” *American Journal
+of Political Science*. Harvard Dataverse Network, at:
+<https://doi.org/10.7910/DVN/LWOCW>.
 
 Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron
 Rudkin, and Luke Sonnet. 2022. “Voteview: Congressional Roll-Call Votes

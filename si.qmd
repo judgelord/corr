@@ -1,10 +1,7 @@
 ---
 format:
   html
-  #docx
-  # pdf:
-  #  fig-pos: 'h!'
-  #  fig-env: "figure"
+  #pdf
 linestretch: 1
 number-sections: true
 title: "Supplemental Information: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service"
@@ -28,8 +25,8 @@ author:
      - name: Stanford University
      #department: Department of Political Science and Hoover Institution
 date: today
-dataverse: "https://doi.org/10.7910/DVN/LWOCWO"
-# keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
+abstract: "Replication data: <https://doi.org/10.7910/DVN/LWOCWO>"
+keywords: "US Congress, constituency service, congressional capacity, congressional oversight, interbranch relations"
 indent: true
 number-depth: 2
 cap-location: top
@@ -45,8 +42,6 @@ execute:
 
 
 ```{r knit-options}
-knitr::opts_chunk$set(cache = F)
-
 # inline numbers round to 2
 knitr::knit_hooks$set(inline = function(x) {
   if (is.na(as.numeric(x))) {
@@ -55,7 +50,7 @@ knitr::knit_hooks$set(inline = function(x) {
         return(as.numeric(x) |> round(2))
 })
 
-# means for use in inline code
+# means for use in inline code (created by replication.qmd)
 load(here::here("data", "means.Rdata"))
 
 # custom table formatting for AJPS 
@@ -79,7 +74,7 @@ library(here)
 
 # FOIA Data
 
-Our data represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. In 2018, the FOIA office estimated they would fill our May 2018 request in 2024. As of February 2025, we are still waiting for this data.] 
+Our data [@replication] represent a near census of requests to federal departments, agencies, and sub-agencies. We received records from every department other than the Department of State,^[The Department of State has a notorious FOIA backlog of approximately 10,500 cases. In 2018, the FOIA office estimated they would fill our May 2018 request in 2024. As of February 2025, we are still waiting for this data.] 
 and most independent agencies, commissions, boards, executive offices (e.g., the Council on Environmental Quality and U.S. Trade Representative), and pseudo-governmental institutions like Amtrak and the US Export-Import Bank. @tbl-foia shows the distribution of all 627,356  records we have processed. In the paper, we focus on `r n2007_2020` of these requests sent from these agencies from January 1, 2007, to December 31, 2020. Because FOIA requests often take several years, data for years after 2020 are still incomplete.
 
 ## Variation in Responses to Identical FOIA Request
@@ -487,4 +482,8 @@ The first column of @tbl-models-spillover and @tbl-models-spillover-policy estim
 experienced Senator being replaced by a new Senator for all other
 incumbent legislators.
 Columns 2 and 3 of @tbl-models-spillover and @tbl-models-spillover-policy show, respectively, that either a new member in the delegation or the proportion of new members in the delegation results in insignificant or negative effects on requests when focusing on senators only. This consistent null or negative finding regarding the impact of new legislators in a state delegation provides reassurance that there is no evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
+
+\clearpage
+
+# References {.unnumbered}
 

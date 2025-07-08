@@ -78,7 +78,7 @@ Citations: Author-created data souce  [@replication], including:
    - committee positions from @StewartWoon2017 and @unitedstates
 
    - state population from @Census2019
-
+   
 Variable names, descriptive labels, and values: 
 
 - "congress"     = Congress   [110-116]
@@ -89,9 +89,9 @@ Variable names, descriptive labels, and values:
 - "district_code" = District number  [0:53]
 - "state_abbrev" = State abbreviation
 - "state"        = State name
-- "pop2010"    = State population in 2010 [563,767:37,252,895]
-- "committees"  = Committee assignments
-- "chair"      = Committee chair [0 = no, 1 = yes]
+- "pop2010"    = State population in 2010 [563,767:37,252,895] from @Census2019
+- "committees"  = Committee assignments from @StewartWoon2017 and @unitedstates
+- "chair"      = Committee chair [0 = no, 1 = yes] from @StewartWoon2017 and @unitedstates
 - "ranking_minority" = Ranking minority [0 = no, 1 = yes]
 - "majority"        = Majority party  [0 = no, 1 = yes]
 - "presidents_party" = Same party as the president [0 = no, 1 = yes]
@@ -129,7 +129,6 @@ member_data |> skimr::skim()
       - models/models_district_party.Rdata
    - "replication.r" is simply the R code extracted from  "replication.qmd" --- it will produce but not save figures
    
-<!-- "robusteness-negbin.qmd"  uses `corr_counts` and `member_data` to replicate all count models on in negative binomial or poisson as a robustness check. All of the substantive results are the same with this alternative estimation strategy.--> 
    
 
 # Manuscript files 
@@ -144,7 +143,6 @@ member_data |> skimr::skim()
 - "replication.html" is "replication.qmd" rendered to HTML 
 - "corr.pdf" is the manuscript text produced by "corr.qmd"
 - "si.pdf" is the Supplemental Information text produced by "si.qmd" 
-<!-- "robustness-negbin.html" is "robustness-negbin.qmd" rendered to HTML-->
 
 
 # Computing Environment: 
