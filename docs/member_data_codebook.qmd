@@ -1,0 +1,50 @@
+---
+title: "member_data.Rdata codebook"
+format: pdf
+author: Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
+bibliography: "assets/congress2019.bib"
+---
+
+# Data on members of Congress
+
+Title/file name: member_data.Rdata 
+
+Citations: Author-created data souce  [@replication], including: 
+
+   - year, chamber, and party from @dwnominate2018 via voteview.com (also available on dataverse)
+
+   - committee positions from @StewartWoon2017 and @unitedstates
+
+   - state population from @Census2019
+
+Variable names, descriptive labels, and values: 
+
+- "congress"     = Congress   [110-116]
+- "chamber"      = "House" or "Senate"
+- "bioname"      = name from voteview.com
+- "first_year"    = First year serving in Congress  [1989:2020]
+- "icpsr"        = ICPSR id number from voteview.com
+- "district_code" = District number  [0:53]
+- "state_abbrev" = State abbreviation
+- "state"        = State name
+- "pop2010"    = State population in 2010 [563,767:37,252,895]
+- "committees"  = Committee assignments
+- "chair"      = Committee chair [0 = no, 1 = yes]
+- "ranking_minority" = Ranking minority [0 = no, 1 = yes]
+- "majority"        = Majority party  [0 = no, 1 = yes]
+- "presidents_party" = Same party as the president [0 = no, 1 = yes]
+- "party"           = Political party ["(D)" = Democrat, "(R)" = Republican, "(I)" = Independent]
+
+```{r}
+load(here::here("data", "member_data.Rdata"))
+
+dim(member_data)
+
+head(member_data)
+```
+
+```{r, eval=TRUE}
+member_data |> skimr::skim()
+```
+
+# Refrences
