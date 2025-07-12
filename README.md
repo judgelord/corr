@@ -1,6 +1,5 @@
-# How Shifting Priorities and Capacity Affect Policy Work and
-Constituency Service: Evidence from a Census of Legislator Requests to
-U.S. Federal Agencies
+# How Shifting Priorities and Capacity Affect Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
+
 Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
 
 # Instructions for replication
