@@ -3,7 +3,15 @@ title: "How Shifting Priorities and Capacity Affect Policy Work and Constituency
 author: Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
 format: md
 bibliography: "assets/congress2019.bib"
+wrap: none
 ---
+
+Manuscript: <https://judgelord.github.io/research/correspondence/>
+
+Replication data on Dataverse: <https://doi.org/10.7910/DVN/LWOCW>
+
+Project repo: <https://judgelord.github.io/correspondence/>
+
 
 ```{r echo=FALSE, results = 'hide'}
 # Make a TXT version for dataverse 
@@ -24,7 +32,7 @@ Alternatively to step 2, if you only wish to reproduce the figures and results a
 
 If you are not working in an RStudio project, replication.qmd may still render, but replication.r will likely require a line pointing to the file path where you saved the dataverse files (e.g., `here::i_am(path = "Downloads/dataverse_files")` ) 
 
-# Data files (in /data/ folder)
+# Data files (in [Dataverse](https://doi.org/10.7910/DVN/LWOCW) /data/ folder)
 
 The main replication data 
 
