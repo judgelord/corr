@@ -6,29 +6,34 @@ bibliography: "assets/congress2019.bib"
 ---
 
 ```{r echo=FALSE, results = 'hide'}
-# make txt version for dataverse 
+# Make a TXT version for dataverse 
 file.copy("readme.md", "readme.txt", overwrite = T)
 ```
 
 # Instructions for replication 
 
 1. Save all files and folders from this dataverse project to the root-level of a project directory and ensure it is the active directory in R. This allows the `here` package to construct valid file paths.
-1. run "replication.qmd" to generate all figures and results
-1. run "corr.qmd" to render manuscript pdf ("corr.pdf")
-1. run "si.qumd" to render Supplemental Information pdf ("si.pdf")
+   - On dataverse, click Access Dataset and download the Original Format ZIP. The default download file will be called "dataverse_files.zip" 
+   - Unzip the downloaded folder
+   - In RStudio, make a new project (File → New Project), select Existing Directory, and select the new unzipped folder "dataverse_files"
+1. run (render) "replication.qmd" to generate all figures and results
+1. run (render) "corr.qmd" to render manuscript PDF ("corr.pdf")
+1. run (render) "si.qmd" to render Supplemental Information pdf ("si.pdf")
 
 Alternatively to step 2, if you only wish to reproduce the figures and results and not the manuscript, you can just run "replication.r"---the R code extracted from replication.qmd. Running "replication.r" will not save the figures in the /figs/ folder as required to render the manuscript. 
+
+If you are not working in an RStudio project, replication.qmd may still render, but replication.r will likely require a line pointing to the file path where you saved the dataverse files (e.g., `here::i_am(path = "Downloads/dataverse_files")` ) 
 
 # Data files (in /data/ folder)
 
 The main replication data 
 
-- "data/corr_counts.Rdata" - Counts of legislator contacts per year per agency (in the /data/ folder of this dataverse project)
+- "data/corr_counts.Rdata" = Counts of legislator contacts per year per agency
    - see complete codebook and coding procedure in Supplemental Information Part B (SI.pdf)
 
 Required data on members of Congress
 
-- "data/member_data.rda" legislator covariates: (in the /data/ folder of this dataverse project)
+- "data/member_data.rda" = legislator covariates
 
 
 # Dataset codebooks (in /docs/ folder)
@@ -39,7 +44,7 @@ Codebook: "docs/corr_counts_codebook.pdf"
 
 Data file: "data/corr_counts.Rdata"
 
-Citation: Author-created data souce [@replication]
+Citation: Author-created data source [@replication]
 
 Variable names, descriptive labels, and values: 
 
@@ -47,7 +52,7 @@ Variable names, descriptive labels, and values:
 - "chamber"  = "House" or "Senate"                         
 - "agency" = Agency acronym                            
 - "year"  = Year  [2007:2020]                          
-- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.     
+- "TYPE"  = Type of Legislator Request. See codebook in Supplemental Information.     
   - 1 ~ "Constituent (individual)"
   - 2 ~ "Constituent (corporate)"
   - 3 ~ "Constituent (501c3 or local\n government)"
@@ -71,7 +76,7 @@ Codebook: "docs/member_data_codebook.pdf"
 
 Data file:  "data/member_data.Rdata"
 
-Citations: Author-created data souce  [@replication], including: 
+Citations: Author-created data source [@replication], including: 
 
    - year, chamber, and party from @dwnominate2018 via voteview.com (also available on dataverse)
 
@@ -114,19 +119,20 @@ member_data |> skimr::skim()
 # Code files
 
 - "replication.qmd" uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
-   - **NOTE:** this file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include: 
+   - **NOTE:** This file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include: 
       - data/means.Rdata
       - models/models_total.Rdata
-      - models/models_district.Rdata
       - models/models_ratio.Rdata
       - models/models_con.Rdata
       - models/models_policy.Rdata
-      - models/models_district_con.Rdata
-      - models/models_spillover_con.Rdata
-      - models/models_spillover.Rdata
-      - models/models_spillover_policy.Rdata
+      - models/models_district.Rdata
       - models/models_district_policy.Rdata
+      - models/models_district_con.Rdata
       - models/models_district_party.Rdata
+      - models/models_spillover.Rdata
+      - models/models_spillover_con.Rdata
+      - models/models_spillover_policy.Rdata
+      
    - "replication.r" is simply the R code extracted from  "replication.qmd" --- it will produce but not save figures
    
    
@@ -135,7 +141,10 @@ member_data |> skimr::skim()
 
 - "corr.qmd" compiles the manuscript text, pulling in results from the intermediate files created by running replication.qmd 
    - "assets/congress2019.bib" is the required bib file
-- "si.qmd" compiles the Supplemental Information text, pulling in saved results running replication.qmd
+- "si.qmd" compiles the Supplemental Information text, pulling in saved results from running replication.qmd
+   - "assets/congress2019.bib" is the required bib file
+   - "FOIA.csv" is a required data summary table
+
 
 # Output files 
 
@@ -145,7 +154,7 @@ member_data |> skimr::skim()
 - "si.pdf" is the Supplemental Information text produced by "si.qmd" 
 
 
-# Computing Environment: 
+# Computing Environment
 
 - Computer Processor: Apple M2 Max,	12 Cores 
 - Computer Memory (RAM): 96 GB 
@@ -158,9 +167,9 @@ Software
 sessionInfo()
 ```
 
-Note: running replication.qmd or replication.r will install the required packages to render the manuscript, including `here`, `scales`, and `modelsummary`.
+Note: running replication.qmd or replication.r will install the required packages to render the manuscript, including `here`, `scales`, and `modelsummary`, but it will not update packages that you already have installed. You may get errors if you have versions of packages that are older than those above.  For example, the "counts-per-year" figure requires ggplot2 v3.5 or higher. 
 
-The following packages may be need to be installed to render qmd files (not required to simply reproduce the just the results using replication.r)
+The following packages may need to be installed to render qmd files (not required to merely reproduce the results using replication.r)
 
 ```
 base64enc

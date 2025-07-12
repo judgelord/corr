@@ -88,7 +88,7 @@ Small agencies and regional offices had staff search their email history or prov
 #| label: tbl-foia
 #| tbl-cap: "FOIA Response Table"
 
-here::here("docs", "tables", "FOIA.csv")  |> 
+here::here("FOIA.csv")  |> 
 read.csv() |>
   tinytable::tt( 
    notes = "The Department of State has a notorious FOIA backlog. The FOIA office initially expected to fill our May 2018 request in 2024. We are still waiting.") |> 
@@ -107,7 +107,7 @@ read.csv() |>
 # Contact Codebook {#codebook}
 
 
-We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word "rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations yet uncoded by hand and containing the word "rulemaking"  to the "Policy-Rulemaking" category.^[Procedures and code for converting the raw records from federal agencies into the dataset required for our analysis are available at github.com/judgelord/correspondence, along with each script's full revision history and all written communication with RAs about processing and coding these data.]
+We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word "rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations yet uncoded by hand and containing the word "rulemaking"  to the "Policy-Rulemaking" category.^[Procedures and code for converting the raw records from federal agencies into the dataset required for our analysis are available at <github.com/judgelord/correspondence>, along with each script's full revision history and all written communication with RAs about processing and coding these data.]
 
 We classify legislator requests into five categories: "Individual Constituent Service" (i.e., individual casework or advocacy on behalf of a group such as employees of a company), "Nonprofit or Local Government Constituent Service" (e.g., help with a grant application), "Corporate Constituent Service" (e.g., help with a specific government contract), "Corporate Policy" (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and "General Policy" (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporation). For example, Representative Tauscher wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then "given a chance to resolve issues" with their contract. We coded this case as "Corporate Constituent Service," part of our broader measure of constituent service. We define constituents broadly, so they need not be in a member's district. In practice, most legislators screen constituents by home address and redirect non-resident constituents to the member who represents them. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as "Individual Constituent Service." We note these "hard cases" to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
 
@@ -179,7 +179,7 @@ To visualize the year to year variation for individual legislators @fig-peryear 
 #| label: fig-peryear
 #| out-width: 80%
 
-knitr::include_graphics("docs/figs/counts-per-year-1.png")
+knitr::include_graphics("figs/counts-per-year-1.png")
 ```
 
 
@@ -212,7 +212,7 @@ modelsummary(models_total,
 #| label: fig-m-total-predicted-time
 #| fig-cap: "Predicted Number of Total Letters (Within-Legislator Difference in Differences), 2007-2020"
 #| out-width: 60%
-knitr::include_graphics("docs/figs/m-total-predicted-4.png")
+knitr::include_graphics("figs/m-total-predicted-4.png")
 ```
 
 @fig-m-total-predicted-time shows the predicted total number of letters in Congress and committee chair status (comparing predictions for counterfactuals where the same legislator did and did not receive a chairmanship in their sixth year).^[Predictions are based on a legislator-agency pair where (1) the legislators' average annual contacts equaled the overall average, (2) the legislators' number of contacts with the agency equal the average received by that agency, (3) and the agency received an average number of letters.]
@@ -271,10 +271,10 @@ By their sixth year, their behavior no longer differs from more experienced legi
 #|   - "Model 2"
 #| layout-ncol: 2
 #| out-width: 100%
-knitr::include_graphics("docs/figs/m-con-predicted-1.png")
-knitr::include_graphics("docs/figs/m-con-predicted-2.png")
-knitr::include_graphics("docs/figs/m-con-predicted-3.png")
-knitr::include_graphics("docs/figs/m-con-predicted-4.png")
+knitr::include_graphics("figs/m-con-predicted-1.png")
+knitr::include_graphics("figs/m-con-predicted-2.png")
+knitr::include_graphics("figs/m-con-predicted-3.png")
+knitr::include_graphics("figs/m-con-predicted-4.png")
 ```
 
 \clearpage 
@@ -312,10 +312,10 @@ We estimate that becoming a committee chair causes an increase of `r beta$chair`
 #|   - "Model 2"
 #| layout-ncol: 2
 #| out-width: 100%
-knitr::include_graphics("docs/figs/m-policy-predicted-1.png")
-knitr::include_graphics("docs/figs/m-policy-predicted-2.png")
-knitr::include_graphics("docs/figs/m-policy-predicted-3.png")
-knitr::include_graphics("docs/figs/m-policy-predicted-4.png")
+knitr::include_graphics("figs/m-policy-predicted-1.png")
+knitr::include_graphics("figs/m-policy-predicted-2.png")
+knitr::include_graphics("figs/m-policy-predicted-3.png")
+knitr::include_graphics("figs/m-policy-predicted-4.png")
 ```
 
 \clearpage 
@@ -346,10 +346,10 @@ modelsummary(models_district_con,
 #|   - "Model 4"
 #| layout-ncol: 2
 #| out-width: 100%
-knitr::include_graphics("docs/figs/m-district-con-predicted-1.png")
-knitr::include_graphics("docs/figs/m-district-con-predicted-3.png")
-knitr::include_graphics("docs/figs/m-district-con-predicted-house-1.png")
-knitr::include_graphics("docs/figs/m-district-con-predicted-senate-1.png")
+knitr::include_graphics("figs/m-district-con-predicted-1.png")
+knitr::include_graphics("figs/m-district-con-predicted-3.png")
+knitr::include_graphics("figs/m-district-con-predicted-house-1.png")
+knitr::include_graphics("figs/m-district-con-predicted-senate-1.png")
 ```
 
 \clearpage 
@@ -380,10 +380,10 @@ modelsummary(models_district_policy,
 #|   - "Model 4"
 #| layout-ncol: 2
 #| out-width: 100%
-knitr::include_graphics("docs/figs/m-district-policy-predicted-1.png")
-knitr::include_graphics("docs/figs/m-district-policy-predicted-3.png")
-knitr::include_graphics("docs/figs/m-district-policy-predicted-house-1.png")
-knitr::include_graphics("docs/figs/m-district-policy-predicted-senate-1.png")
+knitr::include_graphics("figs/m-district-policy-predicted-1.png")
+knitr::include_graphics("figs/m-district-policy-predicted-3.png")
+knitr::include_graphics("figs/m-district-policy-predicted-house-1.png")
+knitr::include_graphics("figs/m-district-policy-predicted-senate-1.png")
 ```
 
 \clearpage 
@@ -436,8 +436,8 @@ The effect of electing a new representative, however, dissipates quickly. This p
 #|   - "Model 2"
 #| layout-ncol: 2
 #| out-width: 100%
-knitr::include_graphics("docs/figs/m-district-predicted-2.png")
-knitr::include_graphics("docs/figs/m-district-predicted-4.png")
+knitr::include_graphics("figs/m-district-predicted-2.png")
+knitr::include_graphics("figs/m-district-predicted-4.png")
 ```
 
 Despite the increased uncertainty caused by the much smaller (and non-random) sample of districts where turnover allows us to measure the new “same party” variable, our main results (direction, statistical significance, and magnitude of effects) are largely the same: legislators contact the bureaucracy significantly less in their first two years in office, even holding district constant. Because the new models contain a large number of interaction terms, we present predictions at modal values in @fig-m-district-predicted-party.

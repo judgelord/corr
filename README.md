@@ -9,9 +9,17 @@ Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
     root-level of a project directory and ensure it is the active
     directory in R. This allows the `here` package to construct valid
     file paths.
-2.  run “replication.qmd” to generate all figures and results
-3.  run “corr.qmd” to render manuscript pdf (“corr.pdf”)
-4.  run “si.qumd” to render Supplemental Information pdf (“si.pdf”)
+    -   On dataverse, click Access Dataset and download the Original
+        Format ZIP. The default download file will be called
+        “dataverse_files.zip”
+    -   Unzip the downloaded folder
+    -   In RStudio, make a new project (File → New Project), select
+        Existing Directory, and select the new unzipped folder
+        “dataverse_files”
+2.  run (render) “replication.qmd” to generate all figures and results
+3.  run (render) “corr.qmd” to render manuscript PDF (“corr.pdf”)
+4.  run (render) “si.qmd” to render Supplemental Information pdf
+    (“si.pdf”)
 
 Alternatively to step 2, if you only wish to reproduce the figures and
 results and not the manuscript, you can just run “replication.r”—the R
@@ -19,19 +27,23 @@ code extracted from replication.qmd. Running “replication.r” will not
 save the figures in the /figs/ folder as required to render the
 manuscript.
 
+If you are not working in an RStudio project, replication.qmd may still
+render, but replication.r will likely require a line pointing to the
+file path where you saved the dataverse files (e.g.,
+`here::i_am(path = "Downloads/dataverse_files")` )
+
 # Data files (in /data/ folder)
 
 The main replication data
 
--   “data/corr_counts.Rdata” - Counts of legislator contacts per year
-    per agency (in the /data/ folder of this dataverse project)
+-   “data/corr_counts.Rdata” = Counts of legislator contacts per year
+    per agency
     -   see complete codebook and coding procedure in Supplemental
         Information Part B (SI.pdf)
 
 Required data on members of Congress
 
--   “data/member_data.rda” legislator covariates: (in the /data/ folder
-    of this dataverse project)
+-   “data/member_data.rda” = legislator covariates
 
 # Dataset codebooks (in /docs/ folder)
 
@@ -41,7 +53,7 @@ Codebook: “docs/corr_counts_codebook.pdf”
 
 Data file: “data/corr_counts.Rdata”
 
-Citation: Author-created data souce (Devin Judge-Lord and Eleanor Neff
+Citation: Author-created data source (Devin Judge-Lord and Eleanor Neff
 Powell and Justin Grimmer 2025)
 
 Variable names, descriptive labels, and values:
@@ -50,7 +62,7 @@ Variable names, descriptive labels, and values:
 -   “chamber” = “House” or “Senate”  
 -   “agency” = Agency acronym  
 -   “year” = Year \[2007:2020\]  
--   “TYPE” = Type of Legislator Request. See codebook in Suplimental
+-   “TYPE” = Type of Legislator Request. See codebook in Supplemental
     Information.
     -   1 ~ “Constituent (individual)”
     -   2 ~ “Constituent (corporate)”
@@ -87,7 +99,7 @@ Codebook: “docs/member_data_codebook.pdf”
 
 Data file: “data/member_data.Rdata”
 
-Citations: Author-created data souce (Devin Judge-Lord and Eleanor Neff
+Citations: Author-created data source (Devin Judge-Lord and Eleanor Neff
 Powell and Justin Grimmer 2025), including:
 
 -   year, chamber, and party from Lewis et al. (2022) via voteview.com
@@ -170,23 +182,23 @@ member_data |> skimr::skim()
 -   “replication.qmd” uses `corr_counts` and `member data` to reproduce
     all analyses in the paper and Supplemental Information (rendered
     [here](https://judgelord.github.io/corr/replication))
-    -   **NOTE:** this file produces intermediate data files saved to
+    -   **NOTE:** This file produces intermediate data files saved to
         /data/, figures saved to /figs/, and model objects saved to
         /models/ directories, which are required to render the
         manuscript and SI. In addition to all figures in the paper,
         these intermediate files include:
         -   data/means.Rdata
         -   models/models_total.Rdata
-        -   models/models_district.Rdata
         -   models/models_ratio.Rdata
         -   models/models_con.Rdata
         -   models/models_policy.Rdata
-        -   models/models_district_con.Rdata
-        -   models/models_spillover_con.Rdata
-        -   models/models_spillover.Rdata
-        -   models/models_spillover_policy.Rdata
+        -   models/models_district.Rdata
         -   models/models_district_policy.Rdata
+        -   models/models_district_con.Rdata
         -   models/models_district_party.Rdata
+        -   models/models_spillover.Rdata
+        -   models/models_spillover_con.Rdata
+        -   models/models_spillover_policy.Rdata
     -   “replication.r” is simply the R code extracted from
         “replication.qmd” — it will produce but not save figures
 
@@ -196,7 +208,9 @@ member_data |> skimr::skim()
     intermediate files created by running replication.qmd
     -   “assets/congress2019.bib” is the required bib file
 -   “si.qmd” compiles the Supplemental Information text, pulling in
-    saved results running replication.qmd
+    saved results from running replication.qmd
+    -   “assets/congress2019.bib” is the required bib file
+    -   “FOIA.csv” is a required data summary table
 
 # Output files
 
@@ -205,7 +219,7 @@ member_data |> skimr::skim()
 -   “corr.pdf” is the manuscript text produced by “corr.qmd”
 -   “si.pdf” is the Supplemental Information text produced by “si.qmd”
 
-# Computing Environment:
+# Computing Environment
 
 -   Computer Processor: Apple M2 Max, 12 Cores
 -   Computer Memory (RAM): 96 GB
@@ -218,36 +232,38 @@ Software
 sessionInfo()
 ```
 
-    R version 4.5.1 (2025-06-13)
-    Platform: aarch64-apple-darwin20
-    Running under: macOS Sequoia 15.5
+    R version 4.3.0 (2023-04-21)
+    Platform: aarch64-apple-darwin20 (64-bit)
+    Running under: macOS Ventura 13.4.1
 
     Matrix products: default
-    BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
-    LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+    BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+    LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
     locale:
     [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
-    time zone: America/Detroit
+    time zone: America/Los_Angeles
     tzcode source: internal
 
     attached base packages:
     [1] stats     graphics  grDevices utils     datasets  methods   base     
 
     loaded via a namespace (and not attached):
-     [1] compiler_4.5.1    here_1.0.1        fastmap_1.2.0     rprojroot_2.0.4  
-     [5] cli_3.6.5         tools_4.5.1       htmltools_0.5.8.1 rstudioapi_0.17.1
+     [1] compiler_4.3.0    here_1.0.1        fastmap_1.2.0     rprojroot_2.0.4  
+     [5] cli_3.6.5         tools_4.3.0       htmltools_0.5.8.1 rstudioapi_0.17.1
      [9] yaml_2.3.10       rmarkdown_2.29    knitr_1.50        jsonlite_2.0.0   
     [13] xfun_0.52         digest_0.6.37     rlang_1.1.6       evaluate_1.0.3   
 
 Note: running replication.qmd or replication.r will install the required
 packages to render the manuscript, including `here`, `scales`, and
-`modelsummary`.
+`modelsummary`, but it will not update packages that you already have
+installed. You may get errors if you have versions of packages that are
+older than those above. For example, the “counts-per-year” figure
+requires ggplot2 v3.5 or higher.
 
-The following packages may be need to be installed to render qmd files
-(not required to simply reproduce the just the results using
-replication.r)
+The following packages may need to be installed to render qmd files (not
+required to merely reproduce the results using replication.r)
 
     base64enc
     digest
@@ -289,4 +305,4 @@ March 18, 2025.
 
 U.S. Census Bureau. 2019. “State Population Totals: 2010-2019.”
 <https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html>.
-March 18, 2025.
+Date Accessed: March 18, 2025.

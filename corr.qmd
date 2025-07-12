@@ -1,15 +1,15 @@
 ---
 journal:
   blinded: false
-wordcount: 10,000
+wordcount: 10000
 format:
   #html
   # docx # sent to AJPS for typsetting 
-  # pdf # basic pdf 
-  cmc-article-pdf: # the PDF manuscript uploaded applies additional formatting from  https://github.com/CoryMcCartan/cmc-article thanks to Cory McCartan and Christopher Kenny
-      filters: [citeproc.lua, wordcount.lua]
-      fig-pos: 'h!'
-      fig-env: "figure"
+  pdf # basic pdf 
+  # # cmc-article-pdf: # the PDF manuscript uploaded applies additional formatting from  https://github.com/CoryMcCartan/cmc-article thanks to Cory McCartan and Christopher Kenny
+  #     filters: [citeproc.lua, wordcount.lua]
+  #     fig-pos: 'h!'
+  #     fig-env: "figure"
 linestretch: 1.5
 number-sections: false
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
@@ -812,8 +812,8 @@ Feingold to Senator Johnson and from Senator Kohl to Senator Baldwin.
 #| label: fig-wi
 #| out-width: 80%
 
-knitr::include_graphics("figs/districts/(WI-07).png")
-knitr::include_graphics("figs/districts/(WI).png")
+knitr::include_graphics("figs/cases-2.png")
+knitr::include_graphics("figs/cases-1.png")
 
 ```
 
