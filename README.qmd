@@ -32,7 +32,7 @@ Alternatively to step 2, if you only wish to reproduce the figures and results a
 
 If you are not working in an RStudio project, replication.qmd may still render, but replication.r will likely require a line pointing to the file path where you saved the dataverse files (e.g., `here::i_am(path = "Downloads/dataverse_files")` ) 
 
-# Data files (in [Dataverse](https://doi.org/10.7910/DVN/LWOCW) /data/ folder)
+# Data files (in /data/ folder on Dataverse)
 
 The main replication data 
 
@@ -110,6 +110,8 @@ Variable names, descriptive labels, and values:
 - "presidents_party" = Same party as the president [0 = no, 1 = yes]
 - "party"           = Political party ["(D)" = Democrat, "(R)" = Republican, "(I)" = Independent]
 
+For additional variables that are part of the broader data from this project but not required to replicate the analysis for this paper, including data on oversight relationships and agency characteristics from @LewisSelin2012, please contact the authors. 
+
 ```{r}
 load(here::here("data", "member_data.Rdata"))
 
@@ -167,12 +169,25 @@ member_data |> skimr::skim()
 - Computer Processor: Apple M2 Max,	12 Cores 
 - Computer Memory (RAM): 96 GB 
 
-Software
+## Software
 
 - RStudio 2025.05.1+513
 
+**NOTE:** Due to breaking changes in version 0.28.0 if the `marginaleffects` package, the code to make all figures using predicted values now requires loading an earlier version of this package. I used `marginaleffects_0.25.1`. One [way to do this](https://stackoverflow.com/questions/17082341/how-to-downgrade-an-r-package-by-installing-an-older-version):
+
+```{r, eval=FALSE}
+if(packageVersion("marginaleffects") != "0.25.1"){
+remove.packages("marginaleffects")
+packageurl <- "http://cran.r-project.org/src/contrib/Archive/marginaleffects/marginaleffects_0.25.1.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
+}
+```
+
+
 ```{r}
-sessionInfo()
+load(here::here("data", "sessionInfo.rda"))
+
+sessionInfo
 ```
 
 Note: running replication.qmd or replication.r will install the required packages to render the manuscript, including `here`, `scales`, and `modelsummary`, but it will not update packages that you already have installed. You may get errors if you have versions of packages that are older than those above.  For example, the "counts-per-year" figure requires ggplot2 v3.5 or higher. 
@@ -194,6 +209,13 @@ stringi
 stringr
 xfun
 yaml
+```
+
+## Time to run replication.qmd
+
+```{r}
+load(here::here("data", "time.rda"))
+time
 ```
 
 # References

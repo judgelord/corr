@@ -21,7 +21,7 @@ Alternatively to step 2, if you only wish to reproduce the figures and results a
 
 If you are not working in an RStudio project, replication.qmd may still render, but replication.r will likely require a line pointing to the file path where you saved the dataverse files (e.g., `here::i_am(path = "Downloads/dataverse_files")` )
 
-# Data files (in [Dataverse](https://doi.org/10.7910/DVN/LWOCW) /data/ folder)
+# Data files (in /data/ folder on Dataverse)
 
 The main replication data
 
@@ -85,7 +85,7 @@ Data file: “data/member_data.Rdata”
 
 Citations: Author-created data source (Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer 2025), including:
 
--   year, chamber, and party from Lewis et al. (2022) via voteview.com (also available on dataverse)
+-   year, chamber, and party from J. B. Lewis et al. (2022) via voteview.com (also available on dataverse)
 
 -   committee positions from Stewart and Woon (2017) and @unitedstates-project (2025)
 
@@ -108,6 +108,8 @@ Variable names, descriptive labels, and values:
 -   “majority” = Majority party \[0 = no, 1 = yes\]
 -   “presidents_party” = Same party as the president \[0 = no, 1 = yes\]
 -   “party” = Political party \[“(D)” = Democrat, “(R)” = Republican, “(I)” = Independent\]
+
+For additional variables that are part of the broader data from this project but not required to replicate the analysis for this paper, including data on oversight relationships and agency characteristics from D. E. Lewis and Selin (2012), please contact the authors.
 
 ``` r
 load(here::here("data", "member_data.Rdata"))
@@ -192,36 +194,77 @@ member_data |> skimr::skim()
 -   Computer Processor: Apple M2 Max, 12 Cores
 -   Computer Memory (RAM): 96 GB
 
-Software
+## Software
 
 -   RStudio 2025.05.1+513
 
+**NOTE:** Due to breaking changes in version 0.28.0 if the `marginaleffects` package, the code to make all figures using predicted values now requires loading an earlier version of this package. I used `marginaleffects_0.25.1`. One [way to do this](https://stackoverflow.com/questions/17082341/how-to-downgrade-an-r-package-by-installing-an-older-version):
+
 ``` r
-sessionInfo()
+if(packageVersion("marginaleffects") != "0.25.1"){
+remove.packages("marginaleffects")
+packageurl <- "http://cran.r-project.org/src/contrib/Archive/marginaleffects/marginaleffects_0.25.1.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
+}
 ```
 
-    R version 4.3.0 (2023-04-21)
-    Platform: aarch64-apple-darwin20 (64-bit)
-    Running under: macOS Ventura 13.4.1
+``` r
+load(here::here("data", "sessionInfo.rda"))
+
+sessionInfo
+```
+
+    R version 4.5.1 (2025-06-13)
+    Platform: aarch64-apple-darwin20
+    Running under: macOS Sequoia 15.6
 
     Matrix products: default
-    BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
-    LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+    BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+    LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
     locale:
     [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
-    time zone: America/Los_Angeles
+    time zone: America/Detroit
     tzcode source: internal
 
     attached base packages:
     [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+    other attached packages:
+     [1] scales_1.4.0           ggrepel_0.9.6          kableExtra_1.4.0      
+     [4] ineq_0.2-13            magrittr_2.0.3         lubridate_1.9.4       
+     [7] forcats_1.0.0          stringr_1.5.1          dplyr_1.1.4           
+    [10] purrr_1.0.4            readr_2.1.5            tidyr_1.3.1           
+    [13] tibble_3.3.0           ggplot2_3.5.2          tidyverse_2.0.0       
+    [16] fixest_0.12.1          marginaleffects_0.25.1 modelsummary_2.3.0.3  
+
     loaded via a namespace (and not attached):
-     [1] compiler_4.3.0    here_1.0.1        fastmap_1.2.0     rprojroot_2.0.4  
-     [5] cli_3.6.5         tools_4.3.0       htmltools_0.5.8.1 rstudioapi_0.17.1
-     [9] yaml_2.3.10       rmarkdown_2.29    knitr_1.50        jsonlite_2.0.0   
-    [13] xfun_0.52         digest_0.6.37     rlang_1.1.6       evaluate_1.0.3   
+     [1] tidyselect_1.2.1     viridisLite_0.4.2    farver_2.1.2        
+     [4] fastmap_1.2.0        bayestestR_0.15.2    digest_0.6.37       
+     [7] timechange_0.3.0     lifecycle_1.0.4      dreamerr_1.5.0      
+    [10] compiler_4.5.1       rlang_1.1.6          sass_0.4.10         
+    [13] tools_4.5.1          utf8_1.2.6           data.table_1.17.0   
+    [16] knitr_1.50           ggsignif_0.6.4       labeling_0.4.3      
+    [19] here_1.0.1           xml2_1.3.8           RColorBrewer_1.1-3  
+    [22] pkgload_1.4.0        abind_1.4-8          tinytable_0.8.0     
+    [25] withr_3.0.2          numDeriv_2016.8-1.1  grid_4.5.1          
+    [28] datawizard_1.0.2     fansi_1.0.6          ggpubr_0.6.0        
+    [31] insight_1.2.0.1      cli_3.6.5            rmarkdown_2.29      
+    [34] crayon_1.5.3         generics_0.1.4       rstudioapi_0.17.1   
+    [37] performance_0.13.0.6 tzdb_0.5.0           parameters_0.24.2.17
+    [40] cachem_1.1.0         splines_4.5.1        stringmagic_1.2.0   
+    [43] vctrs_0.6.5          Matrix_1.7-3         sandwich_3.1-1      
+    [46] jsonlite_2.0.0       carData_3.0-5        litedown_0.7        
+    [49] car_3.1-3            hms_1.1.3            rstatix_0.7.2       
+    [52] Formula_1.2-5        systemfonts_1.2.2    jquerylib_0.1.4     
+    [55] glue_1.8.0           stringi_1.8.7        gtable_0.3.6        
+    [58] tables_0.9.31        pillar_1.10.2        htmltools_0.5.8.1   
+    [61] R6_2.6.1             rprojroot_2.0.4      evaluate_1.0.3      
+    [64] lattice_0.22-7       backports_1.5.0      broom_1.0.8         
+    [67] bslib_0.9.0          Rcpp_1.0.14          svglite_2.1.3       
+    [70] nlme_3.1-168         checkmate_2.3.2      mgcv_1.9-3          
+    [73] xfun_0.52            zoo_1.8-14           pkgconfig_2.0.3     
 
 Note: running replication.qmd or replication.r will install the required packages to render the manuscript, including `here`, `scales`, and `modelsummary`, but it will not update packages that you already have installed. You may get errors if you have versions of packages that are older than those above. For example, the “counts-per-year” figure requires ggplot2 v3.5 or higher.
 
@@ -242,9 +285,20 @@ The following packages may need to be installed to render qmd files (not require
     xfun
     yaml
 
+## Time to run replication.qmd
+
+``` r
+load(here::here("data", "time.rda"))
+time
+```
+
+    Time difference of 1.751205 mins
+
 # References
 
 Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025. “The Effects of Shifting Priorities and Capacity on Elected Officials’ Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to u.s. Federal Agencies, Replication Data.” *American Journal of Political Science*. Harvard Dataverse Network, at: <https://doi.org/10.7910/DVN/LWOCW>.
+
+Lewis, David E., and Jennifer L. Selin. 2012. *<span class="nocase">ACUS Sourcebook of United States Executive Agencies</span>*. Administrative Conference of the United States.
 
 Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin, and Luke Sonnet. 2022. “Voteview: Congressional Roll-Call Votes Database.” <https://voteview.com>. Date Accessed: Feb. 24, 2022.
 

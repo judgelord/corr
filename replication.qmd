@@ -57,6 +57,14 @@ Packages:
 
 ```{r message=FALSE}
 #| label: packages
+
+# DUE TO BREAKING CHANGES, THIS CODE REQUIRES AN PRIOR VERSION OF MARGINALEFFECTS
+if(packageVersion("marginaleffects") != "0.25.1"){
+remove.packages("marginaleffects")
+packageurl <- "http://cran.r-project.org/src/contrib/Archive/marginaleffects/marginaleffects_0.25.1.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
+}
+
 requires <- c("tidyverse", "magrittr", # data wrangling
               "scales", # plot scales 
               "ggrepel",# plot labels
@@ -4646,13 +4654,15 @@ save(models_spillover_policy, rows, cm, gm,  #beta, se,
 # Computing Environment and Required Packages
 
 ```{r echo=TRUE}
-sessionInfo()
+sessionInfo <- sessionInfo()
+save(sessionInfo, file = here::here("data", "sessionInfo.rda"))
 ```
 
 ## Duration of time to process the job from start to finish
 
 ```{r echo=TRUE}
-Sys.time() - start_time
+time = Sys.time() - start_time
+save(time, file = here::here("data", "time.rda"))
 ```
 
 
