@@ -3,7 +3,7 @@ Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
 
 Manuscript: <https://judgelord.github.io/research/correspondence/>
 
-Replication data on Dataverse: <https://doi.org/10.7910/DVN/LWOCW>
+Replication data on Dataverse: <https://doi.org/10.7910/DVN/LWOCWO>
 
 Project repo: <https://judgelord.github.io/correspondence/>
 
