@@ -18,7 +18,12 @@ testing = F
 verification = T
 
 library(modelsummary)
-library(marginaleffects)
+# DUE TO BREAKING CHANGES, THIS CODE REQUIRES AN PRIOR VERSION OF MARGINALEFFECTS
+if(packageVersion("marginaleffects") != "0.25.1"){
+remove.packages("marginaleffects")
+packageurl <- "http://cran.r-project.org/src/contrib/Archive/marginaleffects/marginaleffects_0.25.1.tar.gz"
+install.packages(packageurl, repos=NULL, type="source")
+}
 library(fixest)
 library(tidyverse)
 library(magrittr)

@@ -540,9 +540,9 @@ modelsummary(models_total,  # stars = T,
 
 ---
 
-## Total Letters 
+## Total Letters - Electoral Competitiveness
 
-- Figures: `figs/m-total-[1:4].png`
+- Figures: `figs/elect-m-total-[1:4].png`
 
 ```{r elect-m-total,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Total Letters Per Year",fig.subcap= c("Model 1: Cross Sectional","Model 2: Diff in Diff","Model 3: restricted Diff in Diff","Model 4: log Diff in Diff")}
 testing = F
@@ -1117,12 +1117,9 @@ ggtenure() +
 Table `\ref{tab:models_policy}` is identical to Table `\ref{tab:models_total} except that we subset the data to only legislator requests hand-coded as policy work. 
 Column 2 of Table `\ref{tab:models_policy}` provides the estimated effects from the difference-in-differences specification in Equation `\ref{e:diff1}`.  We estimate that a district becoming competitive causes an increase of `r beta$competitive`  policy requests `\textit{per agency}` (95-percent confidence interval [`r beta$competitive - se$competitive*1.96`, `r beta$competitive + se$competitive*1.96`]). Across all `r n_agency` agencies, this represents an increase of approximately `r (beta$competitive*n_agency) %>% round(0)` additional requests per year, `r (beta$competitive / mean(dcounts_tenure$perYear_policy) ) %>% round(3)*100 ``\%` of the average requests per year in our data. There is a smaller increase for individuals who become ranking members and those who join a Prestige Committee, though the increase is statistically significant for the prestige committee. Becoming a ranking member of a committee causes an increase of `r beta$ranking_minority` contacts per agency while joining a prestige committee causes a `r beta$competitive` per agency increase in the policy requests a member of Congress makes.
 
-# Ratio 
+# Ratio - Electoral Competitiveness
 
-
-
-
-- Figures: `figs/m-ratio-[1:2].png`
+- Figures: `figs/elect-m-ratio-[1:2].png`
 
 ```{r elect-m-ratio,  fig.show="hold", out.width="50%", fig.height=4.5, fig.cap= "Ratio", fig.subcap= c("Model 1: Cross Sectional","Model 1: Diff in Diff")}
 dcounts_ratio %<>% 
@@ -1157,7 +1154,7 @@ coefplot(m_ratio_dnd, horiz = T)
 
 ### Ratio Table
 
-- Table: `tables/models_ratio.tex` (sans stars)
+- Table: `tables/elect-models_ratio.tex` (sans stars)
 
 ```{r elect-models_ratio}
 models_ratio <- list(
@@ -1223,7 +1220,7 @@ We estimate that a district becoming competitive causes the ratio of constituenc
 
 ### Predictions 
 
-- Figures: `figs/m-ratio-predicted-[1:4].png`
+- Figures: `figs/elect-m-ratio-predicted-[1:4].png`
 
 ```{r elect-m-ratio-predicted, fig.show="hold", out.width="50%", fig.cap= "Ratio", fig.subcap= c("Model 1: Cross Sectional","Model 1: Cross Sectional", "Model 2: Diff in Diff","Model 2: Diff in Diff")}
 predicted <- predictions(m_ratio_cross,

@@ -173,7 +173,7 @@ member_data |> skimr::skim()
 
 - RStudio 2025.05.1+513
 
-**NOTE:** Due to breaking changes in version 0.28.0 if the `marginaleffects` package, the code to make all figures using predicted values now requires loading an earlier version of this package. I used `marginaleffects_0.25.1`. One [way to do this](https://stackoverflow.com/questions/17082341/how-to-downgrade-an-r-package-by-installing-an-older-version):
+**NOTE:** Due to breaking changes in version 0.28.0 of the `marginaleffects` package, the code to make all figures using predicted values now requires loading an earlier version of this package. I used `marginaleffects_0.25.1`. 
 
 ```{r, eval=FALSE}
 if(packageVersion("marginaleffects") != "0.25.1"){
@@ -183,6 +183,7 @@ install.packages(packageurl, repos=NULL, type="source")
 }
 ```
 
+It may be similarly important that the `modelsummary`, `xfun`, `tinytable`, `yaml` packages are of the versions listed below.
 
 ```{r}
 load(here::here("data", "sessionInfo.rda"))

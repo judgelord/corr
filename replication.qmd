@@ -64,6 +64,7 @@ remove.packages("marginaleffects")
 packageurl <- "http://cran.r-project.org/src/contrib/Archive/marginaleffects/marginaleffects_0.25.1.tar.gz"
 install.packages(packageurl, repos=NULL, type="source")
 }
+# as described in the warning below, the uncertainty intervals around predictions do not include uncertainty in the estimates of the fixed effects. Since we are just using predictions to illustrate the model results, not make any claims about particular years, legislators, or agencies (the fixed effects), the uncertainty in the fixed effect estimates is not relevant for our use case (illustrating main effects, for which we do have estimates of uncertainty). However, we wish to alert users of these code that they should not use the predictions to make such claims. 
 
 requires <- c("tidyverse", "magrittr", # data wrangling
               "scales", # plot scales 
@@ -908,6 +909,16 @@ Notice several patterns
 - quick rebound as Comstock gets her office in order
 - inheriting a highly effective office, Comstock is far above average House member
 
+:::{.callout-important collapse="true"}
+## Results in manuscript (p. 22)
+
+```{r comestock}
+dcounts %>% 
+  filter(bioname == "COMSTOCK, Barbara J.", year %in% c(2015, 2016)) |> 
+  group_by(year) %>% 
+  summarise(n = sum(per_icpsr_chamber_year_agency_type))
+```
+:::
 
 ```{r case-study-function}
 case_study <- function(cq){
@@ -957,12 +968,16 @@ dcounts %>%
 #| fig-height: 2.5
 #| out-width: "100%"
 
+
 # plot for WI for paper
 case_study("(WI)")
 
 case_study("(WI-7)")
 
-# case_study("(VA-10)")
+# Wolf --> Comstock example 
+case_study("(VA-10)")
+
+
 # 
 # case_study("(NY-07)")
 # 
@@ -1390,6 +1405,11 @@ The most frequent legislator agency pair: McCain x VA with 2159 letters!
 The average is  `r perYear_mean_total` letters per legislator per year, `r perYear_mean1` letters per agency per year.
 For predictions, we need an average member-year-agency triad. The first table below shows the members who averaged  `r perYear_mean_total`, entered Congress between 2007 and 2011, were observed in our data for at least seven years, and most often submitted exactly one letter to an agency (the closest integer  `r perYear_mean_total` ). For realism, this person would ideally become a chair at some point in our data. 
 
+:::{.callout-warning}
+In the figures below, uncertainty intervals around predictions do not include uncertainty in the estimates of the fixed effects. This is because the standard errors returned by marginaleffects::predictions() do not reflect uncertainty in the fixed effect estimation. Since we are just using predictions to illustrate the effects of interest, not make any claims about particular years, legislators, or agencies (the fixed effects), the uncertainty in the fixed effect estimates is not relevant for our use case (illustrating main effects, for which we do have estimates of uncertainty). However, we wish to alert users of these code that they should not use the predictions to make such claims. 
+
+For further discussion, see [this discussion](https://github.com/vincentarelbundock/marginaleffects/issues/1487) that led the authors of the marginaleffects package to [stop](https://marginaleffects.com/bonus/NEWS_r.html#section) allowing users to calculate predictions for fixed effects models (due to their potential misuses and possible differences from uncertianty bounds that do include uncertianty related to the estimation of fixed effects).
+:::
 
 <!--
 Of the modal legislators, 
@@ -1535,7 +1555,10 @@ values_tenure <- tidyr::expand(dcounts_tenure,
 ```{r gini}
 gini <- dcounts_tenure |> 
   ungroup() |> 
-  group_by(year, chamber) |> 
+  group_by(year, icpsr) |> 
+  summarize(perYear = sum(perYear)) |> 
+  ungroup() |> 
+group_by(year) |> 
   summarise(gini = round(ineq::Gini(perYear),2)) |>
   arrange(- year) |> 
   filter(year > 2006) 
@@ -1545,14 +1568,20 @@ gini|>
 
 gini |> 
   ggplot() +
-  aes( x = year, y = gini, color = chamber) + 
+  aes( x = year, y = gini) + 
   geom_point() + 
   geom_smooth(method = "lm")
 
+gini_min <- min(gini$gini)
+gini_max <- max(gini$gini)
+
+
 gini2 <- dcounts_tenure |> 
-  filter(perYear > 0) |> 
   ungroup() |> 
-  group_by(year, chamber) |> 
+  group_by(year, chamber, icpsr) |> 
+  summarize(perYear = sum(perYear)) |> 
+  ungroup() |> 
+group_by(year, chamber) |> 
   summarise(gini = round(ineq::Gini(perYear),2)) |>
   arrange(- year) |> 
   filter(year > 2006) 
@@ -1565,24 +1594,39 @@ gini2 |>
   aes( x = year, y = gini, color = chamber) + 
   geom_point() + 
   geom_smooth(method = "lm")
+
+
 ```
 
 
 :::{.callout-important collapse="true"}
 ## Results in manuscript (p. 23)
 ```{r echo=verification, eval=verification}
-gini2 %<>% filter(year > 2017)
+gini %<>% filter(year > 2017)
 
-min(gini2$gini)
-max(gini2$gini)
+min(gini$gini)
+max(gini$gini)
 ```
 :::
 
 
 
-In 2023, Colombia had the highest income inequality Gini coefficient at .55. 
+In 2023, Colombia had the highest income inequality Gini coefficient at .54. 
 
 https://ourworldindata.org/what-is-the-gini-coefficient
+
+Top 10 Gini Coefficients in 2023
+
+1. Colombia	0.54
+1. Brazil	0.52	
+1. Zambia	0.51
+1. Angola	0.51				
+1. Mozambique	0.50	
+1. Zimbabwe	0.50
+1. Kosovo	0.49
+1. Panama	0.49
+1. Honduras	0.47	
+1. Costa Rica	0.47
 
 <!--(The Gini coefficient for House campaign spending in 2016 was .29).  --> 
 
@@ -1882,7 +1926,7 @@ se <- m_total_dnd$se %>%
   pivot_wider(names_from = se)
 
 save(models_total, rows, cm, gm,  beta, se,
-     file = here::here("models", "models_total.Rdata"))
+     file = here::here("models", "models_total-manuscript-table-2.Rdata"))
 
 
 if(testing){
@@ -1956,6 +2000,7 @@ We estimate that the experience gained between the first and second year in Cong
 
 predicted <- predictions(m_total_cross,
                          newdata = values)
+
 
 # Cross-sectional predictions
 predicted %>%
@@ -2588,7 +2633,7 @@ beta <- m_ratio_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>
 se <- m_ratio_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
 save(models_ratio, rows, cm, gm,  beta, se,
-     file = here::here("models", "models_ratio.Rdata"))
+     file = here::here("models", "models_ratio-manuscript-table-4.Rdata"))
 ```
 
 ### Ratio Narrative 
@@ -2986,18 +3031,25 @@ modelsummary(models_district,
 
 beta <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
-beta_cross <- m_district_dnd$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
+beta_cross <- m_district_cross$coefficients %>%round(3) %>% as_tibble(rownames = "beta") %>% pivot_wider(names_from = beta)
 
 
 se <- m_district_dnd$se %>%round(3) %>% as_tibble(rownames = "se") %>% pivot_wider(names_from = se)
 
-save(models_district, rows, cm, gm,  beta, se,
-     file = here::here("models", "models_district.Rdata"))
+save(models_district, rows, cm, gm,  beta, beta_cross, se,
+     file = here::here("models", "models_district-manuscript-table-3.Rdata"))
 ```
 
 :::{.callout-important collapse="true"}
 ## Results in manuscript (Table 3, p. 36)
 ```{r echo=verification, eval=verification}
+# cross-sectional average differences
+beta_cross
+
+# diff in diff
+beta
+
+# all results
 models_district
 ```
 :::
@@ -4561,7 +4613,7 @@ modelsummary(models_spillover_con,
              notes = list("Robust standard errors in parentheses, clustered by district.") ) 
 
 save(models_spillover_con, rows, cm, gm,  #beta, se,
-     file = here::here("models", "models_spillover_con.Rdata"))
+     file = here::here("models", "models_spillover_con-manuscript-table-5.Rdata"))
 ```
 
 

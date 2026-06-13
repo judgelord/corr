@@ -1,0 +1,108 @@
+---
+title: "corr_counts.Rdata codebook"
+format: pdf
+author: Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
+bibliography: "assets/congress2019.bib"
+---
+
+
+#  Counts of legislator contacts per year per agency 
+
+Title/file name: corr_counts.Rdata 
+
+Citation: Author-created data souce [@replication]
+
+Variable names, descriptive labels, and values: 
+
+- "icpsr"  = Legislator id
+- "chamber"  = "House" or "Senate"
+- "agency" = Agency acronym
+- "year"  = Year  [2007:2020]
+- "TYPE"  = Type of Legislator Request. See codebook in Suplimental Information.
+  - 1 ~ "Constituent (individual)"
+  - 2 ~ "Constituent (corporate)"
+  - 3 ~ "Constituent (501c3 or local government)"
+  - 4 ~ "Policy (corporate)"
+  - 5 ~ "Policy (general)"
+- "per_icpsr_chamber_year_agency_type" = Count per legislator per year per agency per type [0:1440]
+
+
+```{r}
+load(here::here("data", "corr_counts.Rdata"))
+
+dim(corr_counts)
+
+head(corr_counts, 7)
+```
+
+```{r, eval=TRUE}
+corr_counts|> skimr::skim()
+```
+
+# Contact Codebook {#codebook}
+
+From Supplemental Information: 
+
+We provide the following codebook to a team of hand-coders to code each case of Congressional contact with federal agencies and extract information about the legislator. The codebook provides steps to move from raw correspondence logs to data formatted for our analysis.  We also developed subagency-specific coding rules throughout the hand-coding process where certain regular expressions indicated certain types of requests. For example, where documents containing the word "rulemaking" consistently indicated that a legislator's request involved an agency's proposed rule, we assigned all observations yet uncoded by hand and containing the word "rulemaking"  to the "Policy-Rulemaking" category.^[Procedures and code for converting the raw records from federal agencies into the dataset required for our analysis are available at github.com/judgelord/correspondence, along with each script's full revision history and all written communication with RAs about processing and coding these data.]
+
+We classify legislator requests into five categories: "Individual Constituent Service" (i.e., individual casework or advocacy on behalf of a group such as employees of a company), "Nonprofit or Local Government Constituent Service" (e.g., help with a grant application), "Corporate Constituent Service" (e.g., help with a specific government contract), "Corporate Policy" (policy work explicitly aimed to benefit a specific industry, like tariffs and subsidies), and "General Policy" (broader policy work related to legislation, budgets, or rulemaking that is not advocating for an individual constituent or corporation). For example, Representative Tauscher wrote to the Defense Commissary Agency on behalf of the Jelly Belly Candy Co., based in California. Jelly Belly was then "given a chance to resolve issues" with their contract. We coded this case as "Corporate Constituent Service," part of our broader measure of constituent service. We define constituents broadly, so they need not be in a member's district. In practice, most legislators screen constituents by home address and redirect non-resident constituents to the member who represents them. We also consider constituent service as broader than individual casework. For example, we coded Senator Rubio asking the IRS for special treatment for residents of hurricane-affected parts of Florida as "Individual Constituent Service." We note these "hard cases" to illustrate the boundaries of our coding scheme. Most contacts were easily parsed into either individual casework or policy work related to hearings, regulations, and legislation.
+
+## General Congressional Correspondence Log Coding Guidelines
+
+The first step is to identify the columns that contain the member of Congress (or Committee), the date that the member-initiated correspondence, and the column that best describes the subject. These should be named FROM, DATE, and SUBJECT. 
+
+We aim to classify the subject of correspondence between members of Congress and government agencies. You can do this using keywords (potential keywords in italics below), but it may also require googling subject lines (e.g., what does this acronym mean in this context!?) and inferring why the legislator made the request. Doing so may require identifying a member's relevant policy positions. For example, if the subject is "mining regulations" or "open internet," a member's voting history on related bills or donations from the industry may help us infer if the letter was policy work on behalf of the industry (type 4) or not (type 5). Limiting your search to a date range around the letter date may yield relevant public statements. If you have questions, find something interesting, or, in your efforts to classify a confusing correspondence, you discover information like a related public statement, note it in the NOTES column. In some cases, columns other than the SUBJECT may offer helpful information. This may be difficult at first, but it will get easier. 
+
+The outcome is a spreadsheet with the first columns being FROM, DATE, SUBJECT, TYPE, CERTAINTY, ALT_TYPE.
+
+Below are five codes for the TYPE and three codes for your level of CERTAINTY that it is this type. If you are less than Very Certain (i.e., if only Fairly Certain or Toss Up), record your second best guess as ALT_TYPE; otherwise, leave this column blank. Only leave NOTES if you think it would be helpful for the team to revisit the entry.
+
+## Coding Types of Congressional Correspondence
+
+### 1 = Personal Service
+
+**Definition:** Individual, non-commercial constituent service.
+Examples: Help with a government form, passport, visa, back pay, military honor, enlistment, criminal case, request for personal information (e.g., one’s FBI file), disability application, worker compensation, personal complaint, discrimination case, job application, health insurance, financial services complaints, etc.
+
+### 2 = Commercial Service - Transactional 
+
+**Definition:** Anything related to a specific individual case by a business (including business owners like farmers and consultants). 
+
+- General Examples: Help with a grant application, payment, loan, or contract (buying anything from or selling anything to a government agency). Help with an individual case of tax assessment, fine, or regulatory enforcement action. Help with public relations on behalf of a business.
+- Specific Examples: allocation of radio spectrum, a case against a company, tax dispute, contract for the purchase of military surplus, crop insurance distribution, debt settlement, foreclosure assistance, a fine for a law violation, etc.
+
+### 3 = Government and Nonprofit Service - Transactional
+
+**Definition:** Same as for (2-Commercial Service), but for municipal or state governments (including cities, counties, etc.) or non-business-oriented nonprofit organizations (i.e., NOT ones that represent an industry or trade association)
+
+### 4 = Commercial Service - Policy
+
+
+**Definition:** Anything applying to a class of commercial activity or businesses (e.g., shipping, airlines, agriculture), including legislation, bills, acts, appropriations, authorizations, etc.
+
+- General Examples: Authorization of or appropriation to a government program targeted towards a particular industry or industries. Regulation of industry or commercial practice or competition.
+-  Specific Examples: Milk prices, insurance or loan eligibility criteria, purchasing policies, crop insurance rates, pollution criteria, classification of products for trade or taxation, conservation appropriation, worker visa types, restrictions, or caps, etc.
+ 
+### 5 = Policy Work - NOT in the service of any individual, business, or specific industry.
+
+Examples of Policy Work: 
+
+- Lawmaking 
+- Request for policy-relevant information. This includes prospective legislation, legislation under consideration, or already implemented legislation that requires oversight.  
+- Oversight
+- Committee requesting a report or testimony at a hearing
+- Requesting clarity on an agency rule
+- Lobbying administrative policy
+- Agency rulemaking with non-commercial implications (comments on agency rulemaking may often be (3)) 
+- Political work
+- Meeting with organized constituent groups (e.g., workers, people with disabilities, environmentalists) about policy (meetings with industry groups generally fall under (4)).
+- Media requests
+
+
+### 6 = Other 
+
+
+Suggest a new category in the NOTES column only if you cannot fit it under 1-4. For example, requesting dirt on one's political opponents could be called "partisan" as none of the above. Other specific types: thank you (for thank you notes with no other information), congratulations (for congratulatory correspondence on appointments or retirements with no other information), family member (for correspondence on behalf of a family member) 
+
+
+# Refrences

@@ -1,7 +1,7 @@
 ---
 format:
-  html
-  #pdf
+  #html
+  pdf
 linestretch: 1
 number-sections: true
 title: "Supplemental Information: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service"
@@ -226,7 +226,7 @@ $$\begin{aligned}
 Y_{ijt} & = & \boldsymbol{\beta}^{'} \textbf{Committee Position}_{it}  + \sum_{s = 1}^{6} \eta_{s} \text{I}\left(\text{tenure}_{it} = s\right) + \gamma_{ij} + \delta_{jt} + m_{it} + p_{it} + \epsilon_{ijt} 
 \end{aligned}$$ {#eq-diff1}
 
-To account for possible differences in legislators who obtain different levels of tenure, the second column of @tbl-models-total estimates the difference-in-differences specification in @eq-diff1. The tenure coefficients show that legislators make fewer requests to agencies in their first year in office. As they acquire experience, they make more requests to federal agencies. This member-level models show that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years is associates with an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of  `r -(beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/84)` increase** over average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year is associated with an increase of `r `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) |> round()` additional requests per year.
+To account for possible differences in legislators who obtain different levels of tenure, the second column of @tbl-models-total estimates the difference-in-differences specification in @eq-diff1. The tenure coefficients show that legislators make fewer requests to agencies in their first year in office. As they acquire experience, they make more requests to federal agencies. This member-level models show that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years is associates with an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of  `r -(beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/84)` increase** over average number of requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year is associated with an increase of `r -beta$second` per agency, an increase of approximately `r (-beta$second*n_agency) |> round()` additional requests per year.
 After a legislator's third year, increases in capacity level off. 
 By their sixth year, their behavior no longer differs from more experienced legislators in Model 2.  
 
@@ -256,7 +256,7 @@ modelsummary(models_con,
 @tbl-models_con is identical to @tbl-models-total except that we subset the data to only legislator requests hand-coded as constituency service. 
 Column 2 of @tbl-models_con provides the estimated effects from the difference-in-differences specification in @eq-diff1. More experience increases the level of constituency service that legislators provide. The effect of being a committee chair is positive but not significant at the .05 level.
 
-We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of `r (-beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/58)` increase** over average number of constituency service requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r `-beta$second` per agency, an increase of `r (-beta$second*n_agency) |> round()` additional requests per year.
+We estimate that the experience gained between the first and second year in Congress causes an increase of `r beta$second - beta$first`  requests *per agency*. The experience gained between the first and seventh years causes an increase of `r -beta$first` per agency. Across all `r n_agency` agencies in these data, this represents an increase of `r (-beta$first*n_agency) |> round()` additional requests per year,  **a `r percent(-(beta$first*n_agency)/58)` increase** over average number of constituency service requests per year in our data. There is a smaller increase after the second year. The experience gained between the second and seventh year causes an increase of `r -beta$second` per agency, an increase of `r (-beta$second*n_agency) |> round()` additional requests per year.
 After a legislator's third year, increases in capacity level off. 
 By their sixth year, their behavior no longer differs from more experienced legislators in Model 2. 
 

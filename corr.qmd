@@ -1,15 +1,15 @@
 ---
 journal:
   blinded: false
-wordcount: 10000
+# wordcount: 9938
 format:
   #html
-  # docx # sent to AJPS for typsetting 
-  pdf # basic pdf 
-  # # cmc-article-pdf: # the PDF manuscript uploaded applies additional formatting from  https://github.com/CoryMcCartan/cmc-article thanks to Cory McCartan and Christopher Kenny
-  #     filters: [citeproc.lua, wordcount.lua]
-  #     fig-pos: 'h!'
-  #     fig-env: "figure"
+  #  docx # sent to AJPS for typsetting 
+  #pdf # basic pdf 
+  cmc-article-pdf: # the PDF manuscript uploaded applies additional formatting from  https://github.com/CoryMcCartan/cmc-article thanks to Cory McCartan and Christopher Kenny
+      filters: [citeproc.lua, wordcount.lua]
+      fig-pos: 'h!'
+      fig-env: "figure"
 linestretch: 1.5
 number-sections: false
 title: How Shifting Priorities and Capacity Affect Policy Work and Constituency Service
@@ -33,8 +33,9 @@ author:
       - name: Stanford University
     #department: Department of Political Science and Hoover Institution
 thanks: |
-  Links to appendices and data: [judgelord.github.io/research/correspondence/](https://judgelord.github.io/research/correspondence/). We are grateful for research assistance from Rochelle Snyder, Anna Meier, Hope Karnopp, Jessie Munson, Fatima Ali, Dan Kojis, Aaron Gold, Julia Derzay, Maggie Nead, Lucy McNeil, and Sam Schutt. We are further grateful for the feedback from anonymous reviewers, the editors, Wendy Schiller, Steve Ansolabehere, Dan Carpenter, Jennifer Hochschild, Andy Hall, Nolan McCarty, Jonathan Mummolo, Dan Thompson, Danielle Thomsen, Leah Rosenstiel, Sean Westwood, seminar participants at Harvard University, Duke University, Princeton University, the University of California-Davis, the University of Chicago, the University of Illinois-Urbana-Champaign, the University of Wisconsin-Madison, Vanderbilt University, and the Women in Legislative Studies Research Seminar, and conference participants at the American Political Science Association and Midwest Political Science Association Annual Meetings. Support for this research was provided by the University of Wisconsin-Madison, Office of the Vice Chancellor for Research, with funding from the Wisconsin Alumni Research Foundation.
-date: today
+  Links to appendices and data: [github.com/judgelord/corr](https://github.com/judgelord/corr). We are grateful for research assistance from Rochelle Snyder, Anna Meier, Hope Karnopp, Jessie Munson, Fatima Ali, Dan Kojis, Aaron Gold, Julia Derzay, Maggie Nead, Lucy McNeil, and Sam Schutt. We are further grateful for the feedback from anonymous reviewers, the editors, Wendy Schiller, Steve Ansolabehere, Dan Carpenter, Jennifer Hochschild, Andy Hall, Nolan McCarty, Jonathan Mummolo, Dan Thompson, Danielle Thomsen, Leah Rosenstiel, Sean Westwood, seminar participants at Harvard University, Duke University, Princeton University, the University of California-Davis, the University of Chicago, the University of Illinois-Urbana-Champaign, the University of Wisconsin-Madison, Vanderbilt University, and the Women in Legislative Studies Research Seminar, and conference participants at the American Political Science Association and Midwest Political Science Association Annual Meetings. Support for this research was provided by the University of Wisconsin-Madison, Office of the Vice Chancellor for Research, with funding from the Wisconsin Alumni Research Foundation. **How to cite this article:** Judge-Lord, Devin, Eleanor Neff Powell, and Justin Grimmer. 2026. “How shifting priorities and capacity affect policy work and constituency service: Evidence from a census of legislator requests to U.S. federal agencies.” *American Journal of Political Science* 1–19. <https://doi.org/10.1111/ajps.70031>
+date: 2025-06-18
+doi: https://doi.org/10.1111/ajps.70031
 abstract: |
   When elected officials gain power, do they use it to provide more constituent service or affect policy? The answer informs debates over how legislator capacity, term limits, and institutional positions affect legislator behavior.  We distinguish two countervailing effects of increased institutional power: shifting priorities and increased capacity.  To assess how institutional power shapes behavior, we assemble a massive new database of 611,239 legislator requests to a near census of federal departments, agencies, and sub-agencies between 2007 and 2020. We find that legislators prioritize policy work as they gain institutional power (e.g., become a committee chair) but simultaneously maintain their levels of constituency service. Moreover, when a new legislator replaces an experienced legislator, the district receives less constituency service *and* less policy work. Rather than long-serving and powerful elected officials diverting attention from constituents, their increased capacity enables them to maintain levels of constituency service, even as they prioritize policy work.
 dataverse: "https://doi.org/10.7910/DVN/LWOCW"
@@ -169,7 +170,7 @@ reform debates.
 
 # Do Experience and Power Increase or Decrease Constituency Service? {#sec-theory}
 
-How elected officials balance their work on broad policy goals and delivering particularistic service to their constituents and district presents a significant tension for representation. Building on multi-task models of representation [@AshworthBuenodeMesquita2006; @gordon2009advantages], we explain why increasing experience and power may either increase or decrease the levels of constituency service legislators provide depending on the relative magnitudes of the effects of increasing capacity and changing priorities.
+How elected officials balance their work on broad policy goals and particularistic service to their constituents presents a significant tension for representation. Building on multi-task models of representation [@AshworthBuenodeMesquita2006; @gordon2009advantages], we explain why increasing experience and power may either increase or decrease the levels of constituency service legislators provide depending on the relative magnitudes of the effects of increasing capacity and changing priorities.
 
 ## Increasing Capacity: Why Experience and Power Could *Increase* Constituency Service
 
@@ -232,7 +233,7 @@ In terms of formal models, office organization increases legislators' capacity [
 ### Mechanism 3: Increased Likelihood of Success
 
 In fulfilling statutory missions, agency officials use broad discretion to prioritize resources as they process visa, permit, and grant applications,
-regulating compliance with environmental, health, and
+regulate compliance with environmental, health, and
 labor laws, and much more. Legislators are in a position to influence
 these decisions. Agency staff often assign special
 importance to elected officials' requests, tagging congressional correspondence as "VIP." Agency protocols
@@ -474,7 +475,7 @@ lost a chair position to representatives who gained a chair position,
 this could partially confound our analysis. More realistically, if
 constituents redirect requests for help away from new legislators toward
 longer-serving legislators, we might observe increases in demand
-targeted at more experienced legislators of a delegation whenever a less
+targeted at the more experienced legislators of a delegation whenever a less
 experienced legislator replaces another more experienced member of their
 state's delegation. To address such concerns,
 we conduct a series of analyses to test alternative
@@ -505,7 +506,7 @@ legislators. We had sufficient information on `r n2007_2020coded` of these conta
     backlog and has been processing our requests for over seven years. Our
     data also include most independent agencies, commissions, boards,
     executive offices (e.g., the White House Council on Environmental
-    Quality and U.S. Trade Representative), and pseudo-governmental
+    Quality and the U.S. Trade Representative), and pseudo-governmental
     institutions like Amtrak and the U.S. Export-Import Bank. By
     rigorously pursuing a census of records, we limit any response bias
     that may exist in more easily obtained samples.
@@ -532,7 +533,7 @@ individual constituents, (2) individual corporations, (3) nonprofits and local g
 began with the authors coding a representative sample of records using
 our codebook (see Supplemental Information, p. 2). We then trained research assistants
 to continue the coding. The first several thousand letters were
-double-coded. For example, of over 10,000 letters for the Environmental
+double-coded. For example, of over 10,000 letters to the Environmental
 Protection Agency, the first 2,500 were double-coded. Our overall
 inter-coder agreement was 0.78, which rose to 0.9 when we removed coding decisions where coders were uncertain.
 
@@ -580,7 +581,7 @@ constituency service (compared to 85% for non-chairs).
 ### Levels of Contact with Federal Agencies are Highly Unequal
 
 Legislators vary significantly in how often they contact federal
-agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year among members of each chamber range between 0.56 and 0.90, exceeding the Gini coefficient for income inequality in every country the World Bank reported in 2023. To visualize this variation, @fig-percentiles shows the average number of contacts per year for House members (panel (a)) and
+agencies. Since 2016, Gini coefficients for inequality in the number of contacts per year per legislator range between 0.49 and 0.54, mirroring the Gini coefficient for income inequality in the eight most unequal countries reported by the World Bank in 2024. To visualize this variation, @fig-percentiles shows the average number of contacts per year for House members (panel (a)) and
 senators (panel (b)).[^5] 
 On average, senators in our data contacted agencies
 148 times per year, while House members averaged 54 per year. We see a similar level of variation in the House but with lower overall levels of contact with federal agencies, reflecting lower resources and fewer constituents than senators. 
@@ -603,12 +604,11 @@ knitr::include_graphics("figs/percentiles-chamber-2.png")
 Among the most prolific senators, Senator Byrd (D-WV) averaged 538
 contacts per year, Senator Nelson (D-FL) averaged 535, and Senator Webb (D-VA) averaged 533 contacts per year. 
 Rep. Barbara Comstock averaged 349 contacts per year. Comstock replaced Rep. Frank Wolf (R-VA), who averaged 381 contacts per year and inherited many of his staff. 
-<!--Comstock had worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. 
---> 
-Nevertheless, Comstock's first year saw the volume of contacts on behalf of Virginia's 10th district dip slightly to 245, the lowest level in our time period. <!--Other members of the House wrote at
+Comstock had worked in Rep. Frank Wolf's congressional office for five years, described him as a "longtime mentor," and claimed that Wolf first urged her to run for office. He endorsed and campaigned with her. 
+Nevertheless, Comstock's first year saw the volume of contacts on behalf of Virginia's 10th district dip slightly to 245 in her first year before rebounding to to 332 in her second year. Other members of the House wrote at
 much lower rates. For example, in her first year in Congress, Michele
 Bachmann wrote only six letters in our data but would average 31 letters
-per year by the end of her time in Congress.--> 
+per year by the end of her time in Congress.
 
 [^5]: Figure A1 in the Supplemental Appendix (p.6) shows the number of requests per legislator over time.
 
@@ -697,9 +697,10 @@ legislator is from the same party as the president in year $t$
 level ($\epsilon_{ijt}$).
 
 We also include indicators for legislators' first six years in Congress (House or Senate),
-$\sum_{s = 1}^{6} \eta_{s} \text{tenure}_{it}$ as controls. This
+$\sum_{s = 1}^{6} \eta_{s} \text{tenure}_{it}$ as controls. 
+<!--This
 specification, however, is not the best specification to assess how
-electing a less experienced representative affects the number of requests made on behalf of a given district. 
+electing a less experienced representative affects the number of requests made on behalf of a given district. --> 
 In @sec-district, we test
 the effect of legislator experience by estimating how electing a new
 representative affects the number of requests made
@@ -717,7 +718,7 @@ of agencies).
 #| tbl-cap: "The effect of institutional power on total requests to federal agencies"
 #| out-width: 100%
 
-load(here::here("models", "models_total.Rdata"))
+load(here::here("models", "models_total-manuscript-table-2.Rdata"))
 
 modelsummary(models_total,
              center_rows = 23:29,
@@ -753,9 +754,14 @@ Evidence about the effects of majority party status or having a co-partisan pres
 ```{r}
 #| fig-cap: "Predicted number of total requests to federal agencies (within legislator difference in differences), 2007-2020. Note: This figure shows the predicted total number of letters per year by whether a legislator is a member of the president's party (subfigure a) and whether they are a chair (subfigure b, comparing predictions for counterfactuals where the same legislator did and did not receive a chair position in their sixth year)"
 #| label: fig-m-total-predicted
-#| out-width: 65%
+#| fig-subcap:
+#|   - "Predicted requests by presidents' party"
+#|   - "Predicted requests by years of service in Congress"
+#| layout-ncol: 2
+#| out-width: 100%
 
 knitr::include_graphics("figs/m-total-predicted-3.png")
+knitr::include_graphics("figs/m-total-predicted-4.png")
 ```
 
 @fig-m-total-predicted shows the predicted total number of letters per
@@ -857,12 +863,13 @@ experienced legislators deliver to their constituents.
 #| tbl-cap: "The effect of electing a new representative on total requests to federal agencies"
 #| out-width: 100%
 
-load(here::here("models", "models_district.Rdata"))
+load(here::here("models", "models_district-manuscript-table-3.Rdata"))
 modelsummary(models_district,
              center_rows = 14:26,
              notes = list("Note: Robust standard errors in parentheses, clustered by district", 
-                          "This table shows how contacts on behalf of a district vary across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 3 shows the difference in differences model subsetted to U.S. Senate delegations only.")) 
+                          "This table shows how contacts on behalf of a district vary across districts. Model 1 is a cross-sectional comparison excluding district fixed effects. The second column is a district x year difference in differences model. Column 3 is the difference in differences model subsetted to U.S. House districts only.  Column 4 shows the difference in differences model subsetted to U.S. Senate delegations only.")) 
 
+beta_cross <- round(beta_cross)
 beta <- round(beta)
 ```
 
@@ -871,9 +878,9 @@ differences across districts represented by a new member and legislators
 in their first six years in office (@eq-district1 minus the district
 fixed effect, $\gamma_{i}$). Districts represented by new legislators
 receive substantially lower levels of service. On average,
-districts with a new representative have 34 fewer
+districts with a new representative have  `r -beta_cross$new_member` fewer
 requests made on their behalf. The magnitude of this difference shrinks
-for districts represented by legislators in their second year (30
+for districts represented by legislators in their second year (`r -beta_cross$second`
 fewer requests). It then reaches a relatively
 stable number for districts represented by legislators in their third
 through sixth years.
@@ -882,7 +889,7 @@ To account for differences in district demographics and demand
 for service, Column 2 of @tbl-models-district provides the
 estimated effects from the difference-in-differences specification from
 @eq-district1. In this specification, we see a large causal effect of a
-new member taking over: electing a new member causes the number of requests on behalf of a given district to **decrease by `r percent(-beta$new_member/84)` **, or `r -beta$new_member |> round()` letters per year
+new member taking over: electing a new member causes the number of requests on behalf of a given district to **decrease by `r percent(-beta$new_member/84)` **, or `r -beta$new_member` letters per year
 (95-percent confidence interval [`r beta$new_member-1.96*se$new_member`, `r beta$new_member+1.96*se$new_member`]).
 
 The effect of electing a new representative, however, dissipates
@@ -947,7 +954,7 @@ prioritize one thing over the other.
 #| tbl-cap: "The effect of institutional power on the ratio of constituency service to policy work"
 #| out-width: 100%
 
-load(here::here("models", "models_ratio.Rdata"))
+load(here::here("models", "models_ratio-manuscript-table-4.Rdata"))
 modelsummary(models_ratio,  
              center_rows = 24:26,
              notes = list("Note: Robust standard errors in parentheses, clustered by legislator.",
@@ -1023,7 +1030,7 @@ variation shown in @sec-results.
 
 ## District Characteristics Affect the Provision of Constituency Service
 
-We find that population size correlates with the overall number of legislator requests. 
+We find that population size [@Census2019] correlates with the overall number of legislator requests. 
 These correlations provide face validity for our measures of legislator behavior, but they also suggest that cross-sectional comparisons may conflate legislator choices with district characteristics. 
 
 We expect senators who represent larger states to make more requests.
@@ -1095,7 +1102,7 @@ representative makes in a particular year. Since we aim to test whether constitu
 #| tbl-cap: "Spillover effects? Examining whether constituent service requests are redirected to experienced legislators when a new legislator is elected"
 #| out-width: 100%
 
-load(here::here("models", "models_spillover_con.Rdata"))
+load(here::here("models", "models_spillover_con-manuscript-table-5.Rdata"))
 modelsummary(models_spillover_con,  
              center_rows = 7:12,
              notes = list("Note: Robust standard errors in parentheses, clustered by district",
@@ -1105,8 +1112,8 @@ modelsummary(models_spillover_con,
 The first column of @tbl-models-spillover estimates the effect of an
 a new Senator replacing an experienced Senator on all other
 incumbent legislators from the state shows a marginally significant impact (p<0.1) on the level of constituency service that other legislators provide.
-Columns 2 and 3 of @tbl-models-spillover focus only on Senators. They show that either a new member in the delegation or the proportion of new members does not increase incumbents' constituency service (indeed, we see a statistically significant decrease in model 3). These inconsistent weak, null and negative impact of new legislators in a state delegation provides reassurance that there is little evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
-
+Columns 2 and 3 of @tbl-models-spillover focus only on Senators. They show that either a new member in the delegation or the proportion of new members does not increase incumbents' constituency service (indeed, we see a statistically significant decrease in model 3). The results are inconsistent, ranging from weak positive (Model 1), null (Model 2), and statistically significant negative (Model 3) across model specifications, which provides reassurance that there is little evidence of constituents redirecting demand toward other, more experienced legislators in response to having new representatives in their state delegation.
+ 
 # Discussion {#sec-discussion}
 
 Most legislator contacts with federal agencies focus on constituency
@@ -1127,7 +1134,7 @@ they divide that effort. Legislator requests to the bureaucracy are one
 of many types of behavior that are likely affected by simultaneous
 changes in capacity and priorities. In addition to correspondence with
 federal agencies, the volume of legislative work, oversight reports, or
-hearings produced by a legislator's office depend both on their
+hearings produced by a legislator's office depends both on their
 capacity to do that work and the relative priority of each task.
 
 Further, our findings suggest that the mechanisms we
@@ -1233,3 +1240,6 @@ institutional power. Voters do not face a trade-off between powerful and attenti
 \clearpage
 
 # References {.unnumbered}
+
+::: {#refs}
+:::
