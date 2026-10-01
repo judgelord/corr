@@ -1,18 +1,22 @@
 # How Shifting Priorities and Capacity Affect Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to U.S. Federal Agencies
 Devin Judge-Lord, Eleanor Neff Powell, Justin Grimmer
 
-Manuscript: <https://judgelord.github.io/research/correspondence/>
+Manuscript: <https://doi.org/10.1111/ajps.70031>
+
+Ungated: <https://judgelord.github.io/research/correspondence/>
 
 Replication data on Dataverse: <https://doi.org/10.7910/DVN/LWOCWO>
 
 Project repo: <https://judgelord.github.io/correspondence/>
 
+![](ajps.png)
+
 # Instructions for replication
 
 1.  Save all files and folders from this dataverse project to the root-level of a project directory and ensure it is the active directory in R. This allows the `here` package to construct valid file paths.
-    -   On dataverse, click Access Dataset and download the Original Format ZIP. The default download file will be called “dataverse_files.zip”
-    -   Unzip the downloaded folder
-    -   In RStudio, make a new project (File → New Project), select Existing Directory, and select the new unzipped folder “dataverse_files”
+    - On dataverse, click Access Dataset and download the Original Format ZIP. The default download file will be called “dataverse_files.zip”
+    - Unzip the downloaded folder
+    - In RStudio, make a new project (File → New Project), select Existing Directory, and select the new unzipped folder “dataverse_files”
 2.  run (render) “replication.qmd” to generate all figures and results
 3.  run (render) “corr.qmd” to render manuscript PDF (“corr.pdf”)
 4.  run (render) “si.qmd” to render Supplemental Information pdf (“si.pdf”)
@@ -25,12 +29,12 @@ If you are not working in an RStudio project, replication.qmd may still render, 
 
 The main replication data
 
--   “data/corr_counts.Rdata” = Counts of legislator contacts per year per agency
-    -   see complete codebook and coding procedure in Supplemental Information Part B (SI.pdf)
+- “data/corr_counts.Rdata” = Counts of legislator contacts per year per agency
+  - see complete codebook and coding procedure in Supplemental Information Part B (SI.pdf)
 
 Required data on members of Congress
 
--   “data/member_data.rda” = legislator covariates
+- “data/member_data.rda” = legislator covariates
 
 # Dataset codebooks (in /docs/ folder)
 
@@ -44,17 +48,17 @@ Citation: Author-created data source (Devin Judge-Lord and Eleanor Neff Powell a
 
 Variable names, descriptive labels, and values:
 
--   “icpsr” = Legislator id  
--   “chamber” = “House” or “Senate”  
--   “agency” = Agency acronym  
--   “year” = Year \[2007:2020\]  
--   “TYPE” = Type of Legislator Request. See codebook in Supplemental Information.
-    -   1 ~ “Constituent (individual)”
-    -   2 ~ “Constituent (corporate)”
-    -   3 ~ “Constituent (501c3 or localgovernment)”
-    -   4 ~ “Policy (corporate)”
-    -   5 ~ “Policy (general)”
--   “per_icpsr_chamber_year_agency_type” = Count per legislator per year per agency per type \[0:1440\]
+- “icpsr” = Legislator id  
+- “chamber” = “House” or “Senate”  
+- “agency” = Agency acronym  
+- “year” = Year \[2007:2020\]  
+- “TYPE” = Type of Legislator Request. See codebook in Supplemental Information.
+  - 1 ~ “Constituent (individual)”
+  - 2 ~ “Constituent (corporate)”
+  - 3 ~ “Constituent (501c3 or localgovernment)”
+  - 4 ~ “Policy (corporate)”
+  - 5 ~ “Policy (general)”
+- “per_icpsr_chamber_year_agency_type” = Count per legislator per year per agency per type \[0:1440\]
 
 ``` r
 load(here::here("data", "corr_counts.Rdata"))
@@ -85,31 +89,31 @@ Data file: “data/member_data.Rdata”
 
 Citations: Author-created data source (Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer 2025), including:
 
--   year, chamber, and party from J. B. Lewis et al. (2022) via voteview.com (also available on dataverse)
+- year, chamber, and party from Lewis et al. (2022) via voteview.com (also available on dataverse)
 
--   committee positions from Stewart and Woon (2017) and @unitedstates-project (2025)
+- committee positions from Stewart and Woon (2017) and <span class="nocase">@unitedstates-project</span> (2025)
 
--   state population from U.S. Census Bureau (2019)
+- state population from U.S. Census Bureau (2019)
 
 Variable names, descriptive labels, and values:
 
--   “congress” = Congress \[110-116\]
--   “chamber” = “House” or “Senate”
--   “bioname” = name from voteview.com
--   “first_year” = First year serving in Congress \[1989:2020\]
--   “icpsr” = ICPSR id number from voteview.com
--   “district_code” = District number \[0:53\]
--   “state_abbrev” = State abbreviation
--   “state” = State name
--   “pop2010” = State population in 2010 \[563,767:37,252,895\] from U.S. Census Bureau (2019)
--   “committees” = Committee assignments from Stewart and Woon (2017) and @unitedstates-project (2025)
--   “chair” = Committee chair \[0 = no, 1 = yes\] from Stewart and Woon (2017) and @unitedstates-project (2025)
--   “ranking_minority” = Ranking minority \[0 = no, 1 = yes\]
--   “majority” = Majority party \[0 = no, 1 = yes\]
--   “presidents_party” = Same party as the president \[0 = no, 1 = yes\]
--   “party” = Political party \[“(D)” = Democrat, “(R)” = Republican, “(I)” = Independent\]
+- “congress” = Congress \[110-116\]
+- “chamber” = “House” or “Senate”
+- “bioname” = name from voteview.com
+- “first_year” = First year serving in Congress \[1989:2020\]
+- “icpsr” = ICPSR id number from voteview.com
+- “district_code” = District number \[0:53\]
+- “state_abbrev” = State abbreviation
+- “state” = State name
+- “pop2010” = State population in 2010 \[563,767:37,252,895\] from U.S. Census Bureau (2019)
+- “committees” = Committee assignments from Stewart and Woon (2017) and <span class="nocase">@unitedstates-project</span> (2025)
+- “chair” = Committee chair \[0 = no, 1 = yes\] from Stewart and Woon (2017) and <span class="nocase">@unitedstates-project</span> (2025)
+- “ranking_minority” = Ranking minority \[0 = no, 1 = yes\]
+- “majority” = Majority party \[0 = no, 1 = yes\]
+- “presidents_party” = Same party as the president \[0 = no, 1 = yes\]
+- “party” = Political party \[“(D)” = Democrat, “(R)” = Republican, “(I)” = Independent\]
 
-For additional variables that are part of the broader data from this project but not required to replicate the analysis for this paper, including data on oversight relationships and agency characteristics from D. E. Lewis and Selin (2012), please contact the authors.
+For additional variables that are part of the broader data from this project but not required to replicate the analysis for this paper, including data on oversight relationships and agency characteristics from Lewis and Selin (2012), please contact the authors.
 
 ``` r
 load(here::here("data", "member_data.Rdata"))
@@ -158,45 +162,45 @@ member_data |> skimr::skim()
 
 # Code files
 
--   “replication.qmd” uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
-    -   **NOTE:** This file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include:
-        -   data/means.Rdata
-        -   models/models_total.Rdata
-        -   models/models_ratio.Rdata
-        -   models/models_con.Rdata
-        -   models/models_policy.Rdata
-        -   models/models_district.Rdata
-        -   models/models_district_policy.Rdata
-        -   models/models_district_con.Rdata
-        -   models/models_district_party.Rdata
-        -   models/models_spillover.Rdata
-        -   models/models_spillover_con.Rdata
-        -   models/models_spillover_policy.Rdata
-    -   “replication.r” is simply the R code extracted from “replication.qmd” — it will produce but not save figures
+- “replication.qmd” uses `corr_counts` and `member data` to reproduce all analyses in the paper and Supplemental Information (rendered [here](https://judgelord.github.io/corr/replication))
+  - **NOTE:** This file produces intermediate data files saved to /data/, figures saved to /figs/, and model objects saved to /models/ directories, which are required to render the manuscript and SI. In addition to all figures in the paper, these intermediate files include:
+    - data/means.Rdata
+    - models/models_total.Rdata
+    - models/models_ratio.Rdata
+    - models/models_con.Rdata
+    - models/models_policy.Rdata
+    - models/models_district.Rdata
+    - models/models_district_policy.Rdata
+    - models/models_district_con.Rdata
+    - models/models_district_party.Rdata
+    - models/models_spillover.Rdata
+    - models/models_spillover_con.Rdata
+    - models/models_spillover_policy.Rdata
+  - “replication.r” is simply the R code extracted from “replication.qmd” — it will produce but not save figures
 
 # Manuscript files
 
--   “corr.qmd” compiles the manuscript text, pulling in results from the intermediate files created by running replication.qmd
-    -   “assets/congress2019.bib” is the required bib file
--   “si.qmd” compiles the Supplemental Information text, pulling in saved results from running replication.qmd
-    -   “assets/congress2019.bib” is the required bib file
-    -   “FOIA.csv” is a required data summary table
+- “corr.qmd” compiles the manuscript text, pulling in results from the intermediate files created by running replication.qmd
+  - “assets/congress2019.bib” is the required bib file
+- “si.qmd” compiles the Supplemental Information text, pulling in saved results from running replication.qmd
+  - “assets/congress2019.bib” is the required bib file
+  - “FOIA.csv” is a required data summary table
 
 # Output files
 
--   “replication.pdf” is “replication.qmd” rendered to PDF
--   “replication.html” is “replication.qmd” rendered to HTML
--   “corr.pdf” is the manuscript text produced by “corr.qmd”
--   “si.pdf” is the Supplemental Information text produced by “si.qmd”
+- “replication.pdf” is “replication.qmd” rendered to PDF
+- “replication.html” is “replication.qmd” rendered to HTML
+- “corr.pdf” is the manuscript text produced by “corr.qmd”
+- “si.pdf” is the Supplemental Information text produced by “si.qmd”
 
 # Computing Environment
 
--   Computer Processor: Apple M2 Max, 12 Cores
--   Computer Memory (RAM): 96 GB
+- Computer Processor: Apple M2 Max, 12 Cores
+- Computer Memory (RAM): 96 GB
 
 ## Software
 
--   RStudio 2025.05.1+513
+- RStudio 2025.05.1+513
 
 **NOTE:** Due to breaking changes in version 0.28.0 of the `marginaleffects` package, the code to make all figures using predicted values now requires loading an earlier version of this package. I used `marginaleffects_0.25.1`.
 
@@ -243,16 +247,16 @@ sessionInfo
 
     loaded via a namespace (and not attached):
      [1] gtable_0.3.6         bayestestR_0.15.2    xfun_0.52           
-     [4] htmlwidgets_1.6.4    insight_1.2.0.1      rstatix_0.7.2       
-     [7] lattice_0.22-7       tzdb_0.5.0           numDeriv_2016.8-1.1 
-    [10] vctrs_0.6.5          tools_4.5.1          generics_0.1.4      
-    [13] datawizard_1.0.2     sandwich_3.1-1       fansi_1.0.6         
-    [16] pkgconfig_2.0.3      Matrix_1.7-3         checkmate_2.3.2     
-    [19] tinytable_0.8.0      data.table_1.17.0    RColorBrewer_1.1-3  
-    [22] stringmagic_1.2.0    lifecycle_1.0.4      compiler_4.5.1      
-    [25] farver_2.1.2         carData_3.0-5        litedown_0.7        
+     [4] insight_1.2.0.1      rstatix_0.7.2        lattice_0.22-7      
+     [7] tzdb_0.5.0           numDeriv_2016.8-1.1  vctrs_0.6.5         
+    [10] tools_4.5.1          generics_0.1.4       datawizard_1.0.2    
+    [13] sandwich_3.1-1       fansi_1.0.6          pkgconfig_2.0.3     
+    [16] Matrix_1.7-3         checkmate_2.3.2      tinytable_0.8.0     
+    [19] data.table_1.17.0    RColorBrewer_1.1-3   stringmagic_1.2.0   
+    [22] lifecycle_1.0.4      compiler_4.5.1       farver_2.1.2        
+    [25] codetools_0.2-20     carData_3.0-5        litedown_0.7        
     [28] htmltools_0.5.8.1    yaml_2.3.10          Formula_1.2-5       
-    [31] car_3.1-3            pillar_1.10.2        ggpubr_0.6.0        
+    [31] pillar_1.10.2        car_3.1-3            ggpubr_0.6.0        
     [34] abind_1.4-8          nlme_3.1-168         tidyselect_1.2.1    
     [37] digest_0.6.37        performance_0.13.0.6 stringi_1.8.7       
     [40] splines_4.5.1        labeling_0.4.3       rprojroot_2.0.4     
@@ -293,18 +297,18 @@ load(here::here("data", "time.rda"))
 time
 ```
 
-    Time difference of 1.714152 mins
+    Time difference of 2.729435 mins
 
 # References
 
-Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025. “The Effects of Shifting Priorities and Capacity on Elected Officials’ Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to u.s. Federal Agencies, Replication Data.” *American Journal of Political Science*. Harvard Dataverse Network, at: <https://doi.org/10.7910/DVN/LWOCW>.
+Devin Judge-Lord and Eleanor Neff Powell and Justin Grimmer. 2025. “The Effects of Shifting Priorities and Capacity on Elected Officials’ Policy Work and Constituency Service: Evidence from a Census of Legislator Requests to u.s. Federal Agencies, Replication Data.” In *American Journal of Political Science*. Harvard Dataverse Network, at: <https://doi.org/10.7910/DVN/LWOCW>.
 
 Lewis, David E., and Jennifer L. Selin. 2012. *<span class="nocase">ACUS Sourcebook of United States Executive Agencies</span>*. Administrative Conference of the United States.
 
-Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin, and Luke Sonnet. 2022. “Voteview: Congressional Roll-Call Votes Database.” <https://voteview.com>. Date Accessed: Feb. 24, 2022.
+Lewis, Jeffrey B., Keith Poole, Howard Rosenthal, Adam Boche, Aaron Rudkin, and Luke Sonnet. 2022. *Voteview: Congressional Roll-Call Votes Database*. <a href="https://voteview.com" class="uri">Https://voteview.com</a>. Date Accessed: Feb. 24, 2022.
 
-Stewart, Charles, III, and Jonathan Woon. 2017. “Congressional Committee Assignments, 103rd to 115th Congresses, 1993–2017: House of Representatives.” <https://web.mit.edu/17.251/www/data_page.html#2>. Date Accessed: March 18, 2025.
+Stewart, Charles, III, and Jonathan Woon. 2017. “Congressional Committee Assignments, 103rd to 115th Congresses, 1993–2017: House of Representatives.” <a href="https://web.mit.edu/17.251/www/data_page.html#2" class="uri">Https://web.mit.edu/17.251/www/data_page.html#2</a>. Date Accessed: March 18, 2025.
 
-@unitedstates-project, the. 2025. “Unitedstates/Congress-Legislators.” <https://unitedstates.github.io/> <https://github.com/unitedstates/congress-legislators>. Date Accessed: March 18, 2025.
+<span class="nocase">@unitedstates-project, the</span>. 2025. *Unitedstates/Congress-Legislators*. <a href="https://unitedstates.github.io/" class="uri">Https://unitedstates.github.io/</a> <https://github.com/unitedstates/congress-legislators>. Date Accessed: March 18, 2025.
 
-U.S. Census Bureau. 2019. “State Population Totals: 2010-2019.” <https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html>. Date Accessed: March 18, 2025.
+U.S. Census Bureau. 2019. *State Population Totals: 2010-2019*. <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html" class="uri">Https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html</a>. Date Accessed: March 18, 2025.
